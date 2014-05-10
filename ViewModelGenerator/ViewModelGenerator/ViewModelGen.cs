@@ -1078,6 +1078,101 @@ namespace ViewModelGenerator
 
                     #endregion
                 }
+
+                #region JSON list
+
+                code = code + @"
+                #region Json
+  
+                // Json GET: /" + controllerName + @"/List" + tableNameplural + @"
+                public ActionResult List" + tableNameplural + @"Json()
+                {
+                    Log.Info(""" + tableName + @" called"");
+                    return Json(""_Edit" + tableName + @""", " + repoName + @".Get" + tableNameplural + @"List(), JsonRequestBehavior.AllowGet);
+                }" + n + n;
+
+
+                foreach (DataGridViewRow item_ in FKGV.Rows)
+                {
+                    if (item_.Cells[0].Value == null)
+                    {
+                        continue;
+                    }
+
+                    string FKColumn = "";
+                    string FKIdFixed = ""; string FKCamel = "";
+
+
+                    if (item_.Cells[3].Value != null)
+                    {
+                        FKColumn = item_.Cells[3].Value.ToString();
+                        FKIdFixed = FKColumn.Replace("ID", "Id");
+                        FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
+                    }
+
+                    code = code + @"
+                            // Json GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"Json
+                            public ActionResult " + tableNameplural + @"By" + FKCamel + @"Json(int? id)
+                            {
+                                if (id == null)
+                                {
+                                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                                }
+                                return Json(" + repoName + @".Get" + tableNameplural + "By" + FKCamel + @"(id.Value), JsonRequestBehavior.AllowGet);
+                            }" + n + n;
+                }
+
+                code = code + @"
+                #endregion";
+                #endregion
+
+                #region Kendo Grid
+
+                code = code + @"
+                
+                #region Kendo Grid
+      
+                // Json GET: /" + controllerName + @"/List" + tableNameplural + @"
+                public ActionResult List" + tableNameplural + @"Kendo([DataSourceRequest] DataSourceRequest request)
+                {
+                    Log.Info(""" + tableName + @" called"");
+                    return Json(""_Edit" + tableName + @""", " + repoName + @".Get" + tableNameplural + @"List().ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+                }" + n + n;
+
+
+                foreach (DataGridViewRow item_ in FKGV.Rows)
+                {
+                    if (item_.Cells[0].Value == null)
+                    {
+                        continue;
+                    }
+
+                    string FKColumn = "";
+                    string FKIdFixed = ""; string FKCamel = "";
+
+
+                    if (item_.Cells[3].Value != null)
+                    {
+                        FKColumn = item_.Cells[3].Value.ToString();
+                        FKIdFixed = FKColumn.Replace("ID", "Id");
+                        FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
+                    }
+
+                    code = code + @"
+                            // Json GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"Json
+                            public ActionResult " + tableNameplural + @"By" + FKCamel + @"Kendo(int? id,[DataSourceRequest] DataSourceRequest request)
+                            {
+                                if (id == null)
+                                {
+                                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                                }
+                                return Json(" + repoName + @".Get" + tableNameplural + "By" + FKCamel + @"(id.Value).ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+                            }" + n + n;
+                }
+                code = code + @"
+                #endregion";
+
+                #endregion
                 code = code + "#endregion" + n + n;
                 myReader.Close();
             }
@@ -1127,31 +1222,33 @@ namespace ViewModelGenerator
 
         private void DBSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            TableNameRepo.Items.Clear();
-            SqlConnection conn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                     "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                     "Trusted_Connection=false;" +
-                                     "database=" + DatabaseCB.SelectedText + "; " +
-                                     "connection timeout=30");
-            conn.Open();
-            List<string> tables = new List<string>();
-
-            DataTable dt = conn.GetSchema("Tables");
-            foreach (DataRow row in dt.Rows)
+            if (ServeTB.Text.Length > 0 && UserTB.Text.Length > 0 && PassTB.Text.Length > 0)
             {
-                if (((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo"))
+                TableNameRepo.Items.Clear();
+                SqlConnection conn = new SqlConnection("user id=" + UserTB.Text + ";" +
+                                         "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
+                                         "Trusted_Connection=false;" +
+                                         "database=" + DatabaseCB.SelectedText + "; " +
+                                         "connection timeout=30");
+                conn.Open();
+                List<string> tables = new List<string>();
+
+                DataTable dt = conn.GetSchema("Tables");
+                foreach (DataRow row in dt.Rows)
                 {
-                    string tablename = (string)row[2];
-                    tables.Add(tablename);
+                    if (((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo"))
+                    {
+                        string tablename = (string)row[2];
+                        tables.Add(tablename);
+                    }
                 }
+                tables.Sort();
+                foreach (var item in tables)
+                {
+                    TableNameRepo.Items.Add(item);
+                }
+                conn.Close();
             }
-            tables.Sort();
-            foreach (var item in tables)
-            {
-                TableNameRepo.Items.Add(item);
-            }
-            conn.Close();
         }
 
         private void ServeTB_TextChanged(object sender, EventArgs e)
