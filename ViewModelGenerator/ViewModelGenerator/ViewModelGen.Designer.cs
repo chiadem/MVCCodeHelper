@@ -645,7 +645,7 @@
             this.TestB.Name = "TestB";
             this.TestB.Size = new System.Drawing.Size(217, 23);
             this.TestB.TabIndex = 4;
-            this.TestB.Text = "Test";
+            this.TestB.Text = "Test and Save";
             this.TestB.UseVisualStyleBackColor = true;
             this.TestB.Click += new System.EventHandler(this.TestB_Click);
             // 
@@ -724,6 +724,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ViewModelGen";
             this.Text = "MVC Code Helper";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewModelGen_FormClosing);
             this.Load += new System.EventHandler(this.ViewModelGen_Load);
             this.DBSettings.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);

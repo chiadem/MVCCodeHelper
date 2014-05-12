@@ -4,16 +4,20 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MVCCodeHelper;
 
 namespace ViewModelGenerator
 {
     public partial class ViewModelGen : Form
     {
+
+        SqlConnection DBConnection;
         public ViewModelGen()
         {
             InitializeComponent();
@@ -21,83 +25,106 @@ namespace ViewModelGenerator
 
         private void ViewModelGen_Load(object sender, EventArgs e)
         {
-  
+            try
+            {
+                string user, pass, server, db;
+                user = Settings.Get("User", "");
+                pass = Settings.Get("Password", "");
+                server = Settings.Get("Server", "");
+                db = Settings.Get("DBName", "");
+                if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(server) || string.IsNullOrEmpty(db))
+                {
+
+                }
+                else
+                {
+                    UserTB.Text = user;
+                    PassTB.Text = pass;
+                    ServeTB.Text = server;
+                    DatabaseCB.Text = db;
+                    DBConnection = new SqlConnection("user id=" + user + ";" +
+                                          "password=" + pass + ";server=" + server + ";" +
+                                          "Trusted_Connection=false;" +
+                                          "database=" + db + "; " +
+                                                      "connection timeout=30");
+                    DBConnection.Open();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
+
 
         private void TestB_Click(object sender, EventArgs e)
         {
-            SqlConnection myConnection = new SqlConnection("user id=" + UserTB.Text + ";" +
+            DBConnection = new SqlConnection("user id=" + UserTB.Text + ";" +
                                       "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
                                       "Trusted_Connection=false;" +
                                       "database=" + DatabaseCB.SelectedText + "; " +
                                       "connection timeout=30");
             try
             {
-                myConnection.Open();
+                DBConnection.Open();
                 MessageBox.Show("Success!");
+                Settings.Set("User", UserTB.Text);
+                Settings.Set("Password", PassTB.Text);
+                Settings.Set("Server", ServeTB.Text);
+                Settings.Set("DBName", DatabaseCB.Text);
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed!");
             }
-            finally
-            {
-                myConnection.Close();
-            }
 
         }
 
         private void DatabaseCB_Click(object sender, EventArgs e)
         {
-            DatabaseCB.Items.Clear();
-
-            List<String> databases = new List<String>();
-
-            SqlConnectionStringBuilder connection = new SqlConnectionStringBuilder();
-
-            connection.DataSource = ServeTB.Text;
-            connection.UserID = UserTB.Text;
-            connection.Password = PassTB.Text;
-            connection.IntegratedSecurity = false;
-
-            String strConn = connection.ToString();
-
-            //create connection
-            SqlConnection sqlConn = new SqlConnection(strConn);
-
-            //open connection
-            sqlConn.Open();
-
-            //get databases
-            DataTable tblDatabases = sqlConn.GetSchema("Databases");
-
-            //close connection
-            sqlConn.Close();
-
-            //add to list
-            foreach (DataRow row in tblDatabases.Rows)
+            SqlConnection DBConnection2 = new SqlConnection("user id=" + UserTB.Text + ";" +
+                              "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
+                              "Trusted_Connection=false;" +
+                              "database=" + DatabaseCB.SelectedText + "; " +
+                              "connection timeout=30");
+            try
             {
-                String strDatabaseName = row["database_name"].ToString();
+                DatabaseCB.Items.Clear();
 
-                databases.Add(strDatabaseName);
+               
 
-                DatabaseCB.Items.Add(strDatabaseName);
+                DBConnection2.Open();
+
+                List<String> databases = new List<String>();
+
+                //get databases
+                DataTable tblDatabases = DBConnection2.GetSchema("Databases");
+
+                //add to list
+                foreach (DataRow row in tblDatabases.Rows)
+                {
+                    String strDatabaseName = row["database_name"].ToString();
+
+                    databases.Add(strDatabaseName);
+
+                    DatabaseCB.Items.Add(strDatabaseName);
+                }
             }
+            catch (Exception)
+            {
+
+            }
+            finally
+            { DBConnection2.Close(); }
         }
 
         private void TableCB_Click(object sender, EventArgs e)
         {
-            TableCB.Items.Clear();
-            SqlConnection conn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                     "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                     "Trusted_Connection=false;" +
-                                     "database=" + DatabaseCB.SelectedText + "; " +
-                                     "connection timeout=30");
-            conn.Open();
             List<string> tables = new List<string>();
 
-            DataTable dt = conn.GetSchema("Tables");
+            DataTable dt = DBConnection.GetSchema("Tables");
             foreach (DataRow row in dt.Rows)
             {
                 if (((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo"))
@@ -111,7 +138,6 @@ namespace ViewModelGenerator
             {
                 TableCB.Items.Add(item);
             }
-            conn.Close();
 
         }
 
@@ -139,20 +165,15 @@ namespace ViewModelGenerator
 
 
 
-            SqlConnection cn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                    "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                    "Trusted_Connection=false;" +
-                                    "database=" + DatabaseCB.SelectedText + "; " +
-                                    "connection timeout=30");
 
             SqlCommand cmd = new SqlCommand();
             DataTable schemaTable;
             SqlDataReader myReader;
 
-            cn.Open();
+
 
             //Retrieve records from the Employees table into a DataReader.
-            cmd.Connection = cn;
+            cmd.Connection = DBConnection;
             cmd.CommandText = "SELECT top 1 * FROM " + tableName;
             myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
@@ -230,8 +251,6 @@ namespace ViewModelGenerator
             //Always close the DataReader and connection.
             myReader.Close();
 
-            cn.Close();
-
             PK(tableName);
 
             foreach (DataGridViewRow itemm in PKGV.Rows)
@@ -281,17 +300,10 @@ namespace ViewModelGenerator
         {
 
 
-            SqlConnection cn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                    "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                    "Trusted_Connection=false;" +
-                                    "database=" + DatabaseCB.SelectedText + "; " +
-                                    "connection timeout=30");
-
             SqlCommand cmd = new SqlCommand();
             DataTable schemaTable;
             SqlDataReader myReader;
 
-            cn.Open();
             string code = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
             {
@@ -307,7 +319,7 @@ namespace ViewModelGenerator
                 string tableNameplural = ToPlural(tableName);
 
                 //Retrieve records from the Employees table into a DataReader.
-                cmd.Connection = cn;
+                cmd.Connection = DBConnection;
                 cmd.CommandText = "SELECT top 1 * FROM " + tableName;
                 myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
                 //Retrieve column schema into a DataTable.
@@ -391,6 +403,7 @@ namespace ViewModelGenerator
                         return db." + tableNameplural + @".Select(" + viewModelName + @".ToModel).ToList();
                     }";
                 #endregion
+                myReader.Close();
 
                 #region GetTableNameByForeignKey
                 FK(tableName);
@@ -498,10 +511,7 @@ namespace ViewModelGenerator
                 #endregion
 
                 code = code + "#endregion" + n + n;
-                myReader.Close();
             }
-            //Always close the DataReader and connection.
-            cn.Close();
             RepoCodeText.Text = code;
             RepoCodeText.Focus();
             RepoCodeText.SelectAll();
@@ -538,7 +548,7 @@ namespace ViewModelGenerator
 
             }
             else
-                TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text,isPartial.Checked);
+                TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text, isPartial.Checked);
             //foreach (var item in TableNameRepo.Items)
             //{
             //    TableGrid.Rows.Add(item.ToString(), FKTB.Text, item.ToString());
@@ -549,22 +559,14 @@ namespace ViewModelGenerator
 
         private void FK(string tableName)
         {
-            SqlConnection sqlConnection1 = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                                             "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                                             "Trusted_Connection=false;" +
-                                                             "database=" + DatabaseCB.SelectedText + "; " +
-                                                             "connection timeout=30");
+
             SqlCommand cmd = new SqlCommand();
-            SqlDataReader reader;
             DataSet ds = new DataSet("TimeRanges");
 
             cmd.CommandText = "sp_fkeys";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@fktable_name", SqlDbType.VarChar, 100).Value = tableName;
-            cmd.Connection = sqlConnection1;
-
-            sqlConnection1.Open();
-
+            cmd.Connection = DBConnection;
 
             SqlDataAdapter da = new SqlDataAdapter();
             da.SelectCommand = cmd;
@@ -575,28 +577,18 @@ namespace ViewModelGenerator
             FKGV.DataSource = ds;
             FKGV.DataMember = ds.Tables[0].TableName;
             // Data is accessible through the DataReader object here.
-
-            sqlConnection1.Close();
         }
 
         private void PK(string tableName)
         {
-            SqlConnection sqlConnection1 = new SqlConnection("user id=" + UserTB.Text + ";" +
-             "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-             "Trusted_Connection=false;" +
-             "database=" + DatabaseCB.SelectedText + "; " +
-             "connection timeout=30");
+
             SqlCommand cmd = new SqlCommand();
-            SqlDataReader reader;
             DataSet ds = new DataSet("TimeRanges");
 
             cmd.CommandText = "sp_fkeys";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@pktable_name", SqlDbType.VarChar, 100).Value = tableName;
-            cmd.Connection = sqlConnection1;
-
-            sqlConnection1.Open();
-
+            cmd.Connection = DBConnection;
 
             SqlDataAdapter da = new SqlDataAdapter();
             da.SelectCommand = cmd;
@@ -606,25 +598,18 @@ namespace ViewModelGenerator
             PKGV.AutoGenerateColumns = true;
             PKGV.DataSource = ds;
             PKGV.DataMember = ds.Tables[0].TableName;
-            // Data is accessible through the DataReader object here.
+           
 
-            sqlConnection1.Close();
         }
 
 
         public void ActionGen_Click()
         {
-            SqlConnection cn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                    "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                    "Trusted_Connection=false;" +
-                                    "database=" + DatabaseCB.SelectedText + "; " +
-                                    "connection timeout=30");
 
             SqlCommand cmd = new SqlCommand();
             DataTable schemaTable;
             SqlDataReader myReader;
 
-            cn.Open();
             string code = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
             {
@@ -641,7 +626,7 @@ namespace ViewModelGenerator
 
                 string tableNameplural = ToPlural(tableName);
                 //Retrieve records from the Employees table into a DataReader.
-                cmd.Connection = cn;
+                cmd.Connection = DBConnection;
                 cmd.CommandText = "SELECT top 1 * FROM " + tableName;
                 myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
                 //Retrieve column schema into a DataTable.
@@ -848,7 +833,7 @@ namespace ViewModelGenerator
                     #endregion
 
                     #region GetTableNameByForeignKey
-
+                    myReader.Close();
                     FK(tableName);
                     PK(tableName);
                     foreach (DataGridViewRow item_ in FKGV.Rows)
@@ -1174,10 +1159,9 @@ namespace ViewModelGenerator
 
                 #endregion
                 code = code + "#endregion" + n + n;
-                myReader.Close();
+             
             }
             //Always close the DataReader and connection.
-            cn.Close();
             ActionsResult.Text = code;
             ActionsResult.Focus();
             ActionsResult.SelectAll();
@@ -1225,15 +1209,10 @@ namespace ViewModelGenerator
             if (ServeTB.Text.Length > 0 && UserTB.Text.Length > 0 && PassTB.Text.Length > 0)
             {
                 TableNameRepo.Items.Clear();
-                SqlConnection conn = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                         "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                         "Trusted_Connection=false;" +
-                                         "database=" + DatabaseCB.SelectedText + "; " +
-                                         "connection timeout=30");
-                conn.Open();
+
                 List<string> tables = new List<string>();
 
-                DataTable dt = conn.GetSchema("Tables");
+                DataTable dt = DBConnection.GetSchema("Tables");
                 foreach (DataRow row in dt.Rows)
                 {
                     if (((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo"))
@@ -1247,13 +1226,17 @@ namespace ViewModelGenerator
                 {
                     TableNameRepo.Items.Add(item);
                 }
-                conn.Close();
             }
         }
 
         private void ServeTB_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ViewModelGen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DBConnection.Close();
         }
 
     }
