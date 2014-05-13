@@ -738,7 +738,6 @@ namespace ViewModelGenerator
                         if (await " + repoName + @".Add" + tableName + @"Async(model))
                         {
                             ViewBag.SuccessMessage = """ + tableName + @" "" + model." + primaryKeyCamel + @" + "" added"";
-                            Log.Info(string.Format(""New " + tableName + @" {0} added"", model." + primaryKeyCamel + @"));
                             return RedirectToAction(""List" + tableName + @""");
                         }
                         ModelState.AddModelError(""" + tableName + @"AddingError"", ""There was a problem adding the " + tableName + @" "" + model." + primaryKeyCamel + @");
@@ -774,7 +773,6 @@ namespace ViewModelGenerator
                             if (await " + repoName + @".Update" + tableName + @"Async(model))
                             {
                                 ViewBag.SuccessMessage = """ + tableName + @" "" + model." + primaryKeyCamel + @" + "" saved"";
-                                Log.Info(string.Format(""New " + tableName + @" {0} edited"", model." + primaryKeyCamel + @"));
                                 return RedirectToAction(""List" + tableNameplural + @""");
                             }
                             ModelState.AddModelError(""" + tableName + @"EditError"", ""There was a problem editing the " + tableName + @" "" + model." + primaryKeyCamel + @");
@@ -826,7 +824,6 @@ namespace ViewModelGenerator
                     await Task.Run(() =>
                     {
                         " + repoName + @".Delete" + tableName + @"Async(id);
-                        Log.Info(string.Format(""" + tableName + @" {0} deleted"", id));
                     });
                     return RedirectToAction(""List" + tableNameplural + @""");
                 }" + n + n;
@@ -924,7 +921,6 @@ namespace ViewModelGenerator
                         if (await " + repoName + @".Add" + tableName + @"Async(model))
                         {
                             ViewBag.SuccessMessage = """ + tableName + @" "" + model." + primaryKeyCamel + @" + "" added"";
-                            Log.Info(string.Format(""New " + tableName + @" {0} added"", model." + primaryKeyCamel + @"));
                             return RedirectToAction(""List" + tableName + @""");
                         }
                         ModelState.AddModelError(""" + tableName + @"AddingError"", ""There was a problem adding the " + tableName + @" "" + model." + primaryKeyCamel + @");
@@ -960,7 +956,6 @@ namespace ViewModelGenerator
                             if (await " + repoName + @".Update" + tableName + @"Async(model))
                             {
                                 ViewBag.SuccessMessage = """ + tableName + @" "" + model." + primaryKeyCamel + @" + "" saved"";
-                                Log.Info(string.Format(""New " + tableName + @" {0} edited"", model." + primaryKeyCamel + @"));
                                 return RedirectToAction(""List" + tableNameplural + @""");
                             }
                             ModelState.AddModelError(""" + tableName + @"EditError"", ""There was a problem editing the " + tableName + @" "" + model." + primaryKeyCamel + @");
@@ -1013,7 +1008,6 @@ namespace ViewModelGenerator
                     await Task.Run(() =>
                     {
                         " + repoName + @".Delete" + tableName + @"Async(id);
-                        Log.Info(string.Format(""" + tableName + @" {0} deleted"", id));
                     });
                     return RedirectToAction(""List" + tableNameplural + @""");
                 }" + n + n;
