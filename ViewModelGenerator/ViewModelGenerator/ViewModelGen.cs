@@ -93,7 +93,7 @@ namespace ViewModelGenerator
             {
                 DatabaseCB.Items.Clear();
 
-               
+
 
                 DBConnection2.Open();
 
@@ -143,151 +143,158 @@ namespace ViewModelGenerator
 
         private void GenB_Click(object sender, EventArgs e)
         {
+            if (TableCB.SelectedIndex == -1)
+            {
+                MessageBox.Show("Select a table man!");
 
-            string viewModelName = ViewModelNameTB.Text;
-            string tableName = TableCB.SelectedItem.ToString();
-            string tableNameplural = ToPlural(tableName);
+            }
+            else
+            {
+                string viewModelName = ViewModelNameTB.Text;
+                string tableName = TableCB.SelectedItem.ToString();
+                string tableNameplural = ToPlural(tableName);
 
-            string[,] columns = new string[100, 4];
-            string n = "\n";
+                string[,] columns = new string[100, 4];
+                string n = "\n";
 
-            string code = "public  class " + viewModelName + n + "{" + n + n;
+                string code = "public  class " + viewModelName + n + "{" + n + n;
 
-            string toEntity = @"public " + tableName + @" ToEntity()" + n + @"
+                string toEntity = @"public " + tableName + @" ToEntity()" + n + @"
             {" + n + @"
             var entity = new " + tableName + @"" + n + @"
             {" + n;
-            string toEntityP = "public " + tableName + " ToEntity(" + tableName + " entity)" + "{" + n;
-            string toModel = " public static " + viewModelName + " ToModel(" + tableName + " entity)" + "{" + n
-                + @" var model = new " + viewModelName + "();"
-                + n + " if (entity != null)" + n + "{" + n;
+                string toEntityP = "public " + tableName + " ToEntity(" + tableName + " entity)" + "{" + n;
+                string toModel = " public static " + viewModelName + " ToModel(" + tableName + " entity)" + "{" + n
+                    + @" var model = new " + viewModelName + "();"
+                    + n + " if (entity != null)" + n + "{" + n;
 
 
 
 
 
-            SqlCommand cmd = new SqlCommand();
-            DataTable schemaTable;
-            SqlDataReader myReader;
+                SqlCommand cmd = new SqlCommand();
+                DataTable schemaTable;
+                SqlDataReader myReader;
 
 
 
-            //Retrieve records from the Employees table into a DataReader.
-            cmd.Connection = DBConnection;
-            cmd.CommandText = "SELECT top 1 * FROM " + tableName;
-            myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+                //Retrieve records from the Employees table into a DataReader.
+                cmd.Connection = DBConnection;
+                cmd.CommandText = "SELECT top 1 * FROM " + tableName;
+                myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
-            //Retrieve column schema into a DataTable.
-            schemaTable = myReader.GetSchemaTable();
-            int i = 0;
-            //For each field in the table...
-            foreach (DataRow myField in schemaTable.Rows)
-            {
-
-
-                columns[i, 0] = myField["ColumnName"].ToString();
-                columns[i, 1] = myField["DataType"].ToString();
-                columns[i, 2] = myField["ColumnSize"].ToString();
-                columns[i, 3] = myField["AllowDBNull"].ToString();
-
-                string columnName = myField["ColumnName"].ToString();
-
-                if ((columnName.Equals("createdDate") && !createdDate.Checked) ||
-                    (columnName.Equals("modifiedDate") && !modifiedDate.Checked) ||
-                    (columnName.Equals("createdBy") && !createdBy.Checked) ||
-                    (columnName.Equals("modifiedBy") && !modifiedBy.Checked) ||
-                    (columnName.Equals("rowVersion") && !rowVersion.Checked)
-                    )
+                //Retrieve column schema into a DataTable.
+                schemaTable = myReader.GetSchemaTable();
+                int i = 0;
+                //For each field in the table...
+                foreach (DataRow myField in schemaTable.Rows)
                 {
-                    continue;
+
+
+                    columns[i, 0] = myField["ColumnName"].ToString();
+                    columns[i, 1] = myField["DataType"].ToString();
+                    columns[i, 2] = myField["ColumnSize"].ToString();
+                    columns[i, 3] = myField["AllowDBNull"].ToString();
+
+                    string columnName = myField["ColumnName"].ToString();
+
+                    if ((columnName.Equals("createdDate") && !createdDate.Checked) ||
+                        (columnName.Equals("modifiedDate") && !modifiedDate.Checked) ||
+                        (columnName.Equals("createdBy") && !createdBy.Checked) ||
+                        (columnName.Equals("modifiedBy") && !modifiedBy.Checked) ||
+                        (columnName.Equals("rowVersion") && !rowVersion.Checked)
+                        )
+                    {
+                        continue;
+                    }
+
+
+                    string columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
+                    columnNameCamel = columnNameCamel.Replace("ID", "Id");
+
+                    string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                    string dataType = myField["DataType"].ToString().Replace("System.", "").Replace("Int16", "short").Replace("Int32", "int").Replace("Int", "int").Replace("String", "string").Replace("Boolean", "bool");
+                    int size = Convert.ToInt32(myField["ColumnSize"]);
+                    bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                    bool IsKey = Convert.ToBoolean(myField["IsKey"]);
+                    if (isNullable)
+                    {
+                        if (!dataType.Equals("string"))
+                        {
+                            dataType = dataType + "?";
+                        }
+                    }
+                    else if (RequiredAnn.Checked && !IsKey && !(columnName.Equals("createdDate") ||
+                                                                columnName.Equals("modifiedDate") ||
+                                                                columnName.Equals("createdBy") ||
+                                                                columnName.Equals("modifiedBy") ||
+                                                                columnName.Equals("rowVersion")))
+                    {
+                        code = code + @"[Required(ErrorMessage = ""{0} value is empty"")]" + n;
+                    }
+
+                    if (IsKey & HiddenInputAnn.Checked)
+                    {
+                        code = code + "[HiddenInput(DisplayValue = false)]" + n;
+                    }
+                    else if (DisplayAnn.Checked)
+                    {
+                        code = code + @"[Display(Name = """ + displayName + @""")]" + n;
+                    }
+                    if (dataType.Equals("string") & StringLengthAnn.Checked)
+                    {
+                        code = code + @"[StringLength(" + size + @", ErrorMessage = ""The length of {0} exceeds the limit of {1} characters!"")]" + n;
+                    }
+
+                    code = code + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
+
+                    toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
+                    toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
+                    toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
+                    i++;
                 }
 
+                //Always close the DataReader and connection.
+                myReader.Close();
 
-                string columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
-                columnNameCamel = columnNameCamel.Replace("ID", "Id");
+                PK(tableName);
 
-                string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
-                string dataType = myField["DataType"].ToString().Replace("System.", "").Replace("Int16", "short").Replace("Int32", "int").Replace("Int", "int").Replace("String", "string").Replace("Boolean", "bool");
-                int size = Convert.ToInt32(myField["ColumnSize"]);
-                bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                bool IsKey = Convert.ToBoolean(myField["IsKey"]);
-                if (isNullable)
+                foreach (DataGridViewRow itemm in PKGV.Rows)
                 {
-                    if (!dataType.Equals("string"))
+                    if (itemm.Cells[0].Value == null)
                     {
-                        dataType = dataType + "?";
+                        continue;
+                    }
+
+                    string FKTableName = "";
+                    string FKTableNamePlurar = "";
+                    string FKTableNameVM = "";
+
+                    if (itemm.Cells[6].Value != null)
+                    {
+                        FKTableName = itemm.Cells[6].Value.ToString();
+                        FKTableNamePlurar = FKTableName + "s";
+                        if (FKTableName.Last().Equals('y'))
+                        {
+                            //agency agenc ies
+                            FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
+                        }
+                        FKTableNameVM = FKTableName + "ViewModel";
+                        code = code + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
+
                     }
                 }
-                else if (RequiredAnn.Checked && !IsKey && !(columnName.Equals("createdDate") ||
-                                                            columnName.Equals("modifiedDate") ||
-                                                            columnName.Equals("createdBy") ||
-                                                            columnName.Equals("modifiedBy") ||
-                                                            columnName.Equals("rowVersion")))
-                {
-                    code = code + @"[Required(ErrorMessage = ""{0} value is empty"")]" + n;
-                }
 
-                if (IsKey & HiddenInputAnn.Checked)
-                {
-                    code = code + "[HiddenInput(DisplayValue = false)]" + n;
-                }
-                else if (DisplayAnn.Checked)
-                {
-                    code = code + @"[Display(Name = """ + displayName + @""")]" + n;
-                }
-                if (dataType.Equals("string") & StringLengthAnn.Checked)
-                {
-                    code = code + @"[StringLength(" + size + @", ErrorMessage = ""The length of {0} exceeds the limit of {1} characters!"")]" + n;
-                }
 
-                code = code + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
 
-                toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
-                toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
-                toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
-                i++;
+                code = code + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
+                code = code + toEntityP + n + @"return entity;" + n + @"}" + n + n;
+                code = code + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
+                code = code + n + "}" + n;
+                CodeText.Text = code;
+                CodeText.Focus();
+                Clipboard.SetText(CodeText.Text);
             }
-
-            //Always close the DataReader and connection.
-            myReader.Close();
-
-            PK(tableName);
-
-            foreach (DataGridViewRow itemm in PKGV.Rows)
-            {
-                if (itemm.Cells[0].Value == null)
-                {
-                    continue;
-                }
-
-                string FKTableName = "";
-                string FKTableNamePlurar = "";
-                string FKTableNameVM = "";
-
-                if (itemm.Cells[6].Value != null)
-                {
-                    FKTableName = itemm.Cells[6].Value.ToString();
-                    FKTableNamePlurar = FKTableName + "s";
-                    if (FKTableName.Last().Equals('y'))
-                    {
-                        //agency agenc ies
-                        FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
-                    }
-                    FKTableNameVM = FKTableName + "ViewModel";
-                    code = code + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
-
-                }
-            }
-
-
-
-            code = code + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
-            code = code + toEntityP + n + @"return entity;" + n + @"}" + n + n;
-            code = code + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
-            code = code + n + "}" + n;
-            CodeText.Text = code;
-            CodeText.Focus();
-            Clipboard.SetText(CodeText.Text);
         }
 
         private void TableCB_SelectedValueChanged(object sender, EventArgs e)
@@ -537,8 +544,11 @@ namespace ViewModelGenerator
 
         private void QueueBtn_Click(object sender, EventArgs e)
         {
-
-            if (TableGrid.Rows.Count > 1)
+            if (TableNameRepo.SelectedIndex == -1)
+            {
+                MessageBox.Show("Are you kidding me!");
+            }
+            else if (TableGrid.Rows.Count > 1)
             {
 
                 if (!TableGrid.Rows
@@ -598,7 +608,7 @@ namespace ViewModelGenerator
             PKGV.AutoGenerateColumns = true;
             PKGV.DataSource = ds;
             PKGV.DataMember = ds.Tables[0].TableName;
-           
+
 
         }
 
@@ -1159,7 +1169,7 @@ namespace ViewModelGenerator
 
                 #endregion
                 code = code + "#endregion" + n + n;
-             
+
             }
             //Always close the DataReader and connection.
             ActionsResult.Text = code;
