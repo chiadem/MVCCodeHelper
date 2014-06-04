@@ -396,7 +396,7 @@ namespace ViewModelGenerator
                 #region GetTableName
 
                 code = code + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
-                code = code + "var result = await db." + tableNameplural + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
+                code = code + "var result = await db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
                 code = code + @"return result != null ? " + viewModelName + ".ToModel(result) : null;" + n + "}" + n + n;
 
@@ -407,7 +407,7 @@ namespace ViewModelGenerator
                 code = code + @"
                     public List<" + viewModelName + @"> Get" + tableNameplural + @"List()
                     {
-                        return db." + tableNameplural + @".Select(" + viewModelName + @".ToModel).ToList();
+                        return db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
                     }";
                 #endregion
                 myReader.Close();
@@ -435,7 +435,7 @@ namespace ViewModelGenerator
 
                     code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                            FKIdFixed + ")" + n + "{";
-                    code = code + " var result = db." + tableNameplural + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                    code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                            ");" + n;
                     code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                 }
@@ -452,14 +452,14 @@ namespace ViewModelGenerator
             {
             try
             {
-                db." + tableNameplural + @".Add(model.ToEntity());
+                db." + tableName + @".Add(model.ToEntity());
                 await db.SaveChangesAsync();
                 Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");
                 return true;
             }
             catch (Exception ex)
             {
-                Log.ErrorException(""Failed to add " + tableName + @" with id  "" + model." + primaryKeyCamel + @", ex);
+                Log.Error(""Failed to add " + tableName + @" with id  "" + model." + primaryKeyCamel + @", ex);
                 return false;
             }" + n + "}" + n + n;
 
@@ -471,7 +471,7 @@ namespace ViewModelGenerator
         {
             try
             {
-                var entity = await db." + tableNameplural + @".FirstOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
+                var entity = await db." + tableName + @".FirstOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
                 entity = model.ToEntity(entity);
                 db.Entry(entity).State = EntityState.Modified;
                 await db.SaveChangesAsync();
@@ -480,7 +480,7 @@ namespace ViewModelGenerator
             }
             catch (Exception ex)
             {
-                Log.ErrorException(""Failed to update " + tableName + @" with id "" + model." + primaryKeyCamel + @", ex);
+                Log.Error(""Failed to update " + tableName + @" with id "" + model." + primaryKeyCamel + @", ex);
                 return false;
             }
         }" + n + n;
@@ -495,10 +495,10 @@ namespace ViewModelGenerator
         {
             try
             {
-                var result = db." + tableNameplural + @".FirstOrDefault(e => e." + primaryKey + @" == id);
+                var result = db." + tableName + @".FirstOrDefault(e => e." + primaryKey + @" == id);
                 if (result != null)
                 {
-                    db." + tableNameplural + @".Remove(result);
+                    db." + tableName + @".Remove(result);
                     await db.SaveChangesAsync();
 
                     Log.Info(""" + tableName + @" deleted with id "" + id);
@@ -509,7 +509,7 @@ namespace ViewModelGenerator
                 }
                 catch (Exception ex)
                 {
-                    Log.ErrorException(""Failed to delete " + tableName + @" with id "" + id, ex);
+                    Log.Error(""Failed to delete " + tableName + @" with id "" + id, ex);
                     return false;
                 }
               }
@@ -876,7 +876,7 @@ namespace ViewModelGenerator
 
                         //code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                         //       FKIdFixed + ")" + n + "{";
-                        //code = code + " var result = db." + tableNameplural + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                        //code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                         //       ");" + n;
                         //code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                     }
@@ -1060,7 +1060,7 @@ namespace ViewModelGenerator
 
                         //code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                         //       FKIdFixed + ")" + n + "{";
-                        //code = code + " var result = db." + tableNameplural + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                        //code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                         //       ");" + n;
                         //code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                     }
@@ -1125,7 +1125,7 @@ namespace ViewModelGenerator
                 public ActionResult List" + tableNameplural + @"Kendo([DataSourceRequest] DataSourceRequest request)
                 {
                     Log.Info(""" + tableName + @" called"");
-                    return Json(""_Edit" + tableName + @""", " + repoName + @".Get" + tableNameplural + @"List().ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+                    return Json(" + repoName + @".Get" + tableNameplural + @"List().ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
                 }" + n + n;
 
 
