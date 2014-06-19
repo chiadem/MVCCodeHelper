@@ -398,7 +398,14 @@ namespace ViewModelGenerator
                 code = code + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
                 code = code + "var result = await db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
-                code = code + @"return result != null ? " + viewModelName + ".ToModel(result) : null;" + n + "}" + n + n;
+
+                code = code + @"if (result != null)
+                    return " + viewModelName + @".ToModel(result);" + @"
+                else
+                {
+                    Log.Warn(""" + tableName + @" is not found id=: "" + " + parameterPK + @");
+                    return null;
+                }}";
 
                 #endregion
 
@@ -720,7 +727,6 @@ namespace ViewModelGenerator
                     var model = await " + repoName + @".Get" + tableName + @"(id.Value);
                     if (model == null)
                     {
-                        Log.Warn(""" + tableName + @" is not found id=: "" + id);
                         return HttpNotFound();
                     }
                     Log.Info(""" + actionName + @" is called id: "" + id);
@@ -817,7 +823,6 @@ namespace ViewModelGenerator
                     var model = await " + repoName + @".Get" + tableName + @"(id.Value);
                     if (model == null)
                     {
-                        Log.Warn(""" + tableName + @" is not found id=: "" + id);
                         return HttpNotFound();
                     }
                     Log.Info(""" + actionName + @" is called id: "" + id);
