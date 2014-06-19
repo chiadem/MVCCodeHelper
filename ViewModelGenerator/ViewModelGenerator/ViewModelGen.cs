@@ -1082,7 +1082,7 @@ namespace ViewModelGenerator
                 public ActionResult List" + tableNameplural + @"Json()
                 {
                     Log.Info(""" + tableName + @" called"");
-                    return Json(""_Edit" + tableName + @""", " + repoName + @".Get" + tableNameplural + @"List(), JsonRequestBehavior.AllowGet);
+                    return Json(" + repoName + @".Get" + tableNameplural + @"List(), JsonRequestBehavior.AllowGet);
                 }" + n + n;
 
 
@@ -1164,7 +1164,7 @@ namespace ViewModelGenerator
                             }" + n + n;
                 }
                 code = code + @"
-                #endregion";
+                #endregion"+n+n;
 
                 #endregion
                 code = code + "#endregion" + n + n;
