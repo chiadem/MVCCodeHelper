@@ -478,7 +478,7 @@ namespace ViewModelGenerator
         {
             try
             {
-                var entity = await db." + tableName + @".FirstOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
+                var entity = await db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
                 entity = model.ToEntity(entity);
                 db.Entry(entity).State = EntityState.Modified;
                 await db.SaveChangesAsync();
@@ -502,7 +502,7 @@ namespace ViewModelGenerator
         {
             try
             {
-                var result = db." + tableName + @".FirstOrDefault(e => e." + primaryKey + @" == id);
+                var result = await db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == id);
                 if (result != null)
                 {
                     db." + tableName + @".Remove(result);
