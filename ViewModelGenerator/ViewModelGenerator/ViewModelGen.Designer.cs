@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewModelGen));
             this.DBSettings = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.rowVersion = new System.Windows.Forms.CheckBox();
             this.modifiedDate = new System.Windows.Forms.CheckBox();
             this.createdDate = new System.Windows.Forms.CheckBox();
@@ -84,6 +87,7 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -98,16 +102,21 @@
             this.DBSettings.Controls.Add(this.tabPage2);
             this.DBSettings.Controls.Add(this.tabPage3);
             this.DBSettings.Controls.Add(this.tabPage1);
-            this.DBSettings.Location = new System.Drawing.Point(8, 8);
+            this.DBSettings.Location = new System.Drawing.Point(8, 11);
             this.DBSettings.Margin = new System.Windows.Forms.Padding(2);
             this.DBSettings.Name = "DBSettings";
             this.DBSettings.SelectedIndex = 0;
-            this.DBSettings.Size = new System.Drawing.Size(1336, 741);
+            this.DBSettings.Size = new System.Drawing.Size(1378, 738);
             this.DBSettings.TabIndex = 0;
             this.DBSettings.SelectedIndexChanged += new System.EventHandler(this.DBSettings_SelectedIndexChanged);
             // 
             // tabPage2
             // 
+            this.tabPage2.BackColor = System.Drawing.Color.White;
+            this.tabPage2.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
+            this.tabPage2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage2.Controls.Add(this.label11);
+            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.rowVersion);
             this.tabPage2.Controls.Add(this.modifiedDate);
             this.tabPage2.Controls.Add(this.createdDate);
@@ -130,10 +139,31 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(1328, 715);
+            this.tabPage2.Size = new System.Drawing.Size(1370, 712);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Generate View Model ";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(20, 243);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(101, 13);
+            this.label11.TabIndex = 28;
+            this.label11.Text = "ViewModel Code";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(688, 243);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(156, 13);
+            this.label12.TabIndex = 27;
+            this.label12.Text = "Click inside to copy to clipboard";
             // 
             // rowVersion
             // 
@@ -193,10 +223,11 @@
             this.DisplayAnn.Location = new System.Drawing.Point(111, 148);
             this.DisplayAnn.Margin = new System.Windows.Forms.Padding(2);
             this.DisplayAnn.Name = "DisplayAnn";
-            this.DisplayAnn.Size = new System.Drawing.Size(97, 17);
+            this.DisplayAnn.Size = new System.Drawing.Size(127, 17);
             this.DisplayAnn.TabIndex = 13;
-            this.DisplayAnn.Text = "Display (Name)";
+            this.DisplayAnn.Text = "Smart Display (Name)";
             this.DisplayAnn.UseVisualStyleBackColor = true;
+            this.DisplayAnn.CheckedChanged += new System.EventHandler(this.DisplayAnn_CheckedChanged);
             // 
             // checkBox1
             // 
@@ -219,9 +250,9 @@
             this.RequiredAnn.Location = new System.Drawing.Point(245, 170);
             this.RequiredAnn.Margin = new System.Windows.Forms.Padding(2);
             this.RequiredAnn.Name = "RequiredAnn";
-            this.RequiredAnn.Size = new System.Drawing.Size(163, 17);
+            this.RequiredAnn.Size = new System.Drawing.Size(232, 17);
             this.RequiredAnn.TabIndex = 13;
-            this.RequiredAnn.Text = "Required for not null columns";
+            this.RequiredAnn.Text = "Mark as Required for the \"not null\" columns";
             this.RequiredAnn.UseVisualStyleBackColor = true;
             // 
             // StringLengthAnn
@@ -232,9 +263,9 @@
             this.StringLengthAnn.Location = new System.Drawing.Point(246, 149);
             this.StringLengthAnn.Margin = new System.Windows.Forms.Padding(2);
             this.StringLengthAnn.Name = "StringLengthAnn";
-            this.StringLengthAnn.Size = new System.Drawing.Size(86, 17);
+            this.StringLengthAnn.Size = new System.Drawing.Size(111, 17);
             this.StringLengthAnn.TabIndex = 13;
-            this.StringLengthAnn.Text = "StringLength";
+            this.StringLengthAnn.Text = "Auto StringLength";
             this.StringLengthAnn.UseVisualStyleBackColor = true;
             // 
             // modifiedBy
@@ -285,12 +316,13 @@
             // 
             // GenB
             // 
-            this.GenB.Location = new System.Drawing.Point(111, 202);
+            this.GenB.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
+            this.GenB.Location = new System.Drawing.Point(22, 206);
             this.GenB.Margin = new System.Windows.Forms.Padding(2);
             this.GenB.Name = "GenB";
-            this.GenB.Size = new System.Drawing.Size(366, 25);
+            this.GenB.Size = new System.Drawing.Size(455, 25);
             this.GenB.TabIndex = 11;
-            this.GenB.Text = "Generate and Copy to Clipboard";
+            this.GenB.Text = "Generate Code";
             this.GenB.UseVisualStyleBackColor = true;
             this.GenB.Click += new System.EventHandler(this.GenB_Click);
             // 
@@ -298,12 +330,13 @@
             // 
             this.CodeText.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CodeText.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.CodeText.Location = new System.Drawing.Point(22, 242);
+            this.CodeText.Location = new System.Drawing.Point(22, 258);
             this.CodeText.Margin = new System.Windows.Forms.Padding(2);
             this.CodeText.Name = "CodeText";
-            this.CodeText.Size = new System.Drawing.Size(1257, 446);
+            this.CodeText.Size = new System.Drawing.Size(822, 430);
             this.CodeText.TabIndex = 10;
             this.CodeText.Text = "";
+            this.CodeText.Click += new System.EventHandler(this.CodeText_Click);
             // 
             // label1
             // 
@@ -334,6 +367,7 @@
             this.TableCB.SelectedIndexChanged += new System.EventHandler(this.TableCB_SelectedIndexChanged);
             this.TableCB.SelectedValueChanged += new System.EventHandler(this.TableCB_SelectedValueChanged);
             this.TableCB.Click += new System.EventHandler(this.TableCB_Click);
+            this.TableCB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TableCB_KeyDown);
             // 
             // TableNameLabel
             // 
@@ -347,6 +381,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
+            this.tabPage3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage3.Controls.Add(this.label13);
             this.tabPage3.Controls.Add(this.isPartial);
             this.tabPage3.Controls.Add(this.ActionsResult);
             this.tabPage3.Controls.Add(this.label9);
@@ -369,7 +406,7 @@
             this.tabPage3.Controls.Add(this.label4);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1328, 715);
+            this.tabPage3.Size = new System.Drawing.Size(1370, 712);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Generate Repo & Controller";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -377,11 +414,11 @@
             // isPartial
             // 
             this.isPartial.AutoSize = true;
-            this.isPartial.Location = new System.Drawing.Point(623, 132);
+            this.isPartial.Location = new System.Drawing.Point(155, 132);
             this.isPartial.Margin = new System.Windows.Forms.Padding(2);
             this.isPartial.Name = "isPartial";
             this.isPartial.Size = new System.Drawing.Size(84, 17);
-            this.isPartial.TabIndex = 29;
+            this.isPartial.TabIndex = 15;
             this.isPartial.Text = "PartialView?";
             this.isPartial.UseVisualStyleBackColor = true;
             // 
@@ -389,11 +426,11 @@
             // 
             this.ActionsResult.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActionsResult.ForeColor = System.Drawing.Color.DarkGreen;
-            this.ActionsResult.Location = new System.Drawing.Point(898, 195);
+            this.ActionsResult.Location = new System.Drawing.Point(430, 195);
             this.ActionsResult.Margin = new System.Windows.Forms.Padding(2);
             this.ActionsResult.Name = "ActionsResult";
-            this.ActionsResult.Size = new System.Drawing.Size(406, 412);
-            this.ActionsResult.TabIndex = 28;
+            this.ActionsResult.Size = new System.Drawing.Size(406, 442);
+            this.ActionsResult.TabIndex = 19;
             this.ActionsResult.Text = "";
             this.ActionsResult.Click += new System.EventHandler(this.ActionsResult_Click);
             // 
@@ -401,7 +438,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(895, 180);
+            this.label9.Location = new System.Drawing.Point(427, 180);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(94, 13);
@@ -412,7 +449,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(477, 180);
+            this.label8.Location = new System.Drawing.Point(9, 180);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(70, 13);
@@ -422,7 +459,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(487, 111);
+            this.label7.Location = new System.Drawing.Point(19, 111);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(82, 13);
@@ -432,7 +469,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(487, 93);
+            this.label5.Location = new System.Drawing.Point(19, 93);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 13);
@@ -441,25 +478,26 @@
             // 
             // ControllerNameTB
             // 
-            this.ControllerNameTB.Location = new System.Drawing.Point(623, 108);
+            this.ControllerNameTB.Location = new System.Drawing.Point(155, 108);
             this.ControllerNameTB.Margin = new System.Windows.Forms.Padding(2);
             this.ControllerNameTB.Name = "ControllerNameTB";
             this.ControllerNameTB.Size = new System.Drawing.Size(333, 20);
-            this.ControllerNameTB.TabIndex = 24;
+            this.ControllerNameTB.TabIndex = 14;
             // 
             // RepoNameTB
             // 
-            this.RepoNameTB.Location = new System.Drawing.Point(623, 90);
+            this.RepoNameTB.Location = new System.Drawing.Point(155, 90);
             this.RepoNameTB.Margin = new System.Windows.Forms.Padding(2);
             this.RepoNameTB.Name = "RepoNameTB";
             this.RepoNameTB.Size = new System.Drawing.Size(333, 20);
-            this.RepoNameTB.TabIndex = 25;
+            this.RepoNameTB.TabIndex = 13;
             this.RepoNameTB.Text = "Repo";
+            this.RepoNameTB.TextChanged += new System.EventHandler(this.RepoNameTB_TextChanged);
             // 
             // FKGV
             // 
             this.FKGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.FKGV.Location = new System.Drawing.Point(269, 487);
+            this.FKGV.Location = new System.Drawing.Point(1109, 510);
             this.FKGV.Name = "FKGV";
             this.FKGV.Size = new System.Drawing.Size(194, 150);
             this.FKGV.TabIndex = 19;
@@ -468,7 +506,7 @@
             // PKGV
             // 
             this.PKGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PKGV.Location = new System.Drawing.Point(12, 487);
+            this.PKGV.Location = new System.Drawing.Point(863, 510);
             this.PKGV.Name = "PKGV";
             this.PKGV.Size = new System.Drawing.Size(240, 150);
             this.PKGV.TabIndex = 19;
@@ -476,6 +514,8 @@
             // 
             // TableGrid
             // 
+            this.TableGrid.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.TableGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TableGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TableGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CTableName,
@@ -483,9 +523,9 @@
             this.CRepoName,
             this.CController,
             this.isPartialView});
-            this.TableGrid.Location = new System.Drawing.Point(12, 18);
+            this.TableGrid.Location = new System.Drawing.Point(850, 153);
             this.TableGrid.Name = "TableGrid";
-            this.TableGrid.Size = new System.Drawing.Size(463, 646);
+            this.TableGrid.Size = new System.Drawing.Size(513, 541);
             this.TableGrid.TabIndex = 18;
             // 
             // CTableName
@@ -515,12 +555,15 @@
             // 
             // QueueBtn
             // 
-            this.QueueBtn.Location = new System.Drawing.Point(480, 153);
+            this.QueueBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.QueueBtn.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
+            this.QueueBtn.Location = new System.Drawing.Point(155, 153);
             this.QueueBtn.Margin = new System.Windows.Forms.Padding(2);
             this.QueueBtn.Name = "QueueBtn";
-            this.QueueBtn.Size = new System.Drawing.Size(490, 25);
-            this.QueueBtn.TabIndex = 17;
-            this.QueueBtn.Text = "<---- Add to queue";
+            this.QueueBtn.Size = new System.Drawing.Size(681, 25);
+            this.QueueBtn.TabIndex = 16;
+            this.QueueBtn.Text = "Add to queue -------->";
+            this.QueueBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.QueueBtn.UseVisualStyleBackColor = true;
             this.QueueBtn.Click += new System.EventHandler(this.QueueBtn_Click);
             // 
@@ -528,29 +571,30 @@
             // 
             this.RepoCodeText.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RepoCodeText.ForeColor = System.Drawing.Color.Chocolate;
-            this.RepoCodeText.Location = new System.Drawing.Point(480, 195);
+            this.RepoCodeText.Location = new System.Drawing.Point(12, 195);
             this.RepoCodeText.Margin = new System.Windows.Forms.Padding(2);
             this.RepoCodeText.Name = "RepoCodeText";
-            this.RepoCodeText.Size = new System.Drawing.Size(395, 412);
-            this.RepoCodeText.TabIndex = 15;
+            this.RepoCodeText.Size = new System.Drawing.Size(395, 442);
+            this.RepoCodeText.TabIndex = 18;
             this.RepoCodeText.Text = "";
             this.RepoCodeText.Click += new System.EventHandler(this.RepoCodeText_Click);
             // 
             // RepoBtn
             // 
-            this.RepoBtn.Location = new System.Drawing.Point(480, 623);
+            this.RepoBtn.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
+            this.RepoBtn.Location = new System.Drawing.Point(12, 653);
             this.RepoBtn.Margin = new System.Windows.Forms.Padding(2);
             this.RepoBtn.Name = "RepoBtn";
-            this.RepoBtn.Size = new System.Drawing.Size(846, 41);
-            this.RepoBtn.TabIndex = 14;
-            this.RepoBtn.Text = "Generate";
+            this.RepoBtn.Size = new System.Drawing.Size(824, 41);
+            this.RepoBtn.TabIndex = 17;
+            this.RepoBtn.Text = "Generate Code";
             this.RepoBtn.UseVisualStyleBackColor = true;
             this.RepoBtn.Click += new System.EventHandler(this.RepoBtn_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(487, 51);
+            this.label3.Location = new System.Drawing.Point(19, 51);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(72, 13);
@@ -559,7 +603,7 @@
             // 
             // RegionTB
             // 
-            this.RegionTB.Location = new System.Drawing.Point(623, 48);
+            this.RegionTB.Location = new System.Drawing.Point(155, 48);
             this.RegionTB.Margin = new System.Windows.Forms.Padding(2);
             this.RegionTB.Name = "RegionTB";
             this.RegionTB.Size = new System.Drawing.Size(333, 20);
@@ -568,19 +612,21 @@
             // TableNameRepo
             // 
             this.TableNameRepo.FormattingEnabled = true;
-            this.TableNameRepo.Location = new System.Drawing.Point(623, 17);
+            this.TableNameRepo.Location = new System.Drawing.Point(155, 17);
             this.TableNameRepo.Margin = new System.Windows.Forms.Padding(2);
             this.TableNameRepo.Name = "TableNameRepo";
             this.TableNameRepo.Size = new System.Drawing.Size(333, 21);
             this.TableNameRepo.TabIndex = 11;
+            this.TableNameRepo.Tag = "Hit Enter to add to queue";
             this.TableNameRepo.SelectedIndexChanged += new System.EventHandler(this.TableNameRepo_SelectedIndexChanged);
             this.TableNameRepo.Click += new System.EventHandler(this.TableNameRepo_Click);
+            this.TableNameRepo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TableNameRepo_KeyDown);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(1148, 180);
+            this.label10.Location = new System.Drawing.Point(680, 180);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(156, 13);
@@ -591,7 +637,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(719, 180);
+            this.label6.Location = new System.Drawing.Point(251, 180);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(156, 13);
@@ -601,7 +647,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(487, 22);
+            this.label4.Location = new System.Drawing.Point(19, 22);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(34, 13);
@@ -610,6 +656,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
+            this.tabPage1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.tabPage1.Controls.Add(this.DatabaseCB);
             this.tabPage1.Controls.Add(this.TestB);
             this.tabPage1.Controls.Add(this.PassTB);
@@ -640,6 +688,7 @@
             // 
             // TestB
             // 
+            this.TestB.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
             this.TestB.Location = new System.Drawing.Point(143, 114);
             this.TestB.Margin = new System.Windows.Forms.Padding(2);
             this.TestB.Name = "TestB";
@@ -715,15 +764,30 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(847, 137);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(140, 13);
+            this.label13.TabIndex = 28;
+            this.label13.Text = "Tables to be processed";
+            // 
             // ViewModelGen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1345, 717);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(1387, 752);
             this.Controls.Add(this.DBSettings);
+            this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ViewModelGen";
-            this.Text = "MVC Code Helper";
+            this.Text = "CHI .NET MVC Code Helper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewModelGen_FormClosing);
             this.Load += new System.EventHandler(this.ViewModelGen_Load);
             this.DBSettings.ResumeLayout(false);
@@ -798,5 +862,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CRepoName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CController;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isPartialView;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
     }
 }

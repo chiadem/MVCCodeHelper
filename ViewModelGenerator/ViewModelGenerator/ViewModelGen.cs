@@ -145,7 +145,7 @@ namespace ViewModelGenerator
         {
             if (TableCB.SelectedIndex == -1)
             {
-                MessageBox.Show("Select a table man!");
+                MessageBox.Show("Select a table first bro!");
 
             }
             else
@@ -293,7 +293,7 @@ namespace ViewModelGenerator
                 code = code + n + "}" + n;
                 CodeText.Text = code;
                 CodeText.Focus();
-                Clipboard.SetText(CodeText.Text);
+                //  Clipboard.SetText(CodeText.Text);
             }
         }
 
@@ -306,6 +306,9 @@ namespace ViewModelGenerator
         private void RepoBtn_Click(object sender, EventArgs e)
         {
 
+            if (TableGrid.Rows.Count == 0 || TableGrid.Rows[0].Cells[0].Value == null)
+                MessageBox.Show("Add at least a table to the queue! \n Or make sure all table names are set in the queue.");
+            
 
             SqlCommand cmd = new SqlCommand();
             DataTable schemaTable;
@@ -1164,7 +1167,7 @@ namespace ViewModelGenerator
                             }" + n + n;
                 }
                 code = code + @"
-                #endregion"+n+n;
+                #endregion" + n + n;
 
                 #endregion
                 code = code + "#endregion" + n + n;
@@ -1246,6 +1249,39 @@ namespace ViewModelGenerator
         private void ViewModelGen_FormClosing(object sender, FormClosingEventArgs e)
         {
             DBConnection.Close();
+        }
+
+        private void DisplayAnn_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RepoNameTB_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TableNameRepo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                QueueBtn.PerformClick();
+            }
+        }
+
+        private void TableCB_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                GenB.PerformClick();
+            }
+        }
+
+        private void CodeText_Click(object sender, EventArgs e)
+        {
+            CodeText.SelectAll();
+            if (!string.IsNullOrEmpty(CodeText.Text))
+                Clipboard.SetText(CodeText.Text);
         }
 
     }
