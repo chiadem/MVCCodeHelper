@@ -22,16 +22,5 @@ namespace CHI_MVCCodeHelper.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=50.203.235.7;Initial Catalog=wt;Persist Security Info=True;User ID=wt" +
-            "master")]
-        public string DBConnectionString {
-            get {
-                return ((string)(this["DBConnectionString"]));
-            }
-        }
     }
 }
