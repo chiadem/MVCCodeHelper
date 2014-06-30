@@ -52,6 +52,7 @@
             this.TableCB = new System.Windows.Forms.ComboBox();
             this.TableNameLabel = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
             this.isPartial = new System.Windows.Forms.CheckBox();
             this.ActionsResult = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -87,7 +88,6 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -102,7 +102,7 @@
             this.DBSettings.Controls.Add(this.tabPage2);
             this.DBSettings.Controls.Add(this.tabPage3);
             this.DBSettings.Controls.Add(this.tabPage1);
-            this.DBSettings.Location = new System.Drawing.Point(8, 11);
+            this.DBSettings.Location = new System.Drawing.Point(11, 11);
             this.DBSettings.Margin = new System.Windows.Forms.Padding(2);
             this.DBSettings.Name = "DBSettings";
             this.DBSettings.SelectedIndex = 0;
@@ -411,6 +411,17 @@
             this.tabPage3.Text = "Generate Repo & Controller";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(847, 137);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(292, 13);
+            this.label13.TabIndex = 28;
+            this.label13.Text = "Queue (tables to be processed to generate codes)";
+            // 
             // isPartial
             // 
             this.isPartial.AutoSize = true;
@@ -671,7 +682,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(1328, 715);
+            this.tabPage1.Size = new System.Drawing.Size(1370, 712);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "DB Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -763,17 +774,6 @@
             this.ServerLabel.Size = new System.Drawing.Size(38, 13);
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(847, 137);
-            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(140, 13);
-            this.label13.TabIndex = 28;
-            this.label13.Text = "Tables to be processed";
             // 
             // ViewModelGen
             // 

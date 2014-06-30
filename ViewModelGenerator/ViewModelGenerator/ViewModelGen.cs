@@ -34,7 +34,8 @@ namespace ViewModelGenerator
                 db = Settings.Get("DBName", "");
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(server) || string.IsNullOrEmpty(db))
                 {
-
+                    DBSettings.SelectedTab = tabPage1;
+                    MessageBox.Show("Set your DB settings before you start");
                 }
                 else
                 {
@@ -539,7 +540,7 @@ namespace ViewModelGenerator
         {
             if (TableNameRepo.SelectedItem != null)
             {
-                RegionTB.Text = TableNameRepo.SelectedItem.ToString();
+                RegionTB.Text = TableNameRepo.SelectedItem.ToString();     
             }
         }
 
@@ -556,7 +557,7 @@ namespace ViewModelGenerator
         {
             if (TableNameRepo.SelectedIndex == -1)
             {
-                MessageBox.Show("Are you kidding me!");
+                MessageBox.Show("Are you kidding me! Select a table first then click this button again!");
             }
             else if (TableGrid.Rows.Count > 1)
             {
