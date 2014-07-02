@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ViewModelGenerator
+namespace CHI_MVCCodeHelper
 {
     static class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace ViewModelGenerator
+﻿namespace CHI_MVCCodeHelper
 {
     partial class ViewModelGen
     {

@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MVCCodeHelper;
 
-namespace ViewModelGenerator
+namespace CHI_MVCCodeHelper
 {
     public partial class ViewModelGen : Form
     {
@@ -25,35 +19,27 @@ namespace ViewModelGenerator
 
         private void ViewModelGen_Load(object sender, EventArgs e)
         {
-            try
+            string user = Settings.Get("User", "");
+            string pass = Settings.Get("Password", "");
+            string server = Settings.Get("Server", "");
+            string db = Settings.Get("DBName", "");
+            if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(server) || string.IsNullOrEmpty(db))
             {
-                string user, pass, server, db;
-                user = Settings.Get("User", "");
-                pass = Settings.Get("Password", "");
-                server = Settings.Get("Server", "");
-                db = Settings.Get("DBName", "");
-                if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(server) || string.IsNullOrEmpty(db))
-                {
-                    DBSettings.SelectedTab = tabPage1;
-                    MessageBox.Show("Set your DB settings before you start");
-                }
-                else
-                {
-                    UserTB.Text = user;
-                    PassTB.Text = pass;
-                    ServeTB.Text = server;
-                    DatabaseCB.Text = db;
-                    DBConnection = new SqlConnection("user id=" + user + ";" +
-                                          "password=" + pass + ";server=" + server + ";" +
-                                          "Trusted_Connection=false;" +
-                                          "database=" + db + "; " +
-                                                      "connection timeout=30");
-                    DBConnection.Open();
-                }
+                DBSettings.SelectedTab = tabPage1;
+                MessageBox.Show("Set your DB settings before you start");
             }
-            catch (Exception)
+            else
             {
-                throw;
+                UserTB.Text = user;
+                PassTB.Text = pass;
+                ServeTB.Text = server;
+                DatabaseCB.Text = db;
+                DBConnection = new SqlConnection("user id=" + user + ";" +
+                                                 "password=" + pass + ";server=" + server + ";" +
+                                                 "Trusted_Connection=false;" +
+                                                 "database=" + db + "; " +
+                                                 "connection timeout=30");
+                DBConnection.Open();
             }
         }
 
@@ -76,7 +62,7 @@ namespace ViewModelGenerator
                 Settings.Set("DBName", DatabaseCB.Text);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Failed!");
             }
@@ -156,7 +142,7 @@ namespace ViewModelGenerator
                 string tableNameplural = ToPlural(tableName);
 
                 string[,] columns = new string[100, 4];
-                string n = "\n";
+                const string n = "\n";
 
                 string code = "public  class " + viewModelName + n + "{" + n + n;
 
@@ -173,19 +159,18 @@ namespace ViewModelGenerator
 
 
 
-                SqlCommand cmd = new SqlCommand();
-                DataTable schemaTable;
-                SqlDataReader myReader;
-
+                SqlCommand cmd = new SqlCommand
+                {
+                    Connection = DBConnection,
+                    CommandText = "SELECT top 1 * FROM " + tableName
+                };
 
 
                 //Retrieve records from the Employees table into a DataReader.
-                cmd.Connection = DBConnection;
-                cmd.CommandText = "SELECT top 1 * FROM " + tableName;
-                myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+                SqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
                 //Retrieve column schema into a DataTable.
-                schemaTable = myReader.GetSchemaTable();
+                DataTable schemaTable = myReader.GetSchemaTable();
                 int i = 0;
                 //For each field in the table...
                 foreach (DataRow myField in schemaTable.Rows)
@@ -267,20 +252,16 @@ namespace ViewModelGenerator
                         continue;
                     }
 
-                    string FKTableName = "";
-                    string FKTableNamePlurar = "";
-                    string FKTableNameVM = "";
-
                     if (itemm.Cells[6].Value != null)
                     {
-                        FKTableName = itemm.Cells[6].Value.ToString();
-                        FKTableNamePlurar = FKTableName + "s";
+                        string FKTableName = itemm.Cells[6].Value.ToString();
+                        string FKTableNamePlurar = FKTableName + "s";
                         if (FKTableName.Last().Equals('y'))
                         {
                             //agency agenc ies
                             FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
                         }
-                        FKTableNameVM = FKTableName + "ViewModel";
+                        string FKTableNameVM = FKTableName + "ViewModel";
                         code = code + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
 
                     }
@@ -311,9 +292,7 @@ namespace ViewModelGenerator
                 MessageBox.Show("Add at least a table to the queue! \n Or make sure all table names are set in the queue.");
             
 
-            SqlCommand cmd = new SqlCommand();
-            DataTable schemaTable;
-            SqlDataReader myReader;
+            var cmd = new SqlCommand();
 
             string code = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
@@ -332,12 +311,12 @@ namespace ViewModelGenerator
                 //Retrieve records from the Employees table into a DataReader.
                 cmd.Connection = DBConnection;
                 cmd.CommandText = "SELECT top 1 * FROM " + tableName;
-                myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+                SqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
                 //Retrieve column schema into a DataTable.
-                schemaTable = myReader.GetSchemaTable();
+                DataTable schemaTable = myReader.GetSchemaTable();
 
-                string[,] columns = new string[100, 4];
-                string n = "\n";
+                var columns = new string[100, 4];
+                const string n = "\n";
 
                 code = code + " #region " + regionName + n + n;
 
@@ -628,8 +607,6 @@ namespace ViewModelGenerator
         {
 
             SqlCommand cmd = new SqlCommand();
-            DataTable schemaTable;
-            SqlDataReader myReader;
 
             string code = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
@@ -649,12 +626,12 @@ namespace ViewModelGenerator
                 //Retrieve records from the Employees table into a DataReader.
                 cmd.Connection = DBConnection;
                 cmd.CommandText = "SELECT top 1 * FROM " + tableName;
-                myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+                SqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
                 //Retrieve column schema into a DataTable.
-                schemaTable = myReader.GetSchemaTable();
+                DataTable schemaTable = myReader.GetSchemaTable();
 
                 string[,] columns = new string[100, 4];
-                string n = "\n";
+                const string n = "\n";
 
                 code = code + " #region " + tableName + n + n;
 
@@ -859,14 +836,13 @@ namespace ViewModelGenerator
                             continue;
                         }
 
-                        string FKColumn = "";
-                        string FKIdFixed = ""; string FKCamel = "";
+                        string FKCamel = "";
 
 
                         if (item_.Cells[3].Value != null)
                         {
-                            FKColumn = item_.Cells[3].Value.ToString();
-                            FKIdFixed = FKColumn.Replace("ID", "Id");
+                            string FKColumn = item_.Cells[3].Value.ToString();
+                            string FKIdFixed = FKColumn.Replace("ID", "Id");
                             FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                         }
 
@@ -1043,14 +1019,13 @@ namespace ViewModelGenerator
                             continue;
                         }
 
-                        string FKColumn = "";
-                        string FKIdFixed = ""; string FKCamel = "";
+                        string FKCamel = "";
 
 
                         if (item_.Cells[3].Value != null)
                         {
-                            FKColumn = item_.Cells[3].Value.ToString();
-                            FKIdFixed = FKColumn.Replace("ID", "Id");
+                            string FKColumn = item_.Cells[3].Value.ToString();
+                            string FKIdFixed = FKColumn.Replace("ID", "Id");
                             FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                         }
 
@@ -1097,13 +1072,12 @@ namespace ViewModelGenerator
                         continue;
                     }
 
-                    string FKColumn = "";
-                    string FKIdFixed = ""; string FKCamel = "";
+                    var FKIdFixed = ""; string FKCamel = "";
 
 
                     if (item_.Cells[3].Value != null)
                     {
-                        FKColumn = item_.Cells[3].Value.ToString();
+                        string FKColumn = item_.Cells[3].Value.ToString();
                         FKIdFixed = FKColumn.Replace("ID", "Id");
                         FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                     }
@@ -1145,14 +1119,13 @@ namespace ViewModelGenerator
                         continue;
                     }
 
-                    string FKColumn = "";
-                    string FKIdFixed = ""; string FKCamel = "";
+                    string FKCamel = "";
 
 
                     if (item_.Cells[3].Value != null)
                     {
-                        FKColumn = item_.Cells[3].Value.ToString();
-                        FKIdFixed = FKColumn.Replace("ID", "Id");
+                        string FKColumn = item_.Cells[3].Value.ToString();
+                        string FKIdFixed = FKColumn.Replace("ID", "Id");
                         FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                     }
 

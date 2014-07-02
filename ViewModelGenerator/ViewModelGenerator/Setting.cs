@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MVCCodeHelper
+namespace CHI_MVCCodeHelper
 {
     [Serializable]
     public static class Settings
     {
-        private static List<SettingsItem> settingsList = new List<SettingsItem>();
-        private static string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)+"\\CodeHelperSettings.set";
+        private static readonly List<SettingsItem> settingsList = new List<SettingsItem>();
+        private static readonly string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)+"\\CodeHelperSettings.set";
         public static String Get(String name, String defVal)
         {
             ReloadSettings();
@@ -20,12 +17,9 @@ namespace MVCCodeHelper
             {
                 return findSet.Value;
             }
-            else
-            {
-                settingsList.Add(new SettingsItem(name, defVal));
-                SaveSettings();
-                return defVal;
-            }
+            settingsList.Add(new SettingsItem(name, defVal));
+            SaveSettings();
+            return defVal;
         }
         public static Boolean Get(String name, Boolean defVal)
         {
@@ -42,12 +36,9 @@ namespace MVCCodeHelper
                     return defVal;
                 }
             }
-            else
-            {
-                settingsList.Add(new SettingsItem(name, defVal.ToString()));
-                SaveSettings();
-                return defVal;
-            }
+            settingsList.Add(new SettingsItem(name, defVal.ToString()));
+            SaveSettings();
+            return defVal;
         }
         public static int Get(String name, int defVal)
         {
@@ -58,12 +49,9 @@ namespace MVCCodeHelper
                 try { return int.Parse(findSet.Value); }
                 catch { return defVal; }
             }
-            else
-            {
-                settingsList.Add(new SettingsItem(name, defVal.ToString()));
-                SaveSettings();
-                return defVal;
-            }
+            settingsList.Add(new SettingsItem(name, defVal.ToString()));
+            SaveSettings();
+            return defVal;
         }
         public static void Set(String name, String val)
         {
@@ -140,8 +128,8 @@ namespace MVCCodeHelper
             }
             public SettingsItem(string name, string value)
             {
-                this.Value = value;
-                this.Name = name;
+                Value = value;
+                Name = name;
             }
         }
     }
