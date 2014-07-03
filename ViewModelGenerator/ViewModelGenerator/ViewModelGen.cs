@@ -109,6 +109,8 @@ namespace CHI_MVCCodeHelper
 
         private void TableCB_Click(object sender, EventArgs e)
         {
+            TableCB.Items.Clear();
+            
             List<string> tables = new List<string>();
 
             DataTable dt = DBConnection.GetSchema("Tables");
@@ -121,6 +123,7 @@ namespace CHI_MVCCodeHelper
                 }
             }
             tables.Sort();
+
             foreach (var item in tables)
             {
                 TableCB.Items.Add(item);
@@ -290,7 +293,7 @@ namespace CHI_MVCCodeHelper
 
             if (TableGrid.Rows.Count == 0 || TableGrid.Rows[0].Cells[0].Value == null)
                 MessageBox.Show("Add at least a table to the queue! \n Or make sure all table names are set in the queue.");
-            
+
 
             var cmd = new SqlCommand();
 
@@ -519,7 +522,7 @@ namespace CHI_MVCCodeHelper
         {
             if (TableNameRepo.SelectedItem != null)
             {
-                RegionTB.Text = TableNameRepo.SelectedItem.ToString();     
+                RegionTB.Text = TableNameRepo.SelectedItem.ToString();
             }
         }
 
@@ -816,11 +819,8 @@ namespace CHI_MVCCodeHelper
                 [HttpPost, ActionName(""Delete" + tableName + @""")]
                 public async Task<ActionResult> DeleteConfirmed" + tableName + @"(int id)
                 {
-                    var model = await " + repoName + @".Get" + tableName + @"(id);
-                    await Task.Run(() =>
-                    {
-                        " + repoName + @".Delete" + tableName + @"Async(id);
-                    });
+                    //var model = await " + repoName + @".Get" + tableName + @"(id);
+                    await " + repoName + @".Delete" + tableName + @"Async(id);
                     return RedirectToAction(""List" + tableNameplural + @""");
                 }" + n + n;
                     #endregion
