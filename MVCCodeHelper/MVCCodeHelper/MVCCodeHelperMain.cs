@@ -109,7 +109,7 @@ namespace CHI_MVCCodeHelper
 
         private void TableCB_Click(object sender, EventArgs e)
         {
-            TableCB.Items.Clear();
+            VMTableCB.Items.Clear();
             
             List<string> tables = new List<string>();
 
@@ -126,14 +126,14 @@ namespace CHI_MVCCodeHelper
 
             foreach (var item in tables)
             {
-                TableCB.Items.Add(item);
+                VMTableCB.Items.Add(item);
             }
 
         }
 
         private void GenB_Click(object sender, EventArgs e)
         {
-            if (TableCB.SelectedIndex == -1)
+            if (VMTableCB.SelectedIndex == -1)
             {
                 MessageBox.Show("Select a table first bro!");
 
@@ -141,7 +141,7 @@ namespace CHI_MVCCodeHelper
             else
             {
                 string viewModelName = ViewModelNameTB.Text;
-                string tableName = TableCB.SelectedItem.ToString();
+                string tableName = VMTableCB.SelectedItem.ToString();
                 string tableNameplural = ToPlural(tableName);
 
                 string[,] columns = new string[100, 4];
@@ -230,7 +230,7 @@ namespace CHI_MVCCodeHelper
                     {
                         code = code + @"[Display(Name = """ + displayName + @""")]" + n;
                     }
-                    if (dataType.Equals("string") & StringLengthAnn.Checked)
+                    if (dataType.Equals("string") & StringLengthAnn.Checked && size < 2147483647)
                     {
                         code = code + @"[StringLength(" + size + @", ErrorMessage = ""The length of {0} exceeds the limit of {1} characters!"")]" + n;
                     }
@@ -284,7 +284,7 @@ namespace CHI_MVCCodeHelper
 
         private void TableCB_SelectedValueChanged(object sender, EventArgs e)
         {
-            ViewModelNameTB.Text = TableCB.SelectedItem + "ViewModel";
+            ViewModelNameTB.Text = VMTableCB.SelectedItem + "ViewModel";
 
         }
 
@@ -382,16 +382,15 @@ namespace CHI_MVCCodeHelper
                 #region GetTableName
 
                 code = code + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
-                code = code + "var result = await db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
+                code = code + "var result = await _db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
 
                 code = code + @"if (result != null)
                     return " + viewModelName + @".ToModel(result);" + @"
-                else
-                {
+           
                     Log.Warn(""" + tableName + @" is not found id=: "" + " + parameterPK + @");
                     return null;
-                }}";
+                }";
 
                 #endregion
 
@@ -400,7 +399,7 @@ namespace CHI_MVCCodeHelper
                 code = code + @"
                     public List<" + viewModelName + @"> Get" + tableNameplural + @"List()
                     {
-                        return db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
+                        return _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
                     }";
                 #endregion
                 myReader.Close();
@@ -428,15 +427,13 @@ namespace CHI_MVCCodeHelper
 
                     code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                            FKIdFixed + ")" + n + "{";
-                    code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                    code = code + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                            ");" + n;
                     code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                 }
 
                 #endregion
-
-
-
+                
                 #region AddTableNameAsync
 
                 code = code + @"
@@ -445,10 +442,23 @@ namespace CHI_MVCCodeHelper
             {
             try
             {
-                db." + tableName + @".Add(model.ToEntity());
-                await db.SaveChangesAsync();
+                _db." + tableName + @".Add(model.ToEntity());
+                await _db.SaveChangesAsync();
                 Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");
                 return true;
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errors = new List<string>();
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    errors.Add(""Entity of type "" + eve.Entry.Entity.GetType().Name + "" in state "" + eve.Entry.State + "" has the following validation errors:"");
+                    errors.AddRange(eve.ValidationErrors.Select(ve => "" Property: '"" + ve.PropertyName + ""'""+ "" Error: '"" + ve.ErrorMessage + ""'""));
+                }
+
+                Log.Error(""Failed to add " + tableName + @" with id  "" + model." + primaryKeyCamel + @" + string.Join("","", errors.ToArray()));
+                return false;
+
             }
             catch (Exception ex)
             {
@@ -464,12 +474,25 @@ namespace CHI_MVCCodeHelper
         {
             try
             {
-                var entity = await db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
+                var entity = await _db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
                 entity = model.ToEntity(entity);
-                db.Entry(entity).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _db.Entry(entity).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
                 Log.Info(""" + tableName + @" updated with id "" + model." + primaryKeyCamel + @");
                 return true;
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errors = new List<string>();
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    errors.Add(""Entity of type "" + eve.Entry.Entity.GetType().Name + "" in state "" + eve.Entry.State + "" has the following validation errors:"");
+                    errors.AddRange(eve.ValidationErrors.Select(ve => "" Property: '"" + ve.PropertyName + ""'""+ "" Error: '"" + ve.ErrorMessage + ""'""));
+                }
+
+                Log.Error(""Failed to update " + tableName + @" with id "" + model." + primaryKeyCamel + @" + "" - "" + string.Join("","", errors.ToArray()));
+                return false;
+
             }
             catch (Exception ex)
             {
@@ -488,11 +511,11 @@ namespace CHI_MVCCodeHelper
         {
             try
             {
-                var result = await db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == id);
+                var result = await _db." + tableName + @".SingleOrDefaultAsync(e => e." + primaryKey + @" == id);
                 if (result != null)
                 {
-                    db." + tableName + @".Remove(result);
-                    await db.SaveChangesAsync();
+                    _db." + tableName + @".Remove(result);
+                    await _db.SaveChangesAsync();
 
                     Log.Info(""" + tableName + @" deleted with id "" + id);
                     return true;
@@ -500,6 +523,19 @@ namespace CHI_MVCCodeHelper
                 Log.Info(""" + tableName + @" not found with id "" + id);
                 return false;
                 }
+            catch (DbEntityValidationException ex)
+            {
+                var errors = new List<string>();
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    errors.Add(""Entity of type "" + eve.Entry.Entity.GetType().Name + "" in state "" + eve.Entry.State + "" has the following validation errors:"");
+                    errors.AddRange(eve.ValidationErrors.Select(ve => "" Property: '"" + ve.PropertyName + ""'""+ "" Error: '"" + ve.ErrorMessage + ""'""));
+                }
+
+                Log.Error(""Failed to delete " + tableName + @" with id "" + id + "" - "" + string.Join("","", errors.ToArray()));
+                return false;
+
+            }
                 catch (Exception ex)
                 {
                     Log.Error(""Failed to delete " + tableName + @" with id "" + id, ex);
@@ -861,7 +897,7 @@ namespace CHI_MVCCodeHelper
 
                         //code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                         //       FKIdFixed + ")" + n + "{";
-                        //code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                        //code = code + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                         //       ");" + n;
                         //code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                     }
@@ -1044,7 +1080,7 @@ namespace CHI_MVCCodeHelper
 
                         //code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                         //       FKIdFixed + ")" + n + "{";
-                        //code = code + " var result = db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                        //code = code + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                         //       ");" + n;
                         //code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                     }
@@ -1247,7 +1283,7 @@ namespace CHI_MVCCodeHelper
         {
             if (e.KeyCode == Keys.Enter)
             {
-                GenB.PerformClick();
+                VMGenB.PerformClick();
             }
         }
 

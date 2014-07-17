@@ -45,11 +45,11 @@
             this.createdBy = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.IncludeLabel = new System.Windows.Forms.Label();
-            this.GenB = new System.Windows.Forms.Button();
+            this.VMGenB = new System.Windows.Forms.Button();
             this.CodeText = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ViewModelNameTB = new System.Windows.Forms.TextBox();
-            this.TableCB = new System.Windows.Forms.ComboBox();
+            this.VMTableCB = new System.Windows.Forms.ComboBox();
             this.TableNameLabel = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
@@ -129,11 +129,11 @@
             this.tabPage2.Controls.Add(this.createdBy);
             this.tabPage2.Controls.Add(this.label2);
             this.tabPage2.Controls.Add(this.IncludeLabel);
-            this.tabPage2.Controls.Add(this.GenB);
+            this.tabPage2.Controls.Add(this.VMGenB);
             this.tabPage2.Controls.Add(this.CodeText);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.ViewModelNameTB);
-            this.tabPage2.Controls.Add(this.TableCB);
+            this.tabPage2.Controls.Add(this.VMTableCB);
             this.tabPage2.Controls.Add(this.TableNameLabel);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
@@ -314,17 +314,17 @@
             this.IncludeLabel.TabIndex = 12;
             this.IncludeLabel.Text = "Include Defaults?";
             // 
-            // GenB
+            // VMGenB
             // 
-            this.GenB.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
-            this.GenB.Location = new System.Drawing.Point(22, 206);
-            this.GenB.Margin = new System.Windows.Forms.Padding(2);
-            this.GenB.Name = "GenB";
-            this.GenB.Size = new System.Drawing.Size(455, 25);
-            this.GenB.TabIndex = 11;
-            this.GenB.Text = "Generate Code";
-            this.GenB.UseVisualStyleBackColor = true;
-            this.GenB.Click += new System.EventHandler(this.GenB_Click);
+            this.VMGenB.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
+            this.VMGenB.Location = new System.Drawing.Point(22, 206);
+            this.VMGenB.Margin = new System.Windows.Forms.Padding(2);
+            this.VMGenB.Name = "VMGenB";
+            this.VMGenB.Size = new System.Drawing.Size(455, 25);
+            this.VMGenB.TabIndex = 11;
+            this.VMGenB.Text = "Generate Code";
+            this.VMGenB.UseVisualStyleBackColor = true;
+            this.VMGenB.Click += new System.EventHandler(this.GenB_Click);
             // 
             // CodeText
             // 
@@ -356,18 +356,18 @@
             this.ViewModelNameTB.Size = new System.Drawing.Size(366, 20);
             this.ViewModelNameTB.TabIndex = 8;
             // 
-            // TableCB
+            // VMTableCB
             // 
-            this.TableCB.FormattingEnabled = true;
-            this.TableCB.Location = new System.Drawing.Point(111, 14);
-            this.TableCB.Margin = new System.Windows.Forms.Padding(2);
-            this.TableCB.Name = "TableCB";
-            this.TableCB.Size = new System.Drawing.Size(366, 21);
-            this.TableCB.TabIndex = 7;
-            this.TableCB.SelectedIndexChanged += new System.EventHandler(this.TableCB_SelectedIndexChanged);
-            this.TableCB.SelectedValueChanged += new System.EventHandler(this.TableCB_SelectedValueChanged);
-            this.TableCB.Click += new System.EventHandler(this.TableCB_Click);
-            this.TableCB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TableCB_KeyDown);
+            this.VMTableCB.FormattingEnabled = true;
+            this.VMTableCB.Location = new System.Drawing.Point(111, 14);
+            this.VMTableCB.Margin = new System.Windows.Forms.Padding(2);
+            this.VMTableCB.Name = "VMTableCB";
+            this.VMTableCB.Size = new System.Drawing.Size(366, 21);
+            this.VMTableCB.TabIndex = 7;
+            this.VMTableCB.SelectedIndexChanged += new System.EventHandler(this.TableCB_SelectedIndexChanged);
+            this.VMTableCB.SelectedValueChanged += new System.EventHandler(this.TableCB_SelectedValueChanged);
+            this.VMTableCB.Click += new System.EventHandler(this.TableCB_Click);
+            this.VMTableCB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TableCB_KeyDown);
             // 
             // TableNameLabel
             // 
@@ -494,6 +494,7 @@
             this.ControllerNameTB.Name = "ControllerNameTB";
             this.ControllerNameTB.Size = new System.Drawing.Size(333, 20);
             this.ControllerNameTB.TabIndex = 14;
+            this.ControllerNameTB.Text = "Controller";
             // 
             // RepoNameTB
             // 
@@ -775,7 +776,7 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // ViewModelGen
+            // MVCCodeHelperMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -786,7 +787,7 @@
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "ViewModelGen";
+            this.Name = "MVCCodeHelperMain";
             this.Text = "CHI .NET MVC Code Helper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewModelGen_FormClosing);
             this.Load += new System.EventHandler(this.ViewModelGen_Load);
@@ -818,9 +819,9 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ComboBox DatabaseCB;
         private System.Windows.Forms.Label DatabaseLabel;
-        private System.Windows.Forms.ComboBox TableCB;
+        private System.Windows.Forms.ComboBox VMTableCB;
         private System.Windows.Forms.Label TableNameLabel;
-        private System.Windows.Forms.Button GenB;
+        private System.Windows.Forms.Button VMGenB;
         private System.Windows.Forms.RichTextBox CodeText;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox ViewModelNameTB;
