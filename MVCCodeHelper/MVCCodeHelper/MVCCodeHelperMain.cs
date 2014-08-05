@@ -110,7 +110,7 @@ namespace CHI_MVCCodeHelper
         private void TableCB_Click(object sender, EventArgs e)
         {
             VMTableCB.Items.Clear();
-            
+
             List<string> tables = new List<string>();
 
             DataTable dt = _dbConnection.GetSchema("Tables");
@@ -147,7 +147,7 @@ namespace CHI_MVCCodeHelper
                 string[,] columns = new string[100, 4];
                 const string n = "\n";
 
-                string code = "public  class " + viewModelName + n + "{" + n + n;
+                string vmCode = "public  class " + viewModelName + n + "{" + n + n;
 
                 string toEntity = @"public " + tableName + @" ToEntity()" + n + @"
             {" + n + @"
@@ -219,23 +219,23 @@ namespace CHI_MVCCodeHelper
                                                                 columnName.Equals("modifiedBy") ||
                                                                 columnName.Equals("rowVersion")))
                     {
-                        code = code + @"[Required(ErrorMessage = ""{0} value is empty"")]" + n;
+                        vmCode = vmCode + @"[Required(ErrorMessage = ""{0} value is empty"")]" + n;
                     }
 
                     if (IsKey & HiddenInputAnn.Checked)
                     {
-                        code = code + "[HiddenInput(DisplayValue = false)]" + n;
+                        vmCode = vmCode + "[HiddenInput(DisplayValue = false)]" + n;
                     }
                     else if (DisplayAnn.Checked)
                     {
-                        code = code + @"[Display(Name = """ + displayName + @""")]" + n;
+                        vmCode = vmCode + @"[Display(Name = """ + displayName + @""")]" + n;
                     }
                     if (dataType.Equals("string") & StringLengthAnn.Checked && size < 2147483647)
                     {
-                        code = code + @"[StringLength(" + size + @", ErrorMessage = ""The length of {0} exceeds the limit of {1} characters!"")]" + n;
+                        vmCode = vmCode + @"[StringLength(" + size + @", ErrorMessage = ""The length of {0} exceeds the limit of {1} characters!"")]" + n;
                     }
 
-                    code = code + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
+                    vmCode = vmCode + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
 
                     toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
                     toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
@@ -265,18 +265,18 @@ namespace CHI_MVCCodeHelper
                             FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
                         }
                         string FKTableNameVM = FKTableName + "ViewModel";
-                        code = code + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
+                        vmCode = vmCode + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
 
                     }
                 }
 
 
 
-                code = code + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
-                code = code + toEntityP + n + @"return entity;" + n + @"}" + n + n;
-                code = code + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
-                code = code + n + "}" + n;
-                CodeText.Text = code;
+                vmCode = vmCode + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
+                vmCode = vmCode + toEntityP + n + @"return entity;" + n + @"}" + n + n;
+                vmCode = vmCode + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
+                vmCode = vmCode + n + "}" + n;
+                CodeText.Text = vmCode;
                 CodeText.Focus();
                 //  Clipboard.SetText(CodeText.Text);
             }
@@ -284,7 +284,7 @@ namespace CHI_MVCCodeHelper
 
         private void TableCB_SelectedValueChanged(object sender, EventArgs e)
         {
-            ViewModelNameTB.Text = VMTableCB.SelectedItem + "ViewModel";
+            ViewModelNameTB.Text = VMTableCB.SelectedItem + "VM";
 
         }
 
@@ -297,7 +297,7 @@ namespace CHI_MVCCodeHelper
 
             var cmd = new SqlCommand();
 
-            string code = "";
+            string repoCode = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
             {
                 if (item.Cells[0].Value == null)
@@ -321,7 +321,7 @@ namespace CHI_MVCCodeHelper
                 var columns = new string[100, 4];
                 const string n = "\n";
 
-                code = code + " #region " + regionName + n + n;
+                repoCode = repoCode + " #region " + regionName + n + n;
 
                 string primaryKey = "";
                 string primaryKeyCamel = "";
@@ -381,11 +381,11 @@ namespace CHI_MVCCodeHelper
                 }
                 #region GetTableName
 
-                code = code + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
-                code = code + "var result = await _db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
+                repoCode = repoCode + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
+                repoCode = repoCode + "var result = await _db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
 
-                code = code + @"if (result != null)
+                repoCode = repoCode + @"if (result != null)
                     return " + viewModelName + @".ToModel(result);" + @"
            
                     Log.Warn(""" + tableName + @" is not found id=: "" + " + parameterPK + @");
@@ -396,7 +396,7 @@ namespace CHI_MVCCodeHelper
 
                 #region GetTableNameList
 
-                code = code + @"
+                repoCode = repoCode + @"
                     public List<" + viewModelName + @"> Get" + tableNameplural + @"List()
                     {
                         return _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
@@ -425,18 +425,18 @@ namespace CHI_MVCCodeHelper
                         FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                     }
 
-                    code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
+                    repoCode = repoCode + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
                            FKIdFixed + ")" + n + "{";
-                    code = code + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
+                    repoCode = repoCode + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
                            ");" + n;
-                    code = code + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
+                    repoCode = repoCode + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                 }
 
                 #endregion
-                
+
                 #region AddTableNameAsync
 
-                code = code + @"
+                repoCode = repoCode + @"
 
             public async Task<bool> Add" + tableName + @"Async(" + viewModelName + @" model)
             {
@@ -470,7 +470,7 @@ namespace CHI_MVCCodeHelper
 
                 #region UpdateTableNameAsync
 
-                code = code + @" public async Task<bool> Update" + tableName + @"Async(" + viewModelName + @" model)
+                repoCode = repoCode + @" public async Task<bool> Update" + tableName + @"Async(" + viewModelName + @" model)
         {
             try
             {
@@ -507,7 +507,7 @@ namespace CHI_MVCCodeHelper
 
                 #region DeleteTableNameAsync
 
-                code = code + @"public async Task<bool> Delete" + tableName + @"Async(int id)
+                repoCode = repoCode + @"public async Task<bool> Delete" + tableName + @"Async(int id)
         {
             try
             {
@@ -546,9 +546,9 @@ namespace CHI_MVCCodeHelper
 
                 #endregion
 
-                code = code + "#endregion" + n + n;
+                repoCode = repoCode + "#endregion" + n + n;
             }
-            RepoCodeText.Text = code;
+            RepoCodeText.Text = repoCode;
             RepoCodeText.Focus();
             RepoCodeText.SelectAll();
             ActionGen_Click();
@@ -647,7 +647,7 @@ namespace CHI_MVCCodeHelper
 
             SqlCommand cmd = new SqlCommand();
 
-            string code = "";
+            string contCode = "";
             foreach (DataGridViewRow item in TableGrid.Rows)
             {
                 if (item.Cells[0].Value == null)
@@ -659,7 +659,7 @@ namespace CHI_MVCCodeHelper
                 string repoName = item.Cells[2].Value.ToString();
                 string controllerName = item.Cells[3].Value.ToString();
                 bool isPartial = Convert.ToBoolean(item.Cells[4].Value);
-                string viewModelName = tableName + "ViewModel";
+                string viewModelName = tableName + "VM";
 
                 string tableNameplural = ToPlural(tableName);
                 //Retrieve records from the Employees table into a DataReader.
@@ -672,7 +672,7 @@ namespace CHI_MVCCodeHelper
                 string[,] columns = new string[100, 4];
                 const string n = "\n";
 
-                code = code + " #region " + tableName + n + n;
+                contCode = contCode + " #region " + tableName + n + n;
 
                 string primaryKey = "";
                 string primaryKeyCamel = "";
@@ -736,14 +736,13 @@ namespace CHI_MVCCodeHelper
                     #region TableNameDetails
 
                     string actionName = tableName + @"Details";
-                    code = code + @"
+                    contCode = contCode + @"
                 // GET: /" + controllerName + "/" + actionName + @"/5
                 public async Task<ActionResult> " + actionName + @"(int? id)
                 {
                     if (id == null)
-                    {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                    }
+
                     var model = await " + repoName + @".Get" + tableName + @"(id.Value);
                     if (model == null)
                     {
@@ -751,13 +750,13 @@ namespace CHI_MVCCodeHelper
                     }
                     Log.Info(""" + actionName + @" is called id: "" + id);
                     return View(model);
-                }" + n + n;
+                }" + n;
 
                     #endregion
 
                     #region AddTableName
 
-                    code = code + @"
+                    contCode = contCode + @"
                 // GET: /""" + controllerName + @"/Add" + tableName + @"
                 public ActionResult Add" + tableName + @"()
                 {
@@ -786,19 +785,20 @@ namespace CHI_MVCCodeHelper
 
                     #region EditTableName
 
-                    code = code + @" 
+                    contCode = contCode + @" 
                 // GET: /" + controllerName + @"/Edit" + tableName + @"
                 public async Task<ActionResult> Edit" + tableName + @"(int? id)
                 {
-                    var model = new " + viewModelName + @"();
-                    //get the " + tableName + @" from the DB
-                    if (id.HasValue)
-                    {
-                        model = await " + repoName + @".Get" + tableName + @"(id.Value);
+                    if (id == null)
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                  
+                    var model = await " + repoName + @".Get" + tableName + @"(id.Value);
+                    if (model!=null)
+                    { 
+                       return View(""Edit" + tableName + @""", model);
                     }
-                    return View(""Edit" + tableName + @""", model);
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-
 
                     // POST: /" + controllerName + @"/Edit" + tableName + @"
                     [HttpPost]
@@ -816,41 +816,40 @@ namespace CHI_MVCCodeHelper
                         }
                         return View(model);
 
-                    }" + n + n;
+                    }" + n;
                     #endregion
 
                     #region ListTableName
 
-                    code = code + @"  
+                    contCode = contCode + @"  
                 // GET: /" + controllerName + @"/List" + tableNameplural + @"
                 public ActionResult List" + tableNameplural + @"()
                 {
-                    Log.Info(""" + tableName + @" called"");
+                    //Log.Info(""" + tableName + @" called"");
                     return View(" + repoName + @".Get" + tableNameplural + @"List());
                 }" + n + n;
                     #endregion
 
                     #region DeleteTableName
 
-                    code = code + @" 
+                    contCode = contCode + @" 
                 // GET: /" + controllerName + @"/Delete" + tableName + @"/5
                 public async Task<ActionResult> Delete" + tableName + @"(int? id)
                 {
                     if (id == null)
-                    {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                    }
+                    
                     var model = await " + repoName + @".Get" + tableName + @"(id.Value);
                     if (model == null)
                     {
-                        return HttpNotFound();
+                     return new HttpStatusCodeResult(HttpStatusCode.NotFound);
                     }
                     Log.Info(""" + actionName + @" is called id: "" + id);
                     return View(model);
                 }
                 " + n;
 
-                    code = code + @"   
+                    contCode = contCode + @"   
                 // POST: /" + controllerName + @"/Delete" + tableName + @"/5
                 [HttpPost, ActionName(""Delete" + tableName + @""")]
                 public async Task<ActionResult> DeleteConfirmed" + tableName + @"(int id)
@@ -882,17 +881,16 @@ namespace CHI_MVCCodeHelper
                             FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                         }
 
-                        code = code + @"
+                        contCode = contCode + @"
                             // GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"
                             public ActionResult " + tableNameplural + @"By" + FKCamel + @"(int? id)
                             {
                                 if (id == null)
-                                {
                                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                                }
+                                
                                 Log.Info(""" + tableNameplural + @"By" + FKCamel + @" called with id: ""+id.Value);
                                 return View(" + repoName + @".Get" + tableNameplural + "By" + FKCamel + @"(id.Value));
-                            }" + n + n;
+                            }" + n;
 
 
                         //code = code + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
@@ -912,7 +910,7 @@ namespace CHI_MVCCodeHelper
                     #region TableNameDetails
 
                     string actionName = tableName + @"Details";
-                    code = code + @"
+                    contCode = contCode + @"
                 // GET: /" + controllerName + "/" + actionName + @"/5
                 public async Task<ActionResult> " + actionName + @"(int? id)
                 {
@@ -935,7 +933,7 @@ namespace CHI_MVCCodeHelper
 
                     #region AddTableName
 
-                    code = code + @"
+                    contCode = contCode + @"
                 // GET: /""" + controllerName + @"/Add" + tableName + @"
                 public ActionResult Add" + tableName + @"()
                 {
@@ -964,7 +962,7 @@ namespace CHI_MVCCodeHelper
 
                     #region EditTableName
 
-                    code = code + @" 
+                    contCode = contCode + @" 
                 // GET: /" + controllerName + @"/Edit" + tableName + @"
                 public async Task<ActionResult> Edit" + tableName + @"(int? id)
                 {
@@ -999,7 +997,7 @@ namespace CHI_MVCCodeHelper
 
                     #region ListTableName
 
-                    code = code + @"  
+                    contCode = contCode + @"  
                 // GET: /" + controllerName + @"/List" + tableNameplural + @"
                 public ActionResult List" + tableNameplural + @"()
                 {
@@ -1010,7 +1008,7 @@ namespace CHI_MVCCodeHelper
 
                     #region DeleteTableName
 
-                    code = code + @" 
+                    contCode = contCode + @" 
                 // GET: /" + controllerName + @"/Delete" + tableName + @"/5
                 public async Task<ActionResult> Delete" + tableName + @"(int? id)
                 {
@@ -1030,7 +1028,7 @@ namespace CHI_MVCCodeHelper
                 }
                 " + n;
 
-                    code = code + @"   
+                    contCode = contCode + @"   
                 // POST: /" + controllerName + @"/Delete" + tableName + @"/5
                 [HttpPost, ActionName(""Delete" + tableName + @""")]
                 public async Task<ActionResult> DeleteConfirmed" + tableName + @"(int id)
@@ -1065,7 +1063,7 @@ namespace CHI_MVCCodeHelper
                             FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                         }
 
-                        code = code + @"
+                        contCode = contCode + @"
                             // GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"
                             public ActionResult " + tableNameplural + @"By" + FKCamel + @"(int? id)
                             {
@@ -1090,13 +1088,13 @@ namespace CHI_MVCCodeHelper
 
                 #region JSON list
 
-                code = code + @"
+                contCode = contCode + @"
                 #region Json
   
                 // Json GET: /" + controllerName + @"/List" + tableNameplural + @"
                 public ActionResult List" + tableNameplural + @"Json()
                 {
-                    Log.Info(""" + tableName + @" called"");
+                    //Log.Info(""" + tableName + @" called"");
                     return Json(" + repoName + @".Get" + tableNameplural + @"List(), JsonRequestBehavior.AllowGet);
                 }" + n + n;
 
@@ -1118,7 +1116,7 @@ namespace CHI_MVCCodeHelper
                         FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                     }
 
-                    code = code + @"
+                    contCode = contCode + @"
                             // Json GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"Json
                             public ActionResult " + tableNameplural + @"By" + FKCamel + @"Json(int? id)
                             {
@@ -1130,20 +1128,20 @@ namespace CHI_MVCCodeHelper
                             }" + n + n;
                 }
 
-                code = code + @"
+                contCode = contCode + @"
                 #endregion";
                 #endregion
 
                 #region Kendo Grid
 
-                code = code + @"
+                contCode = contCode + @"
                 
                 #region Kendo Grid
       
                 // Json GET: /" + controllerName + @"/List" + tableNameplural + @"
                 public ActionResult List" + tableNameplural + @"Kendo([DataSourceRequest] DataSourceRequest request)
                 {
-                    Log.Info(""" + tableName + @" called"");
+                    //Log.Info(""" + tableName + @" called"");
                     return Json(" + repoName + @".Get" + tableNameplural + @"List().ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
                 }" + n + n;
 
@@ -1165,7 +1163,7 @@ namespace CHI_MVCCodeHelper
                         FKCamel = FKIdFixed.First().ToString().ToUpper() + String.Join("", FKIdFixed.Skip(1));
                     }
 
-                    code = code + @"
+                    contCode = contCode + @"
                             // Json GET: /" + controllerName + @"/" + tableNameplural + @"By" + FKCamel + @"Json
                             public ActionResult " + tableNameplural + @"By" + FKCamel + @"Kendo(int? id,[DataSourceRequest] DataSourceRequest request)
                             {
@@ -1176,15 +1174,15 @@ namespace CHI_MVCCodeHelper
                                 return Json(" + repoName + @".Get" + tableNameplural + "By" + FKCamel + @"(id.Value).ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
                             }" + n + n;
                 }
-                code = code + @"
+                contCode = contCode + @"
                 #endregion" + n + n;
 
                 #endregion
-                code = code + "#endregion" + n + n;
+                contCode = contCode + "#endregion" + n + n;
 
             }
             //Always close the DataReader and connection.
-            ActionsResult.Text = code;
+            ActionsResult.Text = contCode;
             ActionsResult.Focus();
             ActionsResult.SelectAll();
         }
