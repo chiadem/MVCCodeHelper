@@ -78,6 +78,22 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.LuckyGroup = new System.Windows.Forms.GroupBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.ControlLabelMd = new System.Windows.Forms.NumericUpDown();
+            this.rowCount = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.ControllMD = new System.Windows.Forms.NumericUpDown();
+            this.GroupMd = new System.Windows.Forms.NumericUpDown();
+            this.luckyCheckBox = new System.Windows.Forms.CheckBox();
+            this.ViewButton = new System.Windows.Forms.Button();
+            this.ViewCode = new System.Windows.Forms.RichTextBox();
+            this.ViewHelperTableCB = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.DatabaseCB = new System.Windows.Forms.ComboBox();
             this.TestB = new System.Windows.Forms.Button();
@@ -88,12 +104,21 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.generateLabelsCheck = new System.Windows.Forms.CheckBox();
+            this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FKGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PKGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TableGrid)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            this.LuckyGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ControlLabelMd)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rowCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ControllMD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GroupMd)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,6 +126,7 @@
             // 
             this.DBSettings.Controls.Add(this.tabPage2);
             this.DBSettings.Controls.Add(this.tabPage3);
+            this.DBSettings.Controls.Add(this.tabPage4);
             this.DBSettings.Controls.Add(this.tabPage1);
             this.DBSettings.Location = new System.Drawing.Point(11, 11);
             this.DBSettings.Margin = new System.Windows.Forms.Padding(2);
@@ -666,6 +692,199 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "Table";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.listBox1);
+            this.tabPage4.Controls.Add(this.LuckyGroup);
+            this.tabPage4.Controls.Add(this.DefaultscheckBox);
+            this.tabPage4.Controls.Add(this.generateLabelsCheck);
+            this.tabPage4.Controls.Add(this.luckyCheckBox);
+            this.tabPage4.Controls.Add(this.ViewButton);
+            this.tabPage4.Controls.Add(this.ViewCode);
+            this.tabPage4.Controls.Add(this.ViewHelperTableCB);
+            this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Controls.Add(this.label14);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1370, 712);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "View Helper (Alfa)";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Location = new System.Drawing.Point(1178, 43);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(9);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(182, 649);
+            this.listBox1.TabIndex = 37;
+            this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
+            this.listBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.listBox1_DragOver);
+            this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
+            this.listBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox1_KeyDown);
+            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
+            // 
+            // LuckyGroup
+            // 
+            this.LuckyGroup.Controls.Add(this.label17);
+            this.LuckyGroup.Controls.Add(this.ControlLabelMd);
+            this.LuckyGroup.Controls.Add(this.rowCount);
+            this.LuckyGroup.Controls.Add(this.label18);
+            this.LuckyGroup.Controls.Add(this.label16);
+            this.LuckyGroup.Controls.Add(this.label15);
+            this.LuckyGroup.Controls.Add(this.ControllMD);
+            this.LuckyGroup.Controls.Add(this.GroupMd);
+            this.LuckyGroup.Location = new System.Drawing.Point(111, 92);
+            this.LuckyGroup.Name = "LuckyGroup";
+            this.LuckyGroup.Size = new System.Drawing.Size(526, 92);
+            this.LuckyGroup.TabIndex = 36;
+            this.LuckyGroup.TabStop = false;
+            this.LuckyGroup.Text = "Good Luck";
+            this.LuckyGroup.Visible = false;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(27, 54);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(106, 13);
+            this.label17.TabIndex = 35;
+            this.label17.Text = "Control Label col-md-";
+            // 
+            // ControlLabelMd
+            // 
+            this.ControlLabelMd.Location = new System.Drawing.Point(141, 51);
+            this.ControlLabelMd.Name = "ControlLabelMd";
+            this.ControlLabelMd.Size = new System.Drawing.Size(120, 20);
+            this.ControlLabelMd.TabIndex = 32;
+            this.ControlLabelMd.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // rowCount
+            // 
+            this.rowCount.Location = new System.Drawing.Point(141, 25);
+            this.rowCount.Name = "rowCount";
+            this.rowCount.Size = new System.Drawing.Size(120, 20);
+            this.rowCount.TabIndex = 31;
+            this.rowCount.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(278, 54);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(77, 13);
+            this.label18.TabIndex = 34;
+            this.label18.Text = "Control col-md-";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(278, 27);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(109, 13);
+            this.label16.TabIndex = 34;
+            this.label16.Text = "Control Group col-md-";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(27, 27);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(85, 13);
+            this.label15.TabIndex = 34;
+            this.label15.Text = "Controls in a row";
+            // 
+            // ControllMD
+            // 
+            this.ControllMD.Location = new System.Drawing.Point(392, 52);
+            this.ControllMD.Name = "ControllMD";
+            this.ControllMD.Size = new System.Drawing.Size(120, 20);
+            this.ControllMD.TabIndex = 33;
+            this.ControllMD.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            // 
+            // GroupMd
+            // 
+            this.GroupMd.Location = new System.Drawing.Point(392, 25);
+            this.GroupMd.Name = "GroupMd";
+            this.GroupMd.Size = new System.Drawing.Size(120, 20);
+            this.GroupMd.TabIndex = 33;
+            this.GroupMd.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            // 
+            // luckyCheckBox
+            // 
+            this.luckyCheckBox.AutoSize = true;
+            this.luckyCheckBox.Location = new System.Drawing.Point(111, 69);
+            this.luckyCheckBox.Name = "luckyCheckBox";
+            this.luckyCheckBox.Size = new System.Drawing.Size(84, 17);
+            this.luckyCheckBox.TabIndex = 35;
+            this.luckyCheckBox.Text = "I Feel Lucky";
+            this.luckyCheckBox.UseVisualStyleBackColor = true;
+            this.luckyCheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
+            // ViewButton
+            // 
+            this.ViewButton.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
+            this.ViewButton.Location = new System.Drawing.Point(22, 201);
+            this.ViewButton.Margin = new System.Windows.Forms.Padding(2);
+            this.ViewButton.Name = "ViewButton";
+            this.ViewButton.Size = new System.Drawing.Size(455, 25);
+            this.ViewButton.TabIndex = 30;
+            this.ViewButton.Text = "Generate Code";
+            this.ViewButton.UseVisualStyleBackColor = true;
+            this.ViewButton.Click += new System.EventHandler(this.ViewButton_Click);
+            // 
+            // ViewCode
+            // 
+            this.ViewCode.Font = new System.Drawing.Font("Courier New", 9.25F);
+            this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.ViewCode.Location = new System.Drawing.Point(23, 230);
+            this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
+            this.ViewCode.Name = "ViewCode";
+            this.ViewCode.Size = new System.Drawing.Size(1151, 464);
+            this.ViewCode.TabIndex = 29;
+            this.ViewCode.Text = "";
+            // 
+            // ViewHelperTableCB
+            // 
+            this.ViewHelperTableCB.FormattingEnabled = true;
+            this.ViewHelperTableCB.Location = new System.Drawing.Point(111, 21);
+            this.ViewHelperTableCB.Margin = new System.Windows.Forms.Padding(2);
+            this.ViewHelperTableCB.Name = "ViewHelperTableCB";
+            this.ViewHelperTableCB.Size = new System.Drawing.Size(366, 21);
+            this.ViewHelperTableCB.TabIndex = 9;
+            this.ViewHelperTableCB.SelectedIndexChanged += new System.EventHandler(this.ViewHelperTableCB_SelectedIndexChanged);
+            this.ViewHelperTableCB.Click += new System.EventHandler(this.ViewHelperTableCB_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(20, 24);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(34, 13);
+            this.label14.TabIndex = 8;
+            this.label14.Text = "Table";
+            // 
             // tabPage1
             // 
             this.tabPage1.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
@@ -776,6 +995,38 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(1175, 24);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(47, 13);
+            this.label19.TabIndex = 8;
+            this.label19.Text = "Columns";
+            // 
+            // generateLabelsCheck
+            // 
+            this.generateLabelsCheck.AutoSize = true;
+            this.generateLabelsCheck.Location = new System.Drawing.Point(111, 47);
+            this.generateLabelsCheck.Name = "generateLabelsCheck";
+            this.generateLabelsCheck.Size = new System.Drawing.Size(110, 17);
+            this.generateLabelsCheck.TabIndex = 35;
+            this.generateLabelsCheck.Text = "Generate Labels?";
+            this.generateLabelsCheck.UseVisualStyleBackColor = true;
+            this.generateLabelsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
+            // DefaultscheckBox
+            // 
+            this.DefaultscheckBox.AutoSize = true;
+            this.DefaultscheckBox.Location = new System.Drawing.Point(238, 47);
+            this.DefaultscheckBox.Name = "DefaultscheckBox";
+            this.DefaultscheckBox.Size = new System.Drawing.Size(141, 17);
+            this.DefaultscheckBox.TabIndex = 35;
+            this.DefaultscheckBox.Text = "Include Default Colums?";
+            this.DefaultscheckBox.UseVisualStyleBackColor = true;
+            this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
             // MVCCodeHelperMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -799,6 +1050,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.FKGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PKGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TableGrid)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.LuckyGroup.ResumeLayout(false);
+            this.LuckyGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ControlLabelMd)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rowCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ControllMD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GroupMd)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
@@ -866,5 +1125,24 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.RichTextBox ViewCode;
+        private System.Windows.Forms.ComboBox ViewHelperTableCB;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button ViewButton;
+        private System.Windows.Forms.GroupBox LuckyGroup;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown ControlLabelMd;
+        private System.Windows.Forms.NumericUpDown rowCount;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown GroupMd;
+        private System.Windows.Forms.CheckBox luckyCheckBox;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown ControllMD;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.CheckBox generateLabelsCheck;
+        private System.Windows.Forms.CheckBox DefaultscheckBox;
     }
 }

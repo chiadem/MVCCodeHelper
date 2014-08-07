@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -10,11 +11,14 @@ namespace CHI_MVCCodeHelper
 {
     public partial class MVCCodeHelperMain : Form
     {
+        Dictionary<int, string> Columns = new Dictionary<int, string>();
 
         SqlConnection _dbConnection;
         public MVCCodeHelperMain()
         {
             InitializeComponent();
+            this.listBox1.AllowDrop = true;
+
         }
 
         private void ViewModelGen_Load(object sender, EventArgs e)
@@ -1291,6 +1295,327 @@ namespace CHI_MVCCodeHelper
             if (!string.IsNullOrEmpty(CodeText.Text))
                 Clipboard.SetText(CodeText.Text);
         }
+
+        private void ViewHelperTableCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ViewHelperTableCB.SelectedIndex == -1) return;
+            listBox1.Items.Clear();
+            Columns.Clear();
+
+            string tableName = ViewHelperTableCB.SelectedItem.ToString();
+
+            string[,] columns = new string[100, 4];
+            const string n = "\n";
+
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = _dbConnection,
+                CommandText = "SELECT top 1 * FROM " + tableName
+            };
+
+            //Retrieve records from the Employees table into a DataReader.
+            SqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+            //Retrieve column schema into a DataTable.
+            DataTable schemaTable = myReader.GetSchemaTable();
+            int i = 0;
+            //For each field in the table...
+
+            foreach (DataRow myField in schemaTable.Rows)
+            {
+                columns[i, 0] = myField["ColumnName"].ToString();
+                columns[i, 1] = myField["DataType"].ToString();
+                columns[i, 2] = myField["ColumnSize"].ToString();
+                columns[i, 3] = myField["AllowDBNull"].ToString();
+
+                string columnName = myField["ColumnName"].ToString();
+
+                if ((columnName.Equals("createdDate") && !DefaultscheckBox.Checked) ||
+                    (columnName.Equals("modifiedDate") && !DefaultscheckBox.Checked) ||
+                    (columnName.Equals("createdBy") && !DefaultscheckBox.Checked) ||
+                    (columnName.Equals("modifiedBy") && !DefaultscheckBox.Checked) ||
+                    (columnName.Equals("rowVersion") && !DefaultscheckBox.Checked)
+                    )
+                {
+                    continue;
+                }
+
+
+                string columnNameCamel = columnName.First().ToString().ToUpper() +
+                                         String.Join("", columnName.Skip(1));
+                columnNameCamel = columnNameCamel.Replace("ID", "Id");
+
+                string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                string dataType =
+                    myField["DataType"].ToString()
+                        .Replace("System.", "")
+                        .Replace("Int16", "short")
+                        .Replace("Int32", "int")
+                        .Replace("Int", "int")
+                        .Replace("String", "string")
+                        .Replace("Boolean", "bool");
+                int size = Convert.ToInt32(myField["ColumnSize"]);
+                bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                bool IsKey = Convert.ToBoolean(myField["IsKey"]);
+
+                Columns.Add(i, columnNameCamel);
+                listBox1.Items.Add(columnNameCamel);
+                i++;
+            }
+
+            myReader.Close();
+
+        }
+
+        private void ViewHelperTableCB_Click(object sender, EventArgs e)
+        {
+            ViewHelperTableCB.Items.Clear();
+
+            List<string> tables = new List<string>();
+
+            DataTable dt = _dbConnection.GetSchema("Tables");
+            foreach (DataRow row in dt.Rows)
+            {
+                if (((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo"))
+                {
+                    string tablename = (string)row[2];
+                    tables.Add(tablename);
+                }
+            }
+            tables.Sort();
+
+            foreach (var item in tables)
+            {
+                ViewHelperTableCB.Items.Add(item);
+            }
+
+
+        }
+
+        private void ViewButton_Click(object sender, EventArgs e)
+        {
+            string code = "";
+            if (ViewHelperTableCB.SelectedIndex == -1)
+            {
+                MessageBox.Show("Select a table first bro!");
+
+            }
+            else
+            {
+                string tableName = ViewHelperTableCB.SelectedItem.ToString();
+
+                string[,] columns = new string[100, 4];
+                const string n = "\n";
+
+                SqlCommand cmd = new SqlCommand
+                {
+                    Connection = _dbConnection,
+                    CommandText = "SELECT top 1 * FROM " + tableName
+                };
+
+
+                //Retrieve records from the Employees table into a DataReader.
+                SqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                //Retrieve column schema into a DataTable.
+                DataTable schemaTable = myReader.GetSchemaTable();
+
+                //For each field in the table...
+                if (!luckyCheckBox.Checked)
+                {
+                    int i = 0;
+                    foreach (var item in listBox1.Items)
+                    {
+                        if (schemaTable != null)
+                        {
+                            DataRow myField = schemaTable.Rows[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[i]).Key];
+
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[i]).Key, 0] = myField["ColumnName"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[i]).Key, 1] = myField["DataType"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[i]).Key, 2] = myField["ColumnSize"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[i]).Key, 3] = myField["AllowDBNull"].ToString();
+
+                            string columnName = myField["ColumnName"].ToString();
+
+                            string columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
+                            columnNameCamel = columnNameCamel.Replace("ID", "Id");
+
+                            string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                            string dataType = myField["DataType"].ToString().Replace("System.", "").Replace("Int16", "short").Replace("Int32", "int").Replace("Int", "int").Replace("String", "string").Replace("Boolean", "bool");
+                            int size = Convert.ToInt32(myField["ColumnSize"]);
+                            bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                            bool IsKey = Convert.ToBoolean(myField["IsKey"]);
+
+                            if (generateLabelsCheck.Checked)
+                            {
+                                code = code + @"@Html.LabelFor(a => a." + columnNameCamel +
+                                       @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })" + n + n;
+
+                            }
+
+                            code = code + GenerateControl(dataType, columnNameCamel);
+                        }
+
+
+                        //vmCode = vmCode + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
+
+                        //toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
+                        //toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
+                        //toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
+                        i++;
+
+
+                    }
+                }
+                else
+                {
+                    int listIndex = 0;
+                    for (int k = 0; k <= listBox1.Items.Count / rowCount.Value; k++)
+                    {
+                        if (listIndex == listBox1.Items.Count) continue;
+
+                        code = code + @"
+                                        <div class=""row"">";
+                        for (int j = 0; j < rowCount.Value; j++)
+                        {
+                            int index;
+                            if (listIndex == listBox1.Items.Count) continue;
+                            if (schemaTable != null)
+                            {
+                                DataRow myField = schemaTable.Rows[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key];
+
+                                columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 0] = myField["ColumnName"].ToString();
+                                columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 1] = myField["DataType"].ToString();
+                                columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 2] = myField["ColumnSize"].ToString();
+                                columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 3] = myField["AllowDBNull"].ToString();
+
+                                string columnName = myField["ColumnName"].ToString();
+
+                                string columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
+                                columnNameCamel = columnNameCamel.Replace("ID", "Id");
+
+                                string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                                string dataType = myField["DataType"].ToString().Replace("System.", "").Replace("Int16", "short").Replace("Int32", "int").Replace("Int", "int").Replace("String", "string").Replace("Boolean", "bool");
+                                int size = Convert.ToInt32(myField["ColumnSize"]);
+                                bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                                bool IsKey = Convert.ToBoolean(myField["IsKey"]);
+
+                                code = code + @"<div class=""col-md-" + GroupMd.Value + @""">
+                                            <div class=""form-group"">
+                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })
+                                                <div class=""col-md-" + GroupMd.Value + @""">" +
+                                       GenerateControl(dataType, columnNameCamel)
+                                       + @"</div>
+                                            </div>
+                                        </div>";
+                            }
+                            listIndex++;
+                        }
+                        code = code + @"  </div>
+                                          <!--/row-->";
+                    }
+                }
+                //Always close the DataReader and connection.
+                myReader.Close();
+            }
+            ViewCode.Text = code;
+
+        }
+
+        private string GenerateControl(string dataType, string controlName)
+        {
+            string c = "";
+            const string n = "\n";
+            switch (dataType)
+            {
+                case "string": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
+                    break;
+
+                case "bool": c = @"@Html.CheckBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""checked: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
+                    break;
+
+                case "int": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
+                    break;
+            }
+            return c;
+        }
+
+        private void luckyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (luckyCheckBox.Checked)
+            {
+                LuckyGroup.Show();
+                generateLabelsCheck.Checked = true;
+                generateLabelsCheck.Enabled = false;
+            }
+            else
+            {
+                generateLabelsCheck.Enabled = true;
+
+                LuckyGroup.Hide();
+            }
+        }
+
+        private void columnList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var item = listBox1.IndexFromPoint(e.Location);
+                if (item >= 0)
+                {
+                    listBox1.SelectedIndex = item;
+                    listBox1.Items.RemoveAt(item);
+                }
+            }
+            if (this.listBox1.SelectedItem == null) return;
+            this.listBox1.DoDragDrop(this.listBox1.SelectedItem, DragDropEffects.Move);
+        }
+
+        private void listBox1_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            Point point = listBox1.PointToClient(new Point(e.X, e.Y));
+            int index = this.listBox1.IndexFromPoint(point);
+            if (index < 0) index = this.listBox1.Items.Count - 1;
+            object data = e.Data.GetData(typeof(string));
+            this.listBox1.Items.Remove(data);
+            this.listBox1.Items.Insert(index, data);
+        }
+
+        private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (this.listBox1.SelectedIndex >= 0)
+                {
+                    listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+                }
+            }
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.listBox1.SelectedIndex >= 0)
+            {
+                listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+            }
+        }
+
 
     }
 }
