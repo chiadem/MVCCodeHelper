@@ -1616,6 +1616,14 @@ namespace CHI_MVCCodeHelper
             }
         }
 
+        private void rowCount_ValueChanged(object sender, EventArgs e)
+        {
+            if (rowCount.Value < 7 && rowCount.Value > 0 && 12 % rowCount.Value == 0)
+            {
+                GroupMd.Value = 12 / rowCount.Value;
+            }
+        }
+
 
     }
 }

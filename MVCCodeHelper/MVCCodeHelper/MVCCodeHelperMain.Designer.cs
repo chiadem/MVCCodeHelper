@@ -89,10 +89,13 @@
             this.label15 = new System.Windows.Forms.Label();
             this.ControllMD = new System.Windows.Forms.NumericUpDown();
             this.GroupMd = new System.Windows.Forms.NumericUpDown();
+            this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
+            this.generateLabelsCheck = new System.Windows.Forms.CheckBox();
             this.luckyCheckBox = new System.Windows.Forms.CheckBox();
             this.ViewButton = new System.Windows.Forms.Button();
             this.ViewCode = new System.Windows.Forms.RichTextBox();
             this.ViewHelperTableCB = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.DatabaseCB = new System.Windows.Forms.ComboBox();
@@ -104,9 +107,8 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.generateLabelsCheck = new System.Windows.Forms.CheckBox();
-            this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -694,6 +696,10 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
+            this.tabPage4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage4.Controls.Add(this.label21);
+            this.tabPage4.Controls.Add(this.label20);
             this.tabPage4.Controls.Add(this.listBox1);
             this.tabPage4.Controls.Add(this.LuckyGroup);
             this.tabPage4.Controls.Add(this.DefaultscheckBox);
@@ -778,6 +784,7 @@
             0,
             0,
             0});
+            this.rowCount.ValueChanged += new System.EventHandler(this.rowCount_ValueChanged);
             // 
             // label18
             // 
@@ -830,6 +837,28 @@
             0,
             0});
             // 
+            // DefaultscheckBox
+            // 
+            this.DefaultscheckBox.AutoSize = true;
+            this.DefaultscheckBox.Location = new System.Drawing.Point(482, 25);
+            this.DefaultscheckBox.Name = "DefaultscheckBox";
+            this.DefaultscheckBox.Size = new System.Drawing.Size(141, 17);
+            this.DefaultscheckBox.TabIndex = 35;
+            this.DefaultscheckBox.Text = "Include Default Colums?";
+            this.DefaultscheckBox.UseVisualStyleBackColor = true;
+            this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
+            // generateLabelsCheck
+            // 
+            this.generateLabelsCheck.AutoSize = true;
+            this.generateLabelsCheck.Location = new System.Drawing.Point(111, 47);
+            this.generateLabelsCheck.Name = "generateLabelsCheck";
+            this.generateLabelsCheck.Size = new System.Drawing.Size(110, 17);
+            this.generateLabelsCheck.TabIndex = 35;
+            this.generateLabelsCheck.Text = "Generate Labels?";
+            this.generateLabelsCheck.UseVisualStyleBackColor = true;
+            this.generateLabelsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
             // luckyCheckBox
             // 
             this.luckyCheckBox.AutoSize = true;
@@ -874,6 +903,17 @@
             this.ViewHelperTableCB.TabIndex = 9;
             this.ViewHelperTableCB.SelectedIndexChanged += new System.EventHandler(this.ViewHelperTableCB_SelectedIndexChanged);
             this.ViewHelperTableCB.Click += new System.EventHandler(this.ViewHelperTableCB_Click);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(1175, 24);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(54, 13);
+            this.label19.TabIndex = 8;
+            this.label19.Text = "Columns";
             // 
             // label14
             // 
@@ -995,37 +1035,27 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // label19
+            // label20
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(1175, 24);
-            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(47, 13);
-            this.label19.TabIndex = 8;
-            this.label19.Text = "Columns";
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(1201, 681);
+            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(159, 13);
+            this.label20.TabIndex = 38;
+            this.label20.Text = "Right click to a column to delete";
             // 
-            // generateLabelsCheck
+            // label21
             // 
-            this.generateLabelsCheck.AutoSize = true;
-            this.generateLabelsCheck.Location = new System.Drawing.Point(111, 47);
-            this.generateLabelsCheck.Name = "generateLabelsCheck";
-            this.generateLabelsCheck.Size = new System.Drawing.Size(110, 17);
-            this.generateLabelsCheck.TabIndex = 35;
-            this.generateLabelsCheck.Text = "Generate Labels?";
-            this.generateLabelsCheck.UseVisualStyleBackColor = true;
-            this.generateLabelsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
-            // 
-            // DefaultscheckBox
-            // 
-            this.DefaultscheckBox.AutoSize = true;
-            this.DefaultscheckBox.Location = new System.Drawing.Point(238, 47);
-            this.DefaultscheckBox.Name = "DefaultscheckBox";
-            this.DefaultscheckBox.Size = new System.Drawing.Size(141, 17);
-            this.DefaultscheckBox.TabIndex = 35;
-            this.DefaultscheckBox.Text = "Include Default Colums?";
-            this.DefaultscheckBox.UseVisualStyleBackColor = true;
-            this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(1234, 36);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(126, 13);
+            this.label21.TabIndex = 38;
+            this.label21.Text = "Drag to change the order";
             // 
             // MVCCodeHelperMain
             // 
@@ -1144,5 +1174,7 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.CheckBox generateLabelsCheck;
         private System.Windows.Forms.CheckBox DefaultscheckBox;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
     }
 }
