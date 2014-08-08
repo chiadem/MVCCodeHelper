@@ -109,6 +109,7 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
+            this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -703,6 +704,7 @@
             this.tabPage4.Controls.Add(this.listBox1);
             this.tabPage4.Controls.Add(this.LuckyGroup);
             this.tabPage4.Controls.Add(this.DefaultscheckBox);
+            this.tabPage4.Controls.Add(this.StaticControlsCheck);
             this.tabPage4.Controls.Add(this.generateLabelsCheck);
             this.tabPage4.Controls.Add(this.luckyCheckBox);
             this.tabPage4.Controls.Add(this.ViewButton);
@@ -1057,6 +1059,17 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
+            // StaticControlsCheck
+            // 
+            this.StaticControlsCheck.AutoSize = true;
+            this.StaticControlsCheck.Location = new System.Drawing.Point(227, 47);
+            this.StaticControlsCheck.Name = "StaticControlsCheck";
+            this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
+            this.StaticControlsCheck.TabIndex = 35;
+            this.StaticControlsCheck.Text = "Static Controls?";
+            this.StaticControlsCheck.UseVisualStyleBackColor = true;
+            this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
             // MVCCodeHelperMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1176,5 +1189,6 @@
         private System.Windows.Forms.CheckBox DefaultscheckBox;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.CheckBox StaticControlsCheck;
     }
 }

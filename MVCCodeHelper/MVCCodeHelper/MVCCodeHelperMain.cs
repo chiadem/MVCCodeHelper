@@ -1453,7 +1453,13 @@ namespace CHI_MVCCodeHelper
 
                             }
 
-                            code = code + GenerateControl(dataType, columnNameCamel);
+                            if (StaticControlsCheck.Checked)
+                                code = code + @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." + columnNameCamel + @").ToString()""></p>" + n + n;
+                            else
+                                code = code + GenerateControl(dataType, columnNameCamel);
+
+
+
                         }
 
 
@@ -1500,11 +1506,17 @@ namespace CHI_MVCCodeHelper
                                 bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
                                 bool IsKey = Convert.ToBoolean(myField["IsKey"]);
 
+                                string control = StaticControlsCheck.Checked
+                                    ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
+                                      columnNameCamel + @").ToString()""></p>" + n + n
+                                    : GenerateControl(dataType, columnNameCamel);
+
+
                                 code = code + @"<div class=""col-md-" + GroupMd.Value + @""">
                                             <div class=""form-group"">
                                                 @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })
                                                 <div class=""col-md-" + GroupMd.Value + @""">" +
-                                       GenerateControl(dataType, columnNameCamel)
+                                       control
                                        + @"</div>
                                             </div>
                                         </div>";
