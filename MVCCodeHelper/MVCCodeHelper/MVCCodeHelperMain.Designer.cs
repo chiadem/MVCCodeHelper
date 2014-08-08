@@ -79,6 +79,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.LuckyGroup = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -107,8 +109,6 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -169,7 +169,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage2.Size = new System.Drawing.Size(1370, 712);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Generate View Model ";
+            this.tabPage2.Text = "View Model Generator";
             // 
             // label11
             // 
@@ -436,7 +436,7 @@
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1370, 712);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Generate Repo & Controller";
+            this.tabPage3.Text = "Repo & Controller Generator";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // label13
@@ -714,8 +714,30 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(1370, 712);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "View Helper (Alfa)";
+            this.tabPage4.Text = "View Controls Generator (Alfa)";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(1234, 36);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(126, 13);
+            this.label21.TabIndex = 38;
+            this.label21.Text = "Drag to change the order";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(1201, 681);
+            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(159, 13);
+            this.label20.TabIndex = 38;
+            this.label20.Text = "Right click to a column to delete";
             // 
             // listBox1
             // 
@@ -944,7 +966,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(1370, 712);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "DB Settings";
+            this.tabPage1.Text = "Database Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // DatabaseCB
@@ -1034,28 +1056,6 @@
             this.ServerLabel.Size = new System.Drawing.Size(38, 13);
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(1201, 681);
-            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(159, 13);
-            this.label20.TabIndex = 38;
-            this.label20.Text = "Right click to a column to delete";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(1234, 36);
-            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(126, 13);
-            this.label21.TabIndex = 38;
-            this.label21.Text = "Drag to change the order";
             // 
             // MVCCodeHelperMain
             // 
