@@ -1543,7 +1543,7 @@ namespace CHI_MVCCodeHelper
                 case "string": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
                     break;
 
-                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checked: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
+                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checked2: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
                     break;
 
                 case "int": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + n;
