@@ -268,7 +268,7 @@ namespace CHI_MVCCodeHelper
                             //agency agenc ies
                             FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
                         }
-                        string FKTableNameVM = FKTableName + "ViewModel";
+                        string FKTableNameVM = FKTableName + "VM";
                         vmCode = vmCode + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
 
                     }
@@ -311,7 +311,7 @@ namespace CHI_MVCCodeHelper
 
                 string tableName = item.Cells[0].Value.ToString();
                 string regionName = item.Cells[1].Value.ToString();
-                string viewModelName = tableName + "ViewModel";
+                string viewModelName = tableName + "VM";
 
                 string tableNameplural = ToPlural(tableName);
 
