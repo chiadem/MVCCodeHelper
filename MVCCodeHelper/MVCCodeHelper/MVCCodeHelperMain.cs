@@ -442,14 +442,14 @@ namespace CHI_MVCCodeHelper
 
                 repoCode = repoCode + @"
 
-            public async Task<bool> Add" + tableName + @"Async(" + viewModelName + @" model)
+            public async Task<int?> Add" + tableName + @"Async(" + viewModelName + @" model)
             {
             try
             {
-                _db." + tableName + @".Add(model.ToEntity());
+                var entity = _db." + tableName + @".Add(model.ToEntity());
                 await _db.SaveChangesAsync();
                 Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");
-                return true;
+                return entity." + primaryKey + @";
             }
             catch (DbEntityValidationException ex)
             {
@@ -460,14 +460,14 @@ namespace CHI_MVCCodeHelper
                     errors.AddRange(eve.ValidationErrors.Select(ve => "" Property: '"" + ve.PropertyName + ""'""+ "" Error: '"" + ve.ErrorMessage + ""'""));
                 }
 
-                Log.Error(""Failed to add " + tableName + @" with id  "" + model." + primaryKeyCamel + @" + string.Join("","", errors.ToArray()));
-                return false;
+                Log.Error(""Failed to add " + tableName + @""" + string.Join("","", errors.ToArray()) + JsonConvert.SerializeObject(model, Formatting.Indented), ex);
+                return null;
 
             }
             catch (Exception ex)
             {
-                Log.Error(""Failed to add " + tableName + @" with id  "" + model." + primaryKeyCamel + @", ex);
-                return false;
+                Log.Error(""Failed to add " + tableName + @". Json model: "" + JsonConvert.SerializeObject(model, Formatting.Indented), ex);
+                return null;
             }" + n + "}" + n + n;
 
                 #endregion
