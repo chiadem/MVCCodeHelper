@@ -92,6 +92,7 @@
             this.ControllMD = new System.Windows.Forms.NumericUpDown();
             this.GroupMd = new System.Windows.Forms.NumericUpDown();
             this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
+            this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
             this.generateLabelsCheck = new System.Windows.Forms.CheckBox();
             this.luckyCheckBox = new System.Windows.Forms.CheckBox();
             this.ViewButton = new System.Windows.Forms.Button();
@@ -109,7 +110,6 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -357,7 +357,7 @@
             // 
             // CodeText
             // 
-            this.CodeText.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CodeText.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CodeText.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.CodeText.Location = new System.Drawing.Point(22, 258);
             this.CodeText.Margin = new System.Windows.Forms.Padding(2);
@@ -464,7 +464,7 @@
             // 
             // ActionsResult
             // 
-            this.ActionsResult.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActionsResult.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActionsResult.ForeColor = System.Drawing.Color.DarkGreen;
             this.ActionsResult.Location = new System.Drawing.Point(430, 195);
             this.ActionsResult.Margin = new System.Windows.Forms.Padding(2);
@@ -603,14 +603,14 @@
             this.QueueBtn.Name = "QueueBtn";
             this.QueueBtn.Size = new System.Drawing.Size(681, 25);
             this.QueueBtn.TabIndex = 16;
-            this.QueueBtn.Text = "Add to queue -------->";
+            this.QueueBtn.Text = "Queue table -------->";
             this.QueueBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.QueueBtn.UseVisualStyleBackColor = true;
             this.QueueBtn.Click += new System.EventHandler(this.QueueBtn_Click);
             // 
             // RepoCodeText
             // 
-            this.RepoCodeText.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RepoCodeText.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RepoCodeText.ForeColor = System.Drawing.Color.Chocolate;
             this.RepoCodeText.Location = new System.Drawing.Point(12, 195);
             this.RepoCodeText.Margin = new System.Windows.Forms.Padding(2);
@@ -734,12 +734,12 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(1201, 681);
+            this.label20.Location = new System.Drawing.Point(1178, 679);
             this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(159, 13);
+            this.label20.Size = new System.Drawing.Size(101, 13);
             this.label20.TabIndex = 38;
-            this.label20.Text = "Right click to a column to delete";
+            this.label20.Text = "Right click to delete";
             // 
             // listBox1
             // 
@@ -872,6 +872,17 @@
             this.DefaultscheckBox.UseVisualStyleBackColor = true;
             this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
+            // StaticControlsCheck
+            // 
+            this.StaticControlsCheck.AutoSize = true;
+            this.StaticControlsCheck.Location = new System.Drawing.Point(227, 47);
+            this.StaticControlsCheck.Name = "StaticControlsCheck";
+            this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
+            this.StaticControlsCheck.TabIndex = 35;
+            this.StaticControlsCheck.Text = "Static Controls?";
+            this.StaticControlsCheck.UseVisualStyleBackColor = true;
+            this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
             // generateLabelsCheck
             // 
             this.generateLabelsCheck.AutoSize = true;
@@ -908,7 +919,7 @@
             // 
             // ViewCode
             // 
-            this.ViewCode.Font = new System.Drawing.Font("Courier New", 9.25F);
+            this.ViewCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.ViewCode.Location = new System.Drawing.Point(23, 230);
             this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
@@ -1058,17 +1069,6 @@
             this.ServerLabel.Size = new System.Drawing.Size(38, 13);
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
-            // 
-            // StaticControlsCheck
-            // 
-            this.StaticControlsCheck.AutoSize = true;
-            this.StaticControlsCheck.Location = new System.Drawing.Point(227, 47);
-            this.StaticControlsCheck.Name = "StaticControlsCheck";
-            this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
-            this.StaticControlsCheck.TabIndex = 35;
-            this.StaticControlsCheck.Text = "Static Controls?";
-            this.StaticControlsCheck.UseVisualStyleBackColor = true;
-            this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
             // MVCCodeHelperMain
             // 
