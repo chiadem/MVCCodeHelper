@@ -460,7 +460,7 @@ namespace CHI_MVCCodeHelper
                     errors.AddRange(eve.ValidationErrors.Select(ve => "" Property: '"" + ve.PropertyName + ""'""+ "" Error: '"" + ve.ErrorMessage + ""'""));
                 }
 
-                Log.Error(""Failed to add " + tableName + @""" + string.Join("","", errors.ToArray()) + JsonConvert.SerializeObject(model, Formatting.Indented), ex);
+                Log.Error(""Failed to add " + tableName + @". Json model: "" + string.Join("","", errors.ToArray()) + JsonConvert.SerializeObject(model, Formatting.Indented), ex);
                 return null;
 
             }
