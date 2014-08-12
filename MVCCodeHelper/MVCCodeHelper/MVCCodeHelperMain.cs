@@ -731,7 +731,7 @@ namespace CHI_MVCCodeHelper
                         primaryKeyCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
                         primaryKeyCamel = columnNameCamel.Replace("ID", "Id");
                     }
-
+                   
                     i++;
                 }
                 if (!isPartial)
@@ -774,7 +774,8 @@ namespace CHI_MVCCodeHelper
                 {
                     if (ModelState.IsValid)
                     {
-                        if (await " + repoName + @".Add" + tableName + @"Async(model))
+                        var " + parameterPK + @" = await " + repoName + @".Add" + tableName + @"Async(model);
+                        if (" + parameterPK + @".HasValue)
                         {
                             ViewBag.SuccessMessage = """ + tableName + @" "" + model." + primaryKeyCamel + @" + "" added"";
                             return RedirectToAction(""List" + tableName + @""");
