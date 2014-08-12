@@ -392,7 +392,7 @@ namespace CHI_MVCCodeHelper
                 repoCode = repoCode + @"if (result != null)
                     return " + viewModelName + @".ToModel(result);" + @"
            
-                    Log.Warn(""" + tableName + @" is not found id=: "" + " + parameterPK + @");
+                    Log.Warn(""" + tableName + @" is not found id: "" + " + parameterPK + @");
                     return null;
                 }";
 
