@@ -135,7 +135,7 @@ namespace CHI_MVCCodeHelper
 
         }
 
-        private void GenB_Click(object sender, EventArgs e)
+        private void GenerateViewModel_Click(object sender, EventArgs e)
         {
             if (VMTableCB.SelectedIndex == -1)
             {
@@ -161,10 +161,13 @@ namespace CHI_MVCCodeHelper
                 string toModel = " public static " + viewModelName + " ToModel(" + tableName + " entity)" + "{" + n
                     + @" var model = new " + viewModelName + "();"
                     + n + " if (entity != null)" + n + "{" + n;
-
-
-
-
+                string toModelNested = " public static " + viewModelName + " ToModelWithNestedModels(" + tableName + " entity, int levels = 0)" + "{" + n
+                   + @" var model = new " + viewModelName + "();"
+                   + n + " if (entity != null)" + n + "{" + n;
+                string constructor = "public " + viewModelName + "()" + n + "{" + n;
+                string primaryKey = "";
+                string parameterPK = "";
+                string primaryKeyCamel = "";
 
                 SqlCommand cmd = new SqlCommand
                 {
@@ -229,6 +232,10 @@ namespace CHI_MVCCodeHelper
                     if (IsKey & HiddenInputAnn.Checked)
                     {
                         vmCode = vmCode + "[HiddenInput(DisplayValue = false)]" + n;
+                        primaryKey = columnName;
+                        parameterPK = columnName.Replace("ID", "Id");
+                        primaryKeyCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
+                        primaryKeyCamel = columnNameCamel.Replace("ID", "Id");
                     }
                     else if (DisplayAnn.Checked)
                     {
@@ -244,6 +251,8 @@ namespace CHI_MVCCodeHelper
                     toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
                     toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
                     toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
+                    toModelNested = toModelNested + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
+                    
                     i++;
                 }
 
@@ -270,15 +279,17 @@ namespace CHI_MVCCodeHelper
                         }
                         string FKTableNameVM = FKTableName + "VM";
                         vmCode = vmCode + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
-
+                        toModelNested += "using(var repo = new Repository()){" + n + " model." + FKTableNamePlurar + " = repo.Get" + FKTableNamePlurar + "By" + primaryKeyCamel + "(entity." + primaryKey + ",levels); " + n + "}" + n;
+                        constructor += FKTableNamePlurar + " =  new List<" + FKTableNameVM + ">();" + n; 
                     }
                 }
 
 
-
+                vmCode += constructor + "}" + n;
                 vmCode = vmCode + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
                 vmCode = vmCode + toEntityP + n + @"return entity;" + n + @"}" + n + n;
                 vmCode = vmCode + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
+                vmCode = vmCode + toModelNested + n + "}" + n + " return model;" + n + "}" + n + n;
                 vmCode = vmCode + n + "}" + n;
                 CodeText.Text = vmCode;
                 CodeText.Focus();
@@ -292,7 +303,8 @@ namespace CHI_MVCCodeHelper
 
         }
 
-        private void RepoBtn_Click(object sender, EventArgs e)
+
+        private void GenerateRepositoryBtn_Click(object sender, EventArgs e)
         {
 
             if (TableGrid.Rows.Count == 0 || TableGrid.Rows[0].Cells[0].Value == null)
@@ -385,13 +397,11 @@ namespace CHI_MVCCodeHelper
                 }
                 #region GetTableName
 
-                repoCode = repoCode + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ")" + n + "{";
+                repoCode = repoCode + "public async Task<" + viewModelName + "> Get" + tableName + " (int " + parameterPK + ", int levels = 0)" + n + "{";
                 repoCode = repoCode + "var result = await _db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
 
-                repoCode = repoCode + @"if (result != null)
-                    return " + viewModelName + @".ToModel(result);" + @"
-           
+                repoCode = repoCode + @"levels -= 1; " + n + "if (result != null){ " + n + " return (levels +  1) > 0 ? " + viewModelName + @".ToModelWithNestedModels(result,levels) :" + viewModelName + @".ToModel(result);" + n + @"}
                     Log.Warn(""" + tableName + @" is not found id: "" + " + parameterPK + @");
                     return null;
                 }";
@@ -401,10 +411,11 @@ namespace CHI_MVCCodeHelper
                 #region GetTableNameList
 
                 repoCode = repoCode + @"
-                    public List<" + viewModelName + @"> Get" + tableNameplural + @"List()
+                    public List<" + viewModelName + @"> Get" + tableNameplural + @"List(int levels = 0)
                     {
-                        return _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
-                    }";
+                        levels -= 1;
+                        return (levels + 1) > 0 ? _db." + tableName + @".Select(x => " + viewModelName + @".ToModelWithNestedModels(x,levels)).ToList() : _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
+                    }" + n + n;
                 #endregion
                 myReader.Close();
 
@@ -430,10 +441,10 @@ namespace CHI_MVCCodeHelper
                     }
 
                     repoCode = repoCode + "public List<" + viewModelName + "> Get" + tableNameplural + "By" + FKCamel + "(int " +
-                           FKIdFixed + ")" + n + "{";
+                           FKIdFixed + ", int levels = 0)" + n + "{";
                     repoCode = repoCode + " var result = _db." + tableName + ".Where(a => a." + FKColumn + " == " + FKIdFixed +
-                           ");" + n;
-                    repoCode = repoCode + @" return result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
+                           ").ToList();" + n;
+                    repoCode = repoCode + "levels -= 1; " + n + @" return (levels + 1) > 0 ? result.Select(x => " + viewModelName + ".ToModelWithNestedModels(x,levels)).ToList() : result.Select(" + viewModelName + ".ToModel).ToList();" + n + "}" + n + n;
                 }
 
                 #endregion
@@ -555,7 +566,7 @@ namespace CHI_MVCCodeHelper
             RepoCodeText.Text = repoCode;
             RepoCodeText.Focus();
             RepoCodeText.SelectAll();
-            ActionGen_Click();
+            GenerateController();
         }
 
         private void TableNameRepo_SelectedIndexChanged(object sender, EventArgs e)
@@ -575,7 +586,7 @@ namespace CHI_MVCCodeHelper
         {
         }
 
-        private void QueueBtn_Click(object sender, EventArgs e)
+        private void RepoControllerQueueBtn_Click(object sender, EventArgs e)
         {
             if (TableNameRepo.SelectedIndex == -1)
             {
@@ -646,7 +657,7 @@ namespace CHI_MVCCodeHelper
         }
 
 
-        public void ActionGen_Click()
+        public void GenerateController()
         {
 
             SqlCommand cmd = new SqlCommand();
@@ -731,7 +742,7 @@ namespace CHI_MVCCodeHelper
                         primaryKeyCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
                         primaryKeyCamel = columnNameCamel.Replace("ID", "Id");
                     }
-                   
+
                     i++;
                 }
                 if (!isPartial)

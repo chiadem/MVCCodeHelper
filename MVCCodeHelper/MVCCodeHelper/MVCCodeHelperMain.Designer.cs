@@ -353,7 +353,7 @@
             this.VMGenB.TabIndex = 11;
             this.VMGenB.Text = "Generate Code";
             this.VMGenB.UseVisualStyleBackColor = true;
-            this.VMGenB.Click += new System.EventHandler(this.GenB_Click);
+            this.VMGenB.Click += new System.EventHandler(this.GenerateViewModel_Click);
             // 
             // CodeText
             // 
@@ -606,7 +606,7 @@
             this.QueueBtn.Text = "Queue table -------->";
             this.QueueBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.QueueBtn.UseVisualStyleBackColor = true;
-            this.QueueBtn.Click += new System.EventHandler(this.QueueBtn_Click);
+            this.QueueBtn.Click += new System.EventHandler(this.RepoControllerQueueBtn_Click);
             // 
             // RepoCodeText
             // 
@@ -630,7 +630,7 @@
             this.RepoBtn.TabIndex = 17;
             this.RepoBtn.Text = "Generate Code";
             this.RepoBtn.UseVisualStyleBackColor = true;
-            this.RepoBtn.Click += new System.EventHandler(this.RepoBtn_Click);
+            this.RepoBtn.Click += new System.EventHandler(this.GenerateRepositoryBtn_Click);
             // 
             // label3
             // 
