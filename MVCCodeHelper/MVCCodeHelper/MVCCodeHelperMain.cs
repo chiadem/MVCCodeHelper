@@ -252,7 +252,7 @@ namespace CHI_MVCCodeHelper
                     toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
                     toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
                     toModelNested = toModelNested + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
-                    
+
                     i++;
                 }
 
@@ -260,7 +260,7 @@ namespace CHI_MVCCodeHelper
                 myReader.Close();
 
                 PK(tableName);
-
+                toModelNested += "using (var repo = new WTRepository())" + n + "{";
                 foreach (DataGridViewRow itemm in PKGV.Rows)
                 {
                     if (itemm.Cells[0].Value == null)
@@ -279,8 +279,8 @@ namespace CHI_MVCCodeHelper
                         }
                         string FKTableNameVM = FKTableName + "VM";
                         vmCode = vmCode + n + "public List<" + FKTableNameVM + "> " + FKTableNamePlurar + " { get; set; }" + n;
-                        toModelNested += "using(var repo = new Repository()){" + n + " model." + FKTableNamePlurar + " = repo.Get" + FKTableNamePlurar + "By" + primaryKeyCamel + "(entity." + primaryKey + ",levels); " + n + "}" + n;
-                        constructor += FKTableNamePlurar + " =  new List<" + FKTableNameVM + ">();" + n; 
+                        toModelNested += " model." + FKTableNamePlurar + " = repo.Get" + FKTableNamePlurar + "By" + primaryKeyCamel + "(entity." + primaryKey + ",levels); " + n;
+                        constructor += FKTableNamePlurar + " =  new List<" + FKTableNameVM + ">();" + n;
                     }
                 }
 
@@ -289,7 +289,7 @@ namespace CHI_MVCCodeHelper
                 vmCode = vmCode + toEntity.TrimEnd(',') + n + @"};" + n + @"return entity;" + n + @"}" + n + n;
                 vmCode = vmCode + toEntityP + n + @"return entity;" + n + @"}" + n + n;
                 vmCode = vmCode + toModel + n + "}" + n + " return model;" + n + "}" + n + n;
-                vmCode = vmCode + toModelNested + n + "}" + n + " return model;" + n + "}" + n + n;
+                vmCode = vmCode + toModelNested + "}" + n + "}" + n + " return model;" + n + "}" + n + n;
                 vmCode = vmCode + n + "}" + n;
                 CodeText.Text = vmCode;
                 CodeText.Focus();
@@ -401,7 +401,9 @@ namespace CHI_MVCCodeHelper
                 repoCode = repoCode + "var result = await _db." + tableName + ".SingleOrDefaultAsync(e => e." + primaryKey + " == " +
                        parameterPK + ");" + n;
 
-                repoCode = repoCode + @"levels -= 1; " + n + "if (result != null){ " + n + " return (levels +  1) > 0 ? " + viewModelName + @".ToModelWithNestedModels(result,levels) :" + viewModelName + @".ToModel(result);" + n + @"}
+                repoCode = repoCode +
+
+                    "if (result != null){ " + n + " return levels > 0 ? " + viewModelName + @".ToModelWithNestedModels(result,levels - 1) :" + viewModelName + @".ToModel(result);" + n + @"}
                     Log.Warn(""" + tableName + @" is not found id: "" + " + parameterPK + @");
                     return null;
                 }";
@@ -413,8 +415,7 @@ namespace CHI_MVCCodeHelper
                 repoCode = repoCode + @"
                     public List<" + viewModelName + @"> Get" + tableNameplural + @"List(int levels = 0)
                     {
-                        levels -= 1;
-                        return (levels + 1) > 0 ? _db." + tableName + @".Select(x => " + viewModelName + @".ToModelWithNestedModels(x,levels)).ToList() : _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
+                        return levels > 0 ? _db." + tableName + @".Select(x => " + viewModelName + @".ToModelWithNestedModels(x,levels - 1)).ToList() : _db." + tableName + @".Select(" + viewModelName + @".ToModel).ToList();
                     }" + n + n;
                 #endregion
                 myReader.Close();
@@ -518,7 +519,21 @@ namespace CHI_MVCCodeHelper
 
                 #endregion
 
+                repoCode = repoCode + @" public async Task<bool> AddOrUpdate" + tableName + @"Async(" + viewModelName + @" model)
+        {
+            bool exist = await _db." + tableName + @".AnyAsync(e => e." + primaryKey + @" == model." + primaryKeyCamel + @");
+            if (exist)
+            {
+                return await Update" + tableName + @"Async(model);
+            }
+            var result = await Add" + tableName + @"Async(model);
+            return result != null;
+        }" + n + n;
 
+                #region UpdateTableNameAsync
+
+
+                #endregion
 
                 #region DeleteTableNameAsync
 
@@ -672,7 +687,7 @@ namespace CHI_MVCCodeHelper
 
                 string tableName = item.Cells[0].Value.ToString();
                 string repoName = item.Cells[2].Value.ToString();
-                string controllerName = item.Cells[3].Value.ToString();
+                string controllerName = item.Cells[3].Value.ToString().Replace("Controller", "");
                 bool isPartial = Convert.ToBoolean(item.Cells[4].Value);
                 string viewModelName = tableName + "VM";
 

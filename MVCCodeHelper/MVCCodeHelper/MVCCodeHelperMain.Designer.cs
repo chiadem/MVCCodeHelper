@@ -208,8 +208,6 @@
             // modifiedDate
             // 
             this.modifiedDate.AutoSize = true;
-            this.modifiedDate.Checked = true;
-            this.modifiedDate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.modifiedDate.Location = new System.Drawing.Point(246, 104);
             this.modifiedDate.Margin = new System.Windows.Forms.Padding(2);
             this.modifiedDate.Name = "modifiedDate";
@@ -221,8 +219,6 @@
             // createdDate
             // 
             this.createdDate.AutoSize = true;
-            this.createdDate.Checked = true;
-            this.createdDate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.createdDate.Location = new System.Drawing.Point(246, 86);
             this.createdDate.Margin = new System.Windows.Forms.Padding(2);
             this.createdDate.Name = "createdDate";
@@ -300,8 +296,6 @@
             // modifiedBy
             // 
             this.modifiedBy.AutoSize = true;
-            this.modifiedBy.Checked = true;
-            this.modifiedBy.CheckState = System.Windows.Forms.CheckState.Checked;
             this.modifiedBy.Location = new System.Drawing.Point(111, 107);
             this.modifiedBy.Margin = new System.Windows.Forms.Padding(2);
             this.modifiedBy.Name = "modifiedBy";
@@ -313,8 +307,6 @@
             // createdBy
             // 
             this.createdBy.AutoSize = true;
-            this.createdBy.Checked = true;
-            this.createdBy.CheckState = System.Windows.Forms.CheckState.Checked;
             this.createdBy.Location = new System.Drawing.Point(111, 89);
             this.createdBy.Margin = new System.Windows.Forms.Padding(2);
             this.createdBy.Name = "createdBy";
@@ -523,7 +515,6 @@
             this.ControllerNameTB.Name = "ControllerNameTB";
             this.ControllerNameTB.Size = new System.Drawing.Size(333, 20);
             this.ControllerNameTB.TabIndex = 14;
-            this.ControllerNameTB.Text = "Controller";
             // 
             // RepoNameTB
             // 
@@ -532,7 +523,7 @@
             this.RepoNameTB.Name = "RepoNameTB";
             this.RepoNameTB.Size = new System.Drawing.Size(333, 20);
             this.RepoNameTB.TabIndex = 13;
-            this.RepoNameTB.Text = "Repo";
+            this.RepoNameTB.Text = "_repo";
             this.RepoNameTB.TextChanged += new System.EventHandler(this.RepoNameTB_TextChanged);
             // 
             // FKGV
