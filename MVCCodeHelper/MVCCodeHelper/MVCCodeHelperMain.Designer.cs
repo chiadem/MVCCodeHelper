@@ -110,6 +110,8 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.labelPostFix = new System.Windows.Forms.TextBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -751,6 +753,8 @@
             // 
             // LuckyGroup
             // 
+            this.LuckyGroup.Controls.Add(this.labelPostFix);
+            this.LuckyGroup.Controls.Add(this.label22);
             this.LuckyGroup.Controls.Add(this.label17);
             this.LuckyGroup.Controls.Add(this.ControlLabelMd);
             this.LuckyGroup.Controls.Add(this.rowCount);
@@ -761,7 +765,7 @@
             this.LuckyGroup.Controls.Add(this.GroupMd);
             this.LuckyGroup.Location = new System.Drawing.Point(111, 92);
             this.LuckyGroup.Name = "LuckyGroup";
-            this.LuckyGroup.Size = new System.Drawing.Size(526, 92);
+            this.LuckyGroup.Size = new System.Drawing.Size(526, 114);
             this.LuckyGroup.TabIndex = 36;
             this.LuckyGroup.TabStop = false;
             this.LuckyGroup.Text = "Good Luck";
@@ -770,7 +774,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(27, 54);
+            this.label17.Location = new System.Drawing.Point(27, 57);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(106, 13);
             this.label17.TabIndex = 35;
@@ -778,12 +782,12 @@
             // 
             // ControlLabelMd
             // 
-            this.ControlLabelMd.Location = new System.Drawing.Point(141, 51);
+            this.ControlLabelMd.Location = new System.Drawing.Point(141, 54);
             this.ControlLabelMd.Name = "ControlLabelMd";
             this.ControlLabelMd.Size = new System.Drawing.Size(120, 20);
             this.ControlLabelMd.TabIndex = 32;
             this.ControlLabelMd.Value = new decimal(new int[] {
-            3,
+            12,
             0,
             0,
             0});
@@ -835,7 +839,7 @@
             this.ControllMD.Size = new System.Drawing.Size(120, 20);
             this.ControllMD.TabIndex = 33;
             this.ControllMD.Value = new decimal(new int[] {
-            9,
+            12,
             0,
             0,
             0});
@@ -899,7 +903,7 @@
             // ViewButton
             // 
             this.ViewButton.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
-            this.ViewButton.Location = new System.Drawing.Point(22, 201);
+            this.ViewButton.Location = new System.Drawing.Point(23, 270);
             this.ViewButton.Margin = new System.Windows.Forms.Padding(2);
             this.ViewButton.Name = "ViewButton";
             this.ViewButton.Size = new System.Drawing.Size(455, 25);
@@ -912,10 +916,10 @@
             // 
             this.ViewCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.ViewCode.Location = new System.Drawing.Point(23, 230);
+            this.ViewCode.Location = new System.Drawing.Point(23, 299);
             this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
             this.ViewCode.Name = "ViewCode";
-            this.ViewCode.Size = new System.Drawing.Size(1151, 464);
+            this.ViewCode.Size = new System.Drawing.Size(1151, 395);
             this.ViewCode.TabIndex = 29;
             this.ViewCode.Text = "";
             // 
@@ -1061,6 +1065,23 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(27, 86);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(70, 13);
+            this.label22.TabIndex = 35;
+            this.label22.Text = "Label PostFix";
+            // 
+            // labelPostFix
+            // 
+            this.labelPostFix.Location = new System.Drawing.Point(141, 83);
+            this.labelPostFix.Name = "labelPostFix";
+            this.labelPostFix.Size = new System.Drawing.Size(108, 20);
+            this.labelPostFix.TabIndex = 36;
+            this.labelPostFix.Text = ":";
+            // 
             // MVCCodeHelperMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1181,5 +1202,7 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.CheckBox StaticControlsCheck;
+        private System.Windows.Forms.TextBox labelPostFix;
+        private System.Windows.Forms.Label label22;
     }
 }

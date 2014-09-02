@@ -1421,7 +1421,9 @@ namespace CHI_MVCCodeHelper
 
         private void ViewButton_Click(object sender, EventArgs e)
         {
-            string code = "";
+            string tableName = ViewHelperTableCB.SelectedItem.ToString();
+            const string n = "\n";
+            string code = @"<!--#region " + tableName + @"  -->" + n;
             if (ViewHelperTableCB.SelectedIndex == -1)
             {
                 MessageBox.Show("Select a table first bro!");
@@ -1429,10 +1431,8 @@ namespace CHI_MVCCodeHelper
             }
             else
             {
-                string tableName = ViewHelperTableCB.SelectedItem.ToString();
 
                 string[,] columns = new string[100, 4];
-                const string n = "\n";
 
                 SqlCommand cmd = new SqlCommand
                 {
@@ -1475,8 +1475,7 @@ namespace CHI_MVCCodeHelper
 
                             if (generateLabelsCheck.Checked)
                             {
-                                code = code + @"@Html.LabelFor(a => a." + columnNameCamel +
-                                       @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })" + n + n;
+                                code = code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")" + n;
 
                             }
 
@@ -1507,8 +1506,7 @@ namespace CHI_MVCCodeHelper
                     {
                         if (listIndex == listBox1.Items.Count) continue;
 
-                        code = code + @"
-                                        <div class=""row"">";
+                        code = code + @"<div class=""row"">";
                         for (int j = 0; j < rowCount.Value; j++)
                         {
                             int index;
@@ -1535,45 +1533,43 @@ namespace CHI_MVCCodeHelper
 
                                 string control = StaticControlsCheck.Checked
                                     ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
-                                      columnNameCamel + @").ToString()""></p>" + n + n
-                                    : GenerateControl(dataType, columnNameCamel);
+                                      columnNameCamel + @").ToString()""></p>" + n
+                                    : GenerateControl(dataType, columnNameCamel, size);
 
 
-                                code = code + @"<div class=""col-md-" + GroupMd.Value + @""">
-                                            <div class=""form-group"">
-                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })
-                                                <div class=""col-md-" + GroupMd.Value + @""">" +
+                                code = code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
+                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")
+                                                <div class=""col-md-" + ControllMD.Value + @""">" +
                                        control
-                                       + @"</div>
-                                            </div>
-                                        </div>";
+                                       + @"</div>" + n + @"   </div>";
                             }
                             listIndex++;
                         }
-                        code = code + @"  </div>
-                                          <!--/row-->";
+                        code = code + @"</div>" + n;
                     }
                 }
                 //Always close the DataReader and connection.
                 myReader.Close();
             }
+            code = code + n + @" <!--#endregion -->";
             ViewCode.Text = code;
 
         }
 
-        private string GenerateControl(string dataType, string controlName)
+        private string GenerateControl(string dataType, string controlName, int? size = null)
         {
             string c = "";
             const string n = "\n";
             switch (dataType)
             {
-                case "string": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n;
+                case "string": c = size != null && size.Value < 300 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n
+                                                                    : @"@Html.TextAreaFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
                     break;
 
-                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n;
+                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
                     break;
 
-                case "int": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n;
+                case "int": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
                     break;
             }
             return c;
