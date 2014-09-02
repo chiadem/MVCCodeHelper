@@ -1475,7 +1475,8 @@ namespace CHI_MVCCodeHelper
 
                             if (generateLabelsCheck.Checked)
                             {
-                                code = code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")" + n;
+                                code = dataType != "bool" ? code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")" + n
+                                    : code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })" + n + n;
 
                             }
 
@@ -1537,11 +1538,19 @@ namespace CHI_MVCCodeHelper
                                     : GenerateControl(dataType, columnNameCamel, size);
 
 
-                                code = code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
+                                code = dataType != "bool" ? 
+                                        code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
                                                 @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
                                        control
-                                       + @"</div>" + n + @"   </div>";
+                                       + @"</div>" + n + @"   </div>"
+
+                                       : code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
+                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })                                                
+                                                <div class=""col-md-" + ControllMD.Value + @""">" +
+                                       control
+                                       + @"</div>" + n + @"   </div>"
+                                ;
                             }
                             listIndex++;
                         }
