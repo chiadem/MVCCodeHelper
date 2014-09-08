@@ -1538,7 +1538,7 @@ namespace CHI_MVCCodeHelper
                                     : GenerateControl(dataType, columnNameCamel, size);
 
 
-                                code = dataType != "bool" ? 
+                                code = dataType != "bool" ?
                                         code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
                                                 @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
@@ -1571,14 +1571,28 @@ namespace CHI_MVCCodeHelper
             const string n = "\n";
             switch (dataType)
             {
-                case "string": c = size != null && size.Value < 300 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n
+                case "string": c = size != null && size.Value < 200 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n
                                                                     : @"@Html.TextAreaFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
                     break;
 
                 case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
                     break;
-
-                case "int": c = @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control"", @type = ""number"" @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
+                case "int" :
+                case "tinyint":
+                case "smallint":
+                case "bigint":
+                case "short": c = @"<div id=""" + controlName + @"_"">
+                                    <div class=""input-group""> 
+                                @Html.TextBoxFor(a => a." + controlName + @", new { @class = ""spinner-input form-control input-sm"", @maxlength = ""2"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n +
+                                @"<div class=""spinner-buttons input-group-btn"">
+                                       <button type=""button"" class=""btn btn-sm spinner-up default"">
+                                            <i class=""fa fa-angle-up""></i>
+                                        </button>
+                                        <button type=""button"" class=""btn btn-sm spinner-down default"">
+                                             <i class=""fa fa-angle-down""></i>
+                                         </button>
+                                  </div>" + n
+                                + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + "</div>" + n + "</div>" + n;
                     break;
             }
             return c;
