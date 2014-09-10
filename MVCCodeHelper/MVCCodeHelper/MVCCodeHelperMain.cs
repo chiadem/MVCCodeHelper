@@ -1169,7 +1169,7 @@ namespace CHI_MVCCodeHelper
                 
                 #region Kendo Grid
       
-                // Json GET: /" + controllerName + @"/List" + tableNameplural + @"
+                // Json GET: /" + controllerName + @"/List" + tableNameplural + @"Kendo
                 public ActionResult List" + tableNameplural + @"Kendo([DataSourceRequest] DataSourceRequest request)
                 {
                     //Log.Info(""" + tableName + @" called"");
