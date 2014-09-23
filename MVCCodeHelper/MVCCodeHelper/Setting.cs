@@ -8,7 +8,8 @@ namespace CHI_MVCCodeHelper
     public static class Settings
     {
         private static readonly List<SettingsItem> settingsList = new List<SettingsItem>();
-        private static readonly string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)+"\\CodeHelperSettings.set";
+        private static readonly string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\CodeHelperSettings.set";
+
         public static String Get(String name, String defVal)
         {
             ReloadSettings();
@@ -21,6 +22,7 @@ namespace CHI_MVCCodeHelper
             SaveSettings();
             return defVal;
         }
+
         public static Boolean Get(String name, Boolean defVal)
         {
             ReloadSettings();
@@ -40,6 +42,7 @@ namespace CHI_MVCCodeHelper
             SaveSettings();
             return defVal;
         }
+
         public static int Get(String name, int defVal)
         {
             ReloadSettings();
@@ -53,6 +56,7 @@ namespace CHI_MVCCodeHelper
             SaveSettings();
             return defVal;
         }
+
         public static void Set(String name, String val)
         {
             SettingsItem findSet = settingsList.Find(x => x.Name == name);
@@ -67,6 +71,7 @@ namespace CHI_MVCCodeHelper
                 SaveSettings();
             }
         }
+
         public static void Set(String name, Boolean val)
         {
             SettingsItem findSet = settingsList.Find(x => x.Name == name);
@@ -81,6 +86,7 @@ namespace CHI_MVCCodeHelper
                 SaveSettings();
             }
         }
+
         public static void Set(String name, int val)
         {
             SettingsItem findSet = settingsList.Find(x => x.Name == name);
@@ -95,6 +101,7 @@ namespace CHI_MVCCodeHelper
                 SaveSettings();
             }
         }
+
         public static void SaveSettings()
         {
             string[] settings = new string[settingsList.Count];
@@ -106,6 +113,7 @@ namespace CHI_MVCCodeHelper
             }
             File.WriteAllLines(settingsPath, settings);
         }
+
         public static void ReloadSettings()
         {
             if (File.Exists(settingsPath))
@@ -119,13 +127,17 @@ namespace CHI_MVCCodeHelper
                 }
             }
         }
+
         public class SettingsItem
         {
             public String Name { get; set; }
+
             public String Value { get; set; }
+
             public SettingsItem()
             {
             }
+
             public SettingsItem(string name, string value)
             {
                 Value = value;

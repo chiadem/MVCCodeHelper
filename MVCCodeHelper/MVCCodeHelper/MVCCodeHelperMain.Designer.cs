@@ -64,11 +64,6 @@
             this.FKGV = new System.Windows.Forms.DataGridView();
             this.PKGV = new System.Windows.Forms.DataGridView();
             this.TableGrid = new System.Windows.Forms.DataGridView();
-            this.CTableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRegionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRepoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CController = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.isPartialView = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.QueueBtn = new System.Windows.Forms.Button();
             this.RepoCodeText = new System.Windows.Forms.RichTextBox();
             this.RepoBtn = new System.Windows.Forms.Button();
@@ -83,6 +78,8 @@
             this.label20 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.LuckyGroup = new System.Windows.Forms.GroupBox();
+            this.labelPostFix = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.ControlLabelMd = new System.Windows.Forms.NumericUpDown();
             this.rowCount = new System.Windows.Forms.NumericUpDown();
@@ -110,8 +107,14 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.labelPostFix = new System.Windows.Forms.TextBox();
+            this.recursiveAdd = new System.Windows.Forms.CheckBox();
+            this.CTableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRegionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRepoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CController = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.isPartialView = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.RecursiveAddMethod = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.RecursiveText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -407,6 +410,7 @@
             this.tabPage3.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
             this.tabPage3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.recursiveAdd);
             this.tabPage3.Controls.Add(this.isPartial);
             this.tabPage3.Controls.Add(this.ActionsResult);
             this.tabPage3.Controls.Add(this.label9);
@@ -556,36 +560,13 @@
             this.CRegionName,
             this.CRepoName,
             this.CController,
-            this.isPartialView});
+            this.isPartialView,
+            this.RecursiveAddMethod,
+            this.RecursiveText});
             this.TableGrid.Location = new System.Drawing.Point(850, 153);
             this.TableGrid.Name = "TableGrid";
-            this.TableGrid.Size = new System.Drawing.Size(513, 541);
+            this.TableGrid.Size = new System.Drawing.Size(510, 541);
             this.TableGrid.TabIndex = 18;
-            // 
-            // CTableName
-            // 
-            this.CTableName.HeaderText = "Table Name";
-            this.CTableName.Name = "CTableName";
-            // 
-            // CRegionName
-            // 
-            this.CRegionName.HeaderText = "Region Name";
-            this.CRegionName.Name = "CRegionName";
-            // 
-            // CRepoName
-            // 
-            this.CRepoName.HeaderText = "Repo Name";
-            this.CRepoName.Name = "CRepoName";
-            // 
-            // CController
-            // 
-            this.CController.HeaderText = "Controller";
-            this.CController.Name = "CController";
-            // 
-            // isPartialView
-            // 
-            this.isPartialView.HeaderText = "PartialView?";
-            this.isPartialView.Name = "isPartialView";
             // 
             // QueueBtn
             // 
@@ -770,6 +751,23 @@
             this.LuckyGroup.TabStop = false;
             this.LuckyGroup.Text = "Good Luck";
             this.LuckyGroup.Visible = false;
+            // 
+            // labelPostFix
+            // 
+            this.labelPostFix.Location = new System.Drawing.Point(141, 83);
+            this.labelPostFix.Name = "labelPostFix";
+            this.labelPostFix.Size = new System.Drawing.Size(108, 20);
+            this.labelPostFix.TabIndex = 36;
+            this.labelPostFix.Text = ":";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(27, 86);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(70, 13);
+            this.label22.TabIndex = 35;
+            this.label22.Text = "Label PostFix";
             // 
             // label17
             // 
@@ -1065,22 +1063,52 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // label22
+            // recursiveAdd
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(27, 86);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(70, 13);
-            this.label22.TabIndex = 35;
-            this.label22.Text = "Label PostFix";
+            this.recursiveAdd.AutoSize = true;
+            this.recursiveAdd.Location = new System.Drawing.Point(243, 133);
+            this.recursiveAdd.Margin = new System.Windows.Forms.Padding(2);
+            this.recursiveAdd.Name = "recursiveAdd";
+            this.recursiveAdd.Size = new System.Drawing.Size(194, 17);
+            this.recursiveAdd.TabIndex = 15;
+            this.recursiveAdd.Text = "Recursive Repository Add Method?";
+            this.recursiveAdd.UseVisualStyleBackColor = true;
             // 
-            // labelPostFix
+            // CTableName
             // 
-            this.labelPostFix.Location = new System.Drawing.Point(141, 83);
-            this.labelPostFix.Name = "labelPostFix";
-            this.labelPostFix.Size = new System.Drawing.Size(108, 20);
-            this.labelPostFix.TabIndex = 36;
-            this.labelPostFix.Text = ":";
+            this.CTableName.HeaderText = "Table Name";
+            this.CTableName.Name = "CTableName";
+            // 
+            // CRegionName
+            // 
+            this.CRegionName.HeaderText = "Region Name";
+            this.CRegionName.Name = "CRegionName";
+            // 
+            // CRepoName
+            // 
+            this.CRepoName.HeaderText = "Repo Name";
+            this.CRepoName.Name = "CRepoName";
+            // 
+            // CController
+            // 
+            this.CController.HeaderText = "Controller";
+            this.CController.Name = "CController";
+            // 
+            // isPartialView
+            // 
+            this.isPartialView.HeaderText = "PartialView?";
+            this.isPartialView.Name = "isPartialView";
+            // 
+            // RecursiveAddMethod
+            // 
+            this.RecursiveAddMethod.HeaderText = "RecursiveAdd";
+            this.RecursiveAddMethod.Name = "RecursiveAddMethod";
+            // 
+            // RecursiveText
+            // 
+            this.RecursiveText.HeaderText = "RecursiveAddText";
+            this.RecursiveText.Name = "RecursiveText";
+            this.RecursiveText.ReadOnly = true;
             // 
             // MVCCodeHelperMain
             // 
@@ -1172,11 +1200,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox isPartial;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CTableName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CRegionName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CRepoName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CController;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isPartialView;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
@@ -1204,5 +1227,13 @@
         private System.Windows.Forms.CheckBox StaticControlsCheck;
         private System.Windows.Forms.TextBox labelPostFix;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.CheckBox recursiveAdd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CTableName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CRegionName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CRepoName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CController;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isPartialView;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn RecursiveAddMethod;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveText;
     }
 }

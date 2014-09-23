@@ -452,6 +452,39 @@ namespace CHI_MVCCodeHelper
 
                 #region AddTableNameAsync
 
+                string recursive = "";
+                bool recursivecheck = Convert.ToBoolean(item.Cells[5].Value);
+
+                if (recursivecheck)
+                {
+                    foreach (DataGridViewRow itemm in PKGV.Rows)
+                    {
+                        if (itemm.Cells[0].Value == null)
+                        {
+                            continue;
+                        }
+                        if (itemm.Cells[6].Value != null)
+                        {
+                            string FKTableName = itemm.Cells[6].Value.ToString();
+                            string FKTableNamePlurar = FKTableName + "s";
+                            if (FKTableName.Last().Equals('y'))
+                            {
+                                //agency agenc ies
+                                FKTableNamePlurar = FKTableName.Remove(FKTableName.Length - 1) + "ies";
+                            }
+                            string FKTableNameVM = FKTableName + "VM";
+
+                            recursive = recursive + "foreach (var " + FKTableName.ToLower() + " in  model." +
+                                        FKTableNamePlurar + " ?? Enumerable.Empty<" + FKTableNameVM + ">())" + n +
+                                        "{" + n +
+                                        FKTableName.ToLower() + "." + primaryKeyCamel + " =model." + primaryKeyCamel +
+                                        ";" + n +
+                                        "await Add" + FKTableName + @"Async(" + FKTableName.ToLower() + ");" +
+                                        n + "}"+n;
+                        }
+                    }
+                    item.Cells[6].Value = recursive;
+                }
                 repoCode = repoCode + @"
 
             public async Task<int?> Add" + tableName + @"Async(" + viewModelName + @" model)
@@ -460,8 +493,8 @@ namespace CHI_MVCCodeHelper
             {
                 var entity = _db." + tableName + @".Add(model.ToEntity());
                 await _db.SaveChangesAsync();
-                Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");
-                return entity." + primaryKey + @";
+                Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");" + n +n+
+                             recursive + n + @"return entity." + primaryKey + @";
             }
             catch (DbEntityValidationException ex)
             {
@@ -613,11 +646,11 @@ namespace CHI_MVCCodeHelper
                 if (!TableGrid.Rows
                   .Cast<DataGridViewRow>()
                   .Any(r => r.Cells["CTableName"].Value != null && r.Cells["CTableName"].Value.ToString().Equals(TableNameRepo.Text)))
-                    TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text, isPartial.Checked);
+                    TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text, isPartial.Checked, recursiveAdd.Checked);
 
             }
             else
-                TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text, isPartial.Checked);
+                TableGrid.Rows.Add(TableNameRepo.Text, RegionTB.Text, RepoNameTB.Text, ControllerNameTB.Text, isPartial.Checked, recursiveAdd.Checked);
             //foreach (var item in TableNameRepo.Items)
             //{
             //    TableGrid.Rows.Add(item.ToString(), FKTB.Text, item.ToString());
@@ -1571,13 +1604,13 @@ namespace CHI_MVCCodeHelper
             const string n = "\n";
             switch (dataType)
             {
-                case "string": c = size != null && size.Value < 200 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n
-                                                                    : @"@Html.TextAreaFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
+                case "string": c = size != null && size.Value < 200 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + n
+                                                                    : @"@Html.TextAreaFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + n;
                     break;
 
-                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + n;
+                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block""})" + n + n;
                     break;
-                case "int" :
+                case "int":
                 case "tinyint":
                 case "smallint":
                 case "bigint":
@@ -1592,7 +1625,7 @@ namespace CHI_MVCCodeHelper
                                              <i class=""fa fa-angle-down""></i>
                                          </button>
                                   </div>" + n
-                                + @"@Html.ValidationMessageFor(a => a." + controlName + @")" + n + "</div>" + n + "</div>" + n;
+                                + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + "</div>" + n + "</div>" + n;
                     break;
             }
             return c;
