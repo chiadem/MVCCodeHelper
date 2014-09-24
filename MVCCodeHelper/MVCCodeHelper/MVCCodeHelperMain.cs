@@ -452,7 +452,7 @@ namespace CHI_MVCCodeHelper
 
                 #region AddTableNameAsync
 
-                string recursive = "";
+                string recursiveAdd = ""; string recursiveUpdate = "";
                 bool recursivecheck = Convert.ToBoolean(item.Cells[5].Value);
 
                 if (recursivecheck)
@@ -474,16 +474,26 @@ namespace CHI_MVCCodeHelper
                             }
                             string FKTableNameVM = FKTableName + "VM";
 
-                            recursive = recursive + "foreach (var " + FKTableName.ToLower() + " in  model." +
+                            recursiveAdd = recursiveAdd + "foreach (var " + FKTableName.ToLower() + " in  model." +
                                         FKTableNamePlurar + " ?? Enumerable.Empty<" + FKTableNameVM + ">())" + n +
                                         "{" + n +
                                         FKTableName.ToLower() + "." + primaryKeyCamel + " =model." + primaryKeyCamel +
                                         ";" + n +
                                         "await Add" + FKTableName + @"Async(" + FKTableName.ToLower() + ");" +
                                         n + "}"+n;
+
+                            recursiveUpdate = recursiveUpdate + "foreach (var " + FKTableName.ToLower() + " in  model." +
+                                        FKTableNamePlurar + " ?? Enumerable.Empty<" + FKTableNameVM + ">())" + n +
+                                        "{" + n +
+                                        FKTableName.ToLower() + "." + primaryKeyCamel + " =model." + primaryKeyCamel +
+                                        ";" + n +
+                                        "await AddOrUpdate" + FKTableName + @"Async(" + FKTableName.ToLower() + ");" +
+                                        n + "}" + n;
                         }
                     }
-                    item.Cells[6].Value = recursive;
+                    item.Cells[6].Value = recursiveAdd;
+                    item.Cells[7].Value = recursiveUpdate;
+              
                 }
                 repoCode = repoCode + @"
 
@@ -493,8 +503,9 @@ namespace CHI_MVCCodeHelper
             {
                 var entity = _db." + tableName + @".Add(model.ToEntity());
                 await _db.SaveChangesAsync();
+                model." + primaryKeyCamel + @"=entity." + primaryKey + @";
                 Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");" + n +n+
-                             recursive + n + @"return entity." + primaryKey + @";
+                             recursiveAdd + n + @"return entity." + primaryKey + @";
             }
             catch (DbEntityValidationException ex)
             {
@@ -527,7 +538,9 @@ namespace CHI_MVCCodeHelper
                 entity = model.ToEntity(entity);
                 _db.Entry(entity).State = EntityState.Modified;
                 await _db.SaveChangesAsync();
-                Log.Info(""" + tableName + @" updated with id "" + model." + primaryKeyCamel + @");
+                model." + primaryKeyCamel + @"=entity." + primaryKey + @";
+                Log.Info(""" + tableName + @" updated with id "" + model." + primaryKeyCamel + @");" + n +
+                             recursiveUpdate + n +@"
                 return true;
             }
             catch (DbEntityValidationException ex)

@@ -53,6 +53,7 @@
             this.TableNameLabel = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
+            this.recursiveAdd = new System.Windows.Forms.CheckBox();
             this.isPartial = new System.Windows.Forms.CheckBox();
             this.ActionsResult = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -107,14 +108,14 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.recursiveAdd = new System.Windows.Forms.CheckBox();
             this.CTableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CRegionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CRepoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CController = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isPartialView = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.RecursiveAddMethod = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.RecursiveText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RecursiveAddText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RecursiveUpdateText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -449,6 +450,17 @@
             this.label13.TabIndex = 28;
             this.label13.Text = "Queue (tables to be processed to generate codes)";
             // 
+            // recursiveAdd
+            // 
+            this.recursiveAdd.AutoSize = true;
+            this.recursiveAdd.Location = new System.Drawing.Point(243, 133);
+            this.recursiveAdd.Margin = new System.Windows.Forms.Padding(2);
+            this.recursiveAdd.Name = "recursiveAdd";
+            this.recursiveAdd.Size = new System.Drawing.Size(258, 17);
+            this.recursiveAdd.TabIndex = 15;
+            this.recursiveAdd.Text = "Recursive Repository Add and Update Methods?";
+            this.recursiveAdd.UseVisualStyleBackColor = true;
+            // 
             // isPartial
             // 
             this.isPartial.AutoSize = true;
@@ -562,7 +574,8 @@
             this.CController,
             this.isPartialView,
             this.RecursiveAddMethod,
-            this.RecursiveText});
+            this.RecursiveAddText,
+            this.RecursiveUpdateText});
             this.TableGrid.Location = new System.Drawing.Point(850, 153);
             this.TableGrid.Name = "TableGrid";
             this.TableGrid.Size = new System.Drawing.Size(510, 541);
@@ -1063,17 +1076,6 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // recursiveAdd
-            // 
-            this.recursiveAdd.AutoSize = true;
-            this.recursiveAdd.Location = new System.Drawing.Point(243, 133);
-            this.recursiveAdd.Margin = new System.Windows.Forms.Padding(2);
-            this.recursiveAdd.Name = "recursiveAdd";
-            this.recursiveAdd.Size = new System.Drawing.Size(194, 17);
-            this.recursiveAdd.TabIndex = 15;
-            this.recursiveAdd.Text = "Recursive Repository Add Method?";
-            this.recursiveAdd.UseVisualStyleBackColor = true;
-            // 
             // CTableName
             // 
             this.CTableName.HeaderText = "Table Name";
@@ -1104,11 +1106,16 @@
             this.RecursiveAddMethod.HeaderText = "RecursiveAdd";
             this.RecursiveAddMethod.Name = "RecursiveAddMethod";
             // 
-            // RecursiveText
+            // RecursiveAddText
             // 
-            this.RecursiveText.HeaderText = "RecursiveAddText";
-            this.RecursiveText.Name = "RecursiveText";
-            this.RecursiveText.ReadOnly = true;
+            this.RecursiveAddText.HeaderText = "RecursiveAddText";
+            this.RecursiveAddText.Name = "RecursiveAddText";
+            this.RecursiveAddText.ReadOnly = true;
+            // 
+            // RecursiveUpdateText
+            // 
+            this.RecursiveUpdateText.HeaderText = "RecursiveUpdateText";
+            this.RecursiveUpdateText.Name = "RecursiveUpdateText";
             // 
             // MVCCodeHelperMain
             // 
@@ -1234,6 +1241,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CController;
         private System.Windows.Forms.DataGridViewCheckBoxColumn isPartialView;
         private System.Windows.Forms.DataGridViewCheckBoxColumn RecursiveAddMethod;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveAddText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveUpdateText;
     }
 }
