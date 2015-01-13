@@ -59,7 +59,7 @@ namespace CHI_MVCCodeHelper
             try
             {
                 _dbConnection.Open();
-                MessageBox.Show("Success!");
+                MessageBox.Show("Succesful! Setting are saved.");
                 Settings.Set("User", UserTB.Text);
                 Settings.Set("Password", PassTB.Text);
                 Settings.Set("Server", ServeTB.Text);
@@ -151,7 +151,7 @@ namespace CHI_MVCCodeHelper
                 string[,] columns = new string[100, 4];
                 const string n = "\n";
 
-                string vmCode = "public  class " + viewModelName + n + "{" + n + n;
+                string vmCode = "public  class " + viewModelName + " : IViewModel" + n + "{" + n + n;
 
                 string toEntity = @"public " + tableName + @" ToEntity()" + n + @"
             {" + n + @"
@@ -229,9 +229,9 @@ namespace CHI_MVCCodeHelper
                         vmCode = vmCode + @"[Required(ErrorMessage = ""{0} value is empty"")]" + n;
                     }
 
-                    if (IsKey & HiddenInputAnn.Checked)
+                    if (IsKey)
                     {
-                        vmCode = vmCode + "[HiddenInput(DisplayValue = false)]" + n;
+                        vmCode = HiddenInputAnn.Checked ? vmCode + "[HiddenInput(DisplayValue = false)]" : vmCode + n;
                         primaryKey = columnName;
                         parameterPK = columnName.Replace("ID", "Id");
                         primaryKeyCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
@@ -308,7 +308,7 @@ namespace CHI_MVCCodeHelper
         {
 
             if (TableGrid.Rows.Count == 0 || TableGrid.Rows[0].Cells[0].Value == null)
-                MessageBox.Show("Add at least a table to the queue! \n Or make sure all table names are set in the queue.");
+                MessageBox.Show("Add at least one table to the queue! And make sure all table names are set in the queue.");
 
 
             var cmd = new SqlCommand();
@@ -480,7 +480,7 @@ namespace CHI_MVCCodeHelper
                                         FKTableName.ToLower() + "." + primaryKeyCamel + " =model." + primaryKeyCamel +
                                         ";" + n +
                                         "await Add" + FKTableName + @"Async(" + FKTableName.ToLower() + ");" +
-                                        n + "}"+n;
+                                        n + "}" + n;
 
                             recursiveUpdate = recursiveUpdate + "foreach (var " + FKTableName.ToLower() + " in  model." +
                                         FKTableNamePlurar + " ?? Enumerable.Empty<" + FKTableNameVM + ">())" + n +
@@ -493,7 +493,7 @@ namespace CHI_MVCCodeHelper
                     }
                     item.Cells[6].Value = recursiveAdd;
                     item.Cells[7].Value = recursiveUpdate;
-              
+
                 }
                 repoCode = repoCode + @"
 
@@ -504,7 +504,7 @@ namespace CHI_MVCCodeHelper
                 var entity = _db." + tableName + @".Add(model.ToEntity());
                 await _db.SaveChangesAsync();
                 model." + primaryKeyCamel + @"=entity." + primaryKey + @";
-                Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");" + n +n+
+                Log.Info(""" + tableName + @" added with id  "" + model." + primaryKeyCamel + @");" + n + n +
                              recursiveAdd + n + @"return entity." + primaryKey + @";
             }
             catch (DbEntityValidationException ex)
@@ -540,7 +540,7 @@ namespace CHI_MVCCodeHelper
                 await _db.SaveChangesAsync();
                 model." + primaryKeyCamel + @"=entity." + primaryKey + @";
                 Log.Info(""" + tableName + @" updated with id "" + model." + primaryKeyCamel + @");" + n +
-                             recursiveUpdate + n +@"
+                             recursiveUpdate + n + @"
                 return true;
             }
             catch (DbEntityValidationException ex)
@@ -651,7 +651,7 @@ namespace CHI_MVCCodeHelper
         {
             if (TableNameRepo.SelectedIndex == -1)
             {
-                MessageBox.Show("Are you kidding me! Select a table first then click this button again!");
+                MessageBox.Show("Which table do you want to add to the queue? Select a table first then click this button again!");
             }
             else if (TableGrid.Rows.Count > 1)
             {
@@ -1467,6 +1467,12 @@ namespace CHI_MVCCodeHelper
 
         private void ViewButton_Click(object sender, EventArgs e)
         {
+            if (ViewHelperTableCB.SelectedItem == null)
+            {
+                MessageBox.Show("Select a table first bro!");
+                return;
+            }
+
             string tableName = ViewHelperTableCB.SelectedItem.ToString();
             const string n = "\n";
             string code = @"<!--#region " + tableName + @"  -->" + n;
@@ -1494,7 +1500,7 @@ namespace CHI_MVCCodeHelper
                 DataTable schemaTable = myReader.GetSchemaTable();
 
                 //For each field in the table...
-                if (!luckyCheckBox.Checked)
+                if (radioButtonLabel.Checked)
                 {
                     int i = 0;
                     foreach (var item in listBox1.Items)
@@ -1519,15 +1525,15 @@ namespace CHI_MVCCodeHelper
                             bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
                             bool IsKey = Convert.ToBoolean(myField["IsKey"]);
 
-                            if (generateLabelsCheck.Checked)
+                            if (radioButtonBoth.Checked || radioButtonLabel.Checked)
                             {
-                                code = dataType != "bool" ? code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")" + n
-                                    : code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" })" + n + n;
+                                code = dataType != "bool" ? code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-12" + @""" },""" + ":" + @""")" + n
+                                    : code + @"@Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
 
                             }
 
                             if (StaticControlsCheck.Checked)
-                                code = code + @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." + columnNameCamel + @").ToString()""></p>" + n + n;
+                                code = code + @"<p data-bind=""text: @Html.NameFor(a => a." + columnNameCamel + @").ToString()""></p>" + n + n;
                             else
                                 code = code + GenerateControl(dataType, columnNameCamel);
 
@@ -1546,6 +1552,60 @@ namespace CHI_MVCCodeHelper
 
                     }
                 }
+                else if (radioButtonBoth.Checked)
+                {
+                    int listIndex = 0;
+                    code = code + @"<div class=""row"">";
+                    for (int k = 0; k <= listBox1.Items.Count; k++)
+                    {
+                        if (listIndex == listBox1.Items.Count) continue;
+                        if (schemaTable != null)
+                        {
+                            DataRow myField = schemaTable.Rows[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key];
+
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 0] = myField["ColumnName"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 1] = myField["DataType"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 2] = myField["ColumnSize"].ToString();
+                            columns[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key, 3] = myField["AllowDBNull"].ToString();
+
+                            string columnName = myField["ColumnName"].ToString();
+
+                            string columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
+                            columnNameCamel = columnNameCamel.Replace("ID", "Id");
+
+                            string displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                            string dataType = myField["DataType"].ToString().Replace("System.", "").Replace("Int16", "short").Replace("Int32", "int").Replace("Int", "int").Replace("String", "string").Replace("Boolean", "bool");
+                            int size = Convert.ToInt32(myField["ColumnSize"]);
+                            bool isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                            bool IsKey = Convert.ToBoolean(myField["IsKey"]);
+
+                            string control = StaticControlsCheck.Checked
+                                ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." + nestedPrefix.Text +
+                                  columnNameCamel + @").ToString()""></p>" + n
+                                : GenerateControl(dataType, columnNameCamel, size);
+
+
+                            code = dataType != "bool"
+                                ? code + n + @"<div class=""" + textBoxFormclass.Text + @""">
+                                                @Html.LabelFor(a => a." + nestedPrefix.Text + columnNameCamel +
+                                  @", new { @class = ""control-label col-md-12"" },""" + ":" + @""")
+                                                <div class=""col-md-12"">" +
+                                  control
+                                  + @"</div>" + n + @"   </div>"
+
+                                : code + n + @"<div class=""" + textBoxFormclass.Text + @""">
+                                                @Html.LabelFor(a => a." + nestedPrefix.Text + columnNameCamel +
+                                  @", new { @class = ""control-label col-md-12"" },""" + @""")
+                                                <div class=""col-md-12"">" +
+                                  control
+                                  + @"</div>" + n + @"   </div>";
+
+                            listIndex++;
+                        }
+
+                    } code = code + @"</div>" + n;
+                }
+                //Old lucky checkbox code
                 else
                 {
                     int listIndex = 0;
@@ -1554,10 +1614,8 @@ namespace CHI_MVCCodeHelper
                         if (listIndex == listBox1.Items.Count) continue;
 
                         code = code + @"<div class=""row"">";
-                        for (int j = 0; j < rowCount.Value; j++)
+                        for (int j = 0; j < listBox1.Items.Count; j++)
                         {
-                            int index;
-                            if (listIndex == listBox1.Items.Count) continue;
                             if (schemaTable != null)
                             {
                                 DataRow myField = schemaTable.Rows[Columns.FirstOrDefault(v => v.Value == (string)listBox1.Items[listIndex]).Key];
@@ -1586,7 +1644,7 @@ namespace CHI_MVCCodeHelper
 
                                 code = dataType != "bool" ?
                                         code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
-                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + labelPostFix.Text + @""")
+                                                @Html.LabelFor(a => a." + columnNameCamel + @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" + ":" + @""")
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
                                        control
                                        + @"</div>" + n + @"   </div>"
@@ -1617,46 +1675,39 @@ namespace CHI_MVCCodeHelper
             const string n = "\n";
             switch (dataType)
             {
-                case "string": c = size != null && size.Value < 200 ? @"@Html.TextBoxFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + n
-                                                                    : @"@Html.TextAreaFor(a => a." + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + n;
+                case "string": c = size != null && size.Value < 200 ? @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + nestedPrefix.Text + controlName + @", null, new { @class = ""help-block"" })" + n
+                                                                    : @"@Html.TextAreaFor(a => a." + nestedPrefix.Text + controlName + @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." + nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + nestedPrefix.Text + controlName + @", null, new { @class = ""help-block"" })" + n;
                     break;
 
-                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block""})" + n + n;
+                case "bool": c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." + nestedPrefix.Text + controlName + @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." + nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + nestedPrefix.Text + controlName + @", null, new { @class = ""help-block""})" + n;
                     break;
                 case "int":
                 case "tinyint":
                 case "smallint":
                 case "bigint":
-                case "short": c = @"<div id=""" + controlName + @"_"">
-                                    <div class=""input-group""> 
-                                @Html.TextBoxFor(a => a." + controlName + @", new { @class = ""spinner-input form-control input-sm"", @maxlength = ""2"", @data_bind = ""value: "" + Html.NameFor(a => a." + controlName + @") })" + n +
-                                @"<div class=""spinner-buttons input-group-btn"">
-                                       <button type=""button"" class=""btn btn-sm spinner-up default"">
-                                            <i class=""fa fa-angle-up""></i>
-                                        </button>
-                                        <button type=""button"" class=""btn btn-sm spinner-down default"">
-                                             <i class=""fa fa-angle-down""></i>
-                                         </button>
-                                  </div>" + n
-                                + @"@Html.ValidationMessageFor(a => a." + controlName + @", null, new { @class = ""help-block"" })" + n + "</div>" + n + "</div>" + n;
+                case "short":
+                    c = @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName +
+                        @", new { @class = ""form-control input-sm"", @type=""number"", @data_bind = ""value: "" + Html.NameFor(a => a." + nestedPrefix.Text +
+                        controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + nestedPrefix.Text + controlName +
+                        @", null, new { @class = ""help-block"" })" + n;
                     break;
             }
             return c;
         }
         private void luckyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (luckyCheckBox.Checked)
-            {
-                LuckyGroup.Show();
-                generateLabelsCheck.Checked = true;
-                generateLabelsCheck.Enabled = false;
-            }
-            else
-            {
-                generateLabelsCheck.Enabled = true;
+            //if (luckyCheckBox.Checked)
+            //{
+            //    LuckyGroup.Show();
+            //    generateLabelsCheck.Checked = true;
+            //    generateLabelsCheck.Enabled = false;
+            //}
+            //else
+            //{
+            //    generateLabelsCheck.Enabled = true;
 
-                LuckyGroup.Hide();
-            }
+            //    LuckyGroup.Hide();
+            //}
         }
 
         private void columnList_SelectedIndexChanged(object sender, EventArgs e)
@@ -1725,6 +1776,11 @@ namespace CHI_MVCCodeHelper
             {
                 GroupMd.Value = 12 / rowCount.Value;
             }
+        }
+
+        private void radioButtonBoth_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxLabelsandControlsOption.Visible = radioButtonBoth.Checked;
         }
 
 

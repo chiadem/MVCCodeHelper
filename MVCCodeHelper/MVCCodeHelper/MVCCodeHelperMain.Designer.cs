@@ -65,6 +65,14 @@
             this.FKGV = new System.Windows.Forms.DataGridView();
             this.PKGV = new System.Windows.Forms.DataGridView();
             this.TableGrid = new System.Windows.Forms.DataGridView();
+            this.CTableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRegionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CRepoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CController = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.isPartialView = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.RecursiveAddMethod = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.RecursiveAddText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RecursiveUpdateText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.QueueBtn = new System.Windows.Forms.Button();
             this.RepoCodeText = new System.Windows.Forms.RichTextBox();
             this.RepoBtn = new System.Windows.Forms.Button();
@@ -75,12 +83,17 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButtonLabel = new System.Windows.Forms.RadioButton();
+            this.radioButtonBoth = new System.Windows.Forms.RadioButton();
+            this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
+            this.groupBoxLabelsandControlsOption = new System.Windows.Forms.GroupBox();
+            this.textBoxFormclass = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.LuckyGroup = new System.Windows.Forms.GroupBox();
-            this.labelPostFix = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.ControlLabelMd = new System.Windows.Forms.NumericUpDown();
             this.rowCount = new System.Windows.Forms.NumericUpDown();
@@ -90,8 +103,6 @@
             this.ControllMD = new System.Windows.Forms.NumericUpDown();
             this.GroupMd = new System.Windows.Forms.NumericUpDown();
             this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
-            this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
-            this.generateLabelsCheck = new System.Windows.Forms.CheckBox();
             this.luckyCheckBox = new System.Windows.Forms.CheckBox();
             this.ViewButton = new System.Windows.Forms.Button();
             this.ViewCode = new System.Windows.Forms.RichTextBox();
@@ -108,14 +119,8 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.CTableName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRegionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CRepoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CController = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.isPartialView = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.RecursiveAddMethod = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.RecursiveAddText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RecursiveUpdateText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nestedPrefix = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -123,6 +128,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.PKGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TableGrid)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBoxLabelsandControlsOption.SuspendLayout();
             this.LuckyGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ControlLabelMd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rowCount)).BeginInit();
@@ -581,6 +588,47 @@
             this.TableGrid.Size = new System.Drawing.Size(510, 541);
             this.TableGrid.TabIndex = 18;
             // 
+            // CTableName
+            // 
+            this.CTableName.HeaderText = "Table Name";
+            this.CTableName.Name = "CTableName";
+            // 
+            // CRegionName
+            // 
+            this.CRegionName.HeaderText = "Region Name";
+            this.CRegionName.Name = "CRegionName";
+            // 
+            // CRepoName
+            // 
+            this.CRepoName.HeaderText = "Repo Name";
+            this.CRepoName.Name = "CRepoName";
+            // 
+            // CController
+            // 
+            this.CController.HeaderText = "Controller";
+            this.CController.Name = "CController";
+            // 
+            // isPartialView
+            // 
+            this.isPartialView.HeaderText = "PartialView?";
+            this.isPartialView.Name = "isPartialView";
+            // 
+            // RecursiveAddMethod
+            // 
+            this.RecursiveAddMethod.HeaderText = "RecursiveAdd";
+            this.RecursiveAddMethod.Name = "RecursiveAddMethod";
+            // 
+            // RecursiveAddText
+            // 
+            this.RecursiveAddText.HeaderText = "RecursiveAddText";
+            this.RecursiveAddText.Name = "RecursiveAddText";
+            this.RecursiveAddText.ReadOnly = true;
+            // 
+            // RecursiveUpdateText
+            // 
+            this.RecursiveUpdateText.HeaderText = "RecursiveUpdateText";
+            this.RecursiveUpdateText.Name = "RecursiveUpdateText";
+            // 
             // QueueBtn
             // 
             this.QueueBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -686,13 +734,13 @@
             // 
             this.tabPage4.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
             this.tabPage4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage4.Controls.Add(this.groupBox2);
+            this.tabPage4.Controls.Add(this.groupBoxLabelsandControlsOption);
             this.tabPage4.Controls.Add(this.label21);
             this.tabPage4.Controls.Add(this.label20);
             this.tabPage4.Controls.Add(this.listBox1);
             this.tabPage4.Controls.Add(this.LuckyGroup);
             this.tabPage4.Controls.Add(this.DefaultscheckBox);
-            this.tabPage4.Controls.Add(this.StaticControlsCheck);
-            this.tabPage4.Controls.Add(this.generateLabelsCheck);
             this.tabPage4.Controls.Add(this.luckyCheckBox);
             this.tabPage4.Controls.Add(this.ViewButton);
             this.tabPage4.Controls.Add(this.ViewCode);
@@ -703,8 +751,85 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(1370, 712);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "View Controls Generator (Alfa)";
+            this.tabPage4.Text = "View Controls Generator";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.nestedPrefix);
+            this.groupBox2.Controls.Add(this.radioButtonLabel);
+            this.groupBox2.Controls.Add(this.radioButtonBoth);
+            this.groupBox2.Controls.Add(this.StaticControlsCheck);
+            this.groupBox2.Controls.Add(this.label23);
+            this.groupBox2.Location = new System.Drawing.Point(111, 48);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(366, 73);
+            this.groupBox2.TabIndex = 39;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Generate Option";
+            // 
+            // radioButtonLabel
+            // 
+            this.radioButtonLabel.AutoSize = true;
+            this.radioButtonLabel.Location = new System.Drawing.Point(6, 42);
+            this.radioButtonLabel.Name = "radioButtonLabel";
+            this.radioButtonLabel.Size = new System.Drawing.Size(78, 17);
+            this.radioButtonLabel.TabIndex = 0;
+            this.radioButtonLabel.TabStop = true;
+            this.radioButtonLabel.Text = "Labels only";
+            this.radioButtonLabel.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonBoth
+            // 
+            this.radioButtonBoth.AutoSize = true;
+            this.radioButtonBoth.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonBoth.Name = "radioButtonBoth";
+            this.radioButtonBoth.Size = new System.Drawing.Size(117, 17);
+            this.radioButtonBoth.TabIndex = 0;
+            this.radioButtonBoth.TabStop = true;
+            this.radioButtonBoth.Text = "Labels and controls";
+            this.radioButtonBoth.UseVisualStyleBackColor = true;
+            this.radioButtonBoth.CheckedChanged += new System.EventHandler(this.radioButtonBoth_CheckedChanged);
+            // 
+            // StaticControlsCheck
+            // 
+            this.StaticControlsCheck.AutoSize = true;
+            this.StaticControlsCheck.Location = new System.Drawing.Point(256, 19);
+            this.StaticControlsCheck.Name = "StaticControlsCheck";
+            this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
+            this.StaticControlsCheck.TabIndex = 35;
+            this.StaticControlsCheck.Text = "Static Controls?";
+            this.StaticControlsCheck.UseVisualStyleBackColor = true;
+            this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
+            // groupBoxLabelsandControlsOption
+            // 
+            this.groupBoxLabelsandControlsOption.Controls.Add(this.textBoxFormclass);
+            this.groupBoxLabelsandControlsOption.Controls.Add(this.label22);
+            this.groupBoxLabelsandControlsOption.Location = new System.Drawing.Point(111, 144);
+            this.groupBoxLabelsandControlsOption.Name = "groupBoxLabelsandControlsOption";
+            this.groupBoxLabelsandControlsOption.Size = new System.Drawing.Size(375, 48);
+            this.groupBoxLabelsandControlsOption.TabIndex = 39;
+            this.groupBoxLabelsandControlsOption.TabStop = false;
+            this.groupBoxLabelsandControlsOption.Text = "Labels and Controls option";
+            this.groupBoxLabelsandControlsOption.Visible = false;
+            // 
+            // textBoxFormclass
+            // 
+            this.textBoxFormclass.Location = new System.Drawing.Point(101, 19);
+            this.textBoxFormclass.Name = "textBoxFormclass";
+            this.textBoxFormclass.Size = new System.Drawing.Size(268, 20);
+            this.textBoxFormclass.TabIndex = 36;
+            this.textBoxFormclass.Text = "form-group col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 22);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(93, 13);
+            this.label22.TabIndex = 35;
+            this.label22.Text = "Form group class :";
             // 
             // label21
             // 
@@ -747,8 +872,6 @@
             // 
             // LuckyGroup
             // 
-            this.LuckyGroup.Controls.Add(this.labelPostFix);
-            this.LuckyGroup.Controls.Add(this.label22);
             this.LuckyGroup.Controls.Add(this.label17);
             this.LuckyGroup.Controls.Add(this.ControlLabelMd);
             this.LuckyGroup.Controls.Add(this.rowCount);
@@ -757,30 +880,13 @@
             this.LuckyGroup.Controls.Add(this.label15);
             this.LuckyGroup.Controls.Add(this.ControllMD);
             this.LuckyGroup.Controls.Add(this.GroupMd);
-            this.LuckyGroup.Location = new System.Drawing.Point(111, 92);
+            this.LuckyGroup.Location = new System.Drawing.Point(627, 71);
             this.LuckyGroup.Name = "LuckyGroup";
             this.LuckyGroup.Size = new System.Drawing.Size(526, 114);
             this.LuckyGroup.TabIndex = 36;
             this.LuckyGroup.TabStop = false;
             this.LuckyGroup.Text = "Good Luck";
             this.LuckyGroup.Visible = false;
-            // 
-            // labelPostFix
-            // 
-            this.labelPostFix.Location = new System.Drawing.Point(141, 83);
-            this.labelPostFix.Name = "labelPostFix";
-            this.labelPostFix.Size = new System.Drawing.Size(108, 20);
-            this.labelPostFix.TabIndex = 36;
-            this.labelPostFix.Text = ":";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(27, 86);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(70, 13);
-            this.label22.TabIndex = 35;
-            this.label22.Text = "Label PostFix";
             // 
             // label17
             // 
@@ -878,43 +984,22 @@
             this.DefaultscheckBox.UseVisualStyleBackColor = true;
             this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
-            // StaticControlsCheck
-            // 
-            this.StaticControlsCheck.AutoSize = true;
-            this.StaticControlsCheck.Location = new System.Drawing.Point(227, 47);
-            this.StaticControlsCheck.Name = "StaticControlsCheck";
-            this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
-            this.StaticControlsCheck.TabIndex = 35;
-            this.StaticControlsCheck.Text = "Static Controls?";
-            this.StaticControlsCheck.UseVisualStyleBackColor = true;
-            this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
-            // 
-            // generateLabelsCheck
-            // 
-            this.generateLabelsCheck.AutoSize = true;
-            this.generateLabelsCheck.Location = new System.Drawing.Point(111, 47);
-            this.generateLabelsCheck.Name = "generateLabelsCheck";
-            this.generateLabelsCheck.Size = new System.Drawing.Size(110, 17);
-            this.generateLabelsCheck.TabIndex = 35;
-            this.generateLabelsCheck.Text = "Generate Labels?";
-            this.generateLabelsCheck.UseVisualStyleBackColor = true;
-            this.generateLabelsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
-            // 
             // luckyCheckBox
             // 
             this.luckyCheckBox.AutoSize = true;
-            this.luckyCheckBox.Location = new System.Drawing.Point(111, 69);
+            this.luckyCheckBox.Location = new System.Drawing.Point(627, 48);
             this.luckyCheckBox.Name = "luckyCheckBox";
             this.luckyCheckBox.Size = new System.Drawing.Size(84, 17);
             this.luckyCheckBox.TabIndex = 35;
             this.luckyCheckBox.Text = "I Feel Lucky";
             this.luckyCheckBox.UseVisualStyleBackColor = true;
+            this.luckyCheckBox.Visible = false;
             this.luckyCheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
             // ViewButton
             // 
             this.ViewButton.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
-            this.ViewButton.Location = new System.Drawing.Point(23, 270);
+            this.ViewButton.Location = new System.Drawing.Point(23, 213);
             this.ViewButton.Margin = new System.Windows.Forms.Padding(2);
             this.ViewButton.Name = "ViewButton";
             this.ViewButton.Size = new System.Drawing.Size(455, 25);
@@ -927,10 +1012,10 @@
             // 
             this.ViewCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.ViewCode.Location = new System.Drawing.Point(23, 299);
+            this.ViewCode.Location = new System.Drawing.Point(23, 242);
             this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
             this.ViewCode.Name = "ViewCode";
-            this.ViewCode.Size = new System.Drawing.Size(1151, 395);
+            this.ViewCode.Size = new System.Drawing.Size(1151, 452);
             this.ViewCode.TabIndex = 29;
             this.ViewCode.Text = "";
             // 
@@ -1076,46 +1161,21 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // CTableName
+            // nestedPrefix
             // 
-            this.CTableName.HeaderText = "Table Name";
-            this.CTableName.Name = "CTableName";
+            this.nestedPrefix.Location = new System.Drawing.Point(256, 43);
+            this.nestedPrefix.Name = "nestedPrefix";
+            this.nestedPrefix.Size = new System.Drawing.Size(104, 20);
+            this.nestedPrefix.TabIndex = 36;
             // 
-            // CRegionName
+            // label23
             // 
-            this.CRegionName.HeaderText = "Region Name";
-            this.CRegionName.Name = "CRegionName";
-            // 
-            // CRepoName
-            // 
-            this.CRepoName.HeaderText = "Repo Name";
-            this.CRepoName.Name = "CRepoName";
-            // 
-            // CController
-            // 
-            this.CController.HeaderText = "Controller";
-            this.CController.Name = "CController";
-            // 
-            // isPartialView
-            // 
-            this.isPartialView.HeaderText = "PartialView?";
-            this.isPartialView.Name = "isPartialView";
-            // 
-            // RecursiveAddMethod
-            // 
-            this.RecursiveAddMethod.HeaderText = "RecursiveAdd";
-            this.RecursiveAddMethod.Name = "RecursiveAddMethod";
-            // 
-            // RecursiveAddText
-            // 
-            this.RecursiveAddText.HeaderText = "RecursiveAddText";
-            this.RecursiveAddText.Name = "RecursiveAddText";
-            this.RecursiveAddText.ReadOnly = true;
-            // 
-            // RecursiveUpdateText
-            // 
-            this.RecursiveUpdateText.HeaderText = "RecursiveUpdateText";
-            this.RecursiveUpdateText.Name = "RecursiveUpdateText";
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(126, 46);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(130, 13);
+            this.label23.TabIndex = 34;
+            this.label23.Text = "Control prefix (for nested) :";
             // 
             // MVCCodeHelperMain
             // 
@@ -1142,6 +1202,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.TableGrid)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBoxLabelsandControlsOption.ResumeLayout(false);
+            this.groupBoxLabelsandControlsOption.PerformLayout();
             this.LuckyGroup.ResumeLayout(false);
             this.LuckyGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ControlLabelMd)).EndInit();
@@ -1227,12 +1291,9 @@
         private System.Windows.Forms.NumericUpDown ControllMD;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.CheckBox generateLabelsCheck;
         private System.Windows.Forms.CheckBox DefaultscheckBox;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.CheckBox StaticControlsCheck;
-        private System.Windows.Forms.TextBox labelPostFix;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox recursiveAdd;
         private System.Windows.Forms.DataGridViewTextBoxColumn CTableName;
@@ -1243,5 +1304,13 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn RecursiveAddMethod;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveAddText;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecursiveUpdateText;
+        private System.Windows.Forms.GroupBox groupBoxLabelsandControlsOption;
+        private System.Windows.Forms.CheckBox StaticControlsCheck;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radioButtonLabel;
+        private System.Windows.Forms.RadioButton radioButtonBoth;
+        private System.Windows.Forms.TextBox textBoxFormclass;
+        private System.Windows.Forms.TextBox nestedPrefix;
+        private System.Windows.Forms.Label label23;
     }
 }
