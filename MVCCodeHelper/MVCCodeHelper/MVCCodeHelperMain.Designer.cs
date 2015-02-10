@@ -106,12 +106,14 @@
             this.label15 = new System.Windows.Forms.Label();
             this.ControllMD = new System.Windows.Forms.NumericUpDown();
             this.GroupMd = new System.Windows.Forms.NumericUpDown();
+            this.AutoCamelCase = new System.Windows.Forms.CheckBox();
             this.DefaultscheckBox = new System.Windows.Forms.CheckBox();
             this.luckyCheckBox = new System.Windows.Forms.CheckBox();
             this.ViewButton = new System.Windows.Forms.Button();
             this.ViewCode = new System.Windows.Forms.RichTextBox();
             this.ViewHelperTableCB = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -125,8 +127,6 @@
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
             this.classFile = new System.Windows.Forms.OpenFileDialog();
-            this.label25 = new System.Windows.Forms.Label();
-            this.AutoCamelCase = new System.Windows.Forms.CheckBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -1023,6 +1023,19 @@
             0,
             0});
             // 
+            // AutoCamelCase
+            // 
+            this.AutoCamelCase.AutoSize = true;
+            this.AutoCamelCase.Checked = true;
+            this.AutoCamelCase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoCamelCase.Location = new System.Drawing.Point(482, 240);
+            this.AutoCamelCase.Name = "AutoCamelCase";
+            this.AutoCamelCase.Size = new System.Drawing.Size(153, 17);
+            this.AutoCamelCase.TabIndex = 35;
+            this.AutoCamelCase.Text = "Auto CamelCase properties";
+            this.AutoCamelCase.UseVisualStyleBackColor = true;
+            this.AutoCamelCase.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
+            // 
             // DefaultscheckBox
             // 
             this.DefaultscheckBox.AutoSize = true;
@@ -1090,6 +1103,16 @@
             this.label19.Size = new System.Drawing.Size(54, 13);
             this.label19.TabIndex = 8;
             this.label19.Text = "Columns";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(108, 46);
+            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(18, 13);
+            this.label25.TabIndex = 8;
+            this.label25.Text = "Or";
             // 
             // label24
             // 
@@ -1223,34 +1246,10 @@
             // 
             // classFile
             // 
-            this.classFile.FileName = "openFileDialog1";
             this.classFile.Filter = "C# files|*.cs|All files|*.*";
             this.classFile.ReadOnlyChecked = true;
             this.classFile.ShowReadOnly = true;
             this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(108, 46);
-            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(18, 13);
-            this.label25.TabIndex = 8;
-            this.label25.Text = "Or";
-            // 
-            // AutoCamelCase
-            // 
-            this.AutoCamelCase.AutoSize = true;
-            this.AutoCamelCase.Checked = true;
-            this.AutoCamelCase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoCamelCase.Location = new System.Drawing.Point(482, 240);
-            this.AutoCamelCase.Name = "AutoCamelCase";
-            this.AutoCamelCase.Size = new System.Drawing.Size(153, 17);
-            this.AutoCamelCase.TabIndex = 35;
-            this.AutoCamelCase.Text = "Auto CamelCase properties";
-            this.AutoCamelCase.UseVisualStyleBackColor = true;
-            this.AutoCamelCase.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
             // MVCCodeHelperMain
             // 

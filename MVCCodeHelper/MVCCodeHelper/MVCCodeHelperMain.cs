@@ -1744,9 +1744,9 @@ namespace CHI_MVCCodeHelper
                     {
                         var match = pattern.Match(line);
                         if (!match.Success) continue;
-                        var prop = match.Value.Replace("{ get; set; }", "").Replace("public", "").Trim();
+                        var prop = match.Value.Replace("{ get; set; }", "").Replace("public", "").Replace("virtual","").Trim();
                         var array = prop.Split(null);
-                        var property = new Property { Name = array[1], Type = array[0].Replace("?", "") };
+                        var property = new Property { Name = array[1], Type = array[0] };
                         if (_propertyList == null)
                             _propertyList = new List<Property>();
                         _propertyList.Add(property);
