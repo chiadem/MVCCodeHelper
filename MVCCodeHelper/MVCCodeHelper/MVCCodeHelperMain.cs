@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -15,7 +16,9 @@ namespace CHI_MVCCodeHelper
 {
     public partial class MVCCodeHelperMain : Form
     {
-        private readonly Dictionary<int, string> _columns = new Dictionary<int, string>();
+        //private readonly Dictionary<int, string> _columns = new Dictionary<int, string>();
+
+        private List<Property> _propertyList = new List<Property>();
 
         private SqlConnection _dbConnection;
 
@@ -119,7 +122,7 @@ namespace CHI_MVCCodeHelper
             VMTableCB.Items.Clear();
 
             var dt = _dbConnection.GetSchema("Tables");
-            var tables = (from DataRow row in dt.Rows where ((string) row[3]).Equals("BASE TABLE") && ((string) row[1]).Equals("dbo") select (string) row[2]).ToList();
+            var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
             tables.Sort();
 
             foreach (var item in tables)
@@ -143,7 +146,7 @@ namespace CHI_MVCCodeHelper
                 var columns = new string[100, 4];
                 const string n = "\n";
 
-                var vmCode = "public  class " + viewModelName + " : IViewModel" + n + "{" + n + n;
+                var vmCode = "public  class " + viewModelName + " : ViewModel" + n + "{" + n + n;
 
                 var toEntity = @"public " + tableName + @" ToEntity()" + n + @"
             {" + n + @"
@@ -708,7 +711,7 @@ namespace CHI_MVCCodeHelper
             cmd.Parameters.Add("@fktable_name", SqlDbType.VarChar, 100).Value = tableName;
             cmd.Connection = _dbConnection;
 
-            var da = new SqlDataAdapter {SelectCommand = cmd};
+            var da = new SqlDataAdapter { SelectCommand = cmd };
 
             da.Fill(ds);
 
@@ -1342,7 +1345,7 @@ namespace CHI_MVCCodeHelper
                 TableNameRepo.Items.Clear();
 
                 var dt = _dbConnection.GetSchema("Tables");
-                var tables = (from DataRow row in dt.Rows where ((string) row[3]).Equals("BASE TABLE") && ((string) row[1]).Equals("dbo") select (string) row[2]).ToList();
+                var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
                 tables.Sort();
                 foreach (var item in tables)
                 {
@@ -1395,8 +1398,8 @@ namespace CHI_MVCCodeHelper
         {
             if (ViewHelperTableCB.SelectedIndex == -1) return;
             listBox1.Items.Clear();
-            _columns.Clear();
-
+            _propertyList.Clear();
+            classfilename.Text = "";
             var tableName = ViewHelperTableCB.SelectedItem.ToString();
 
             var columns = new string[100, 4];
@@ -1415,7 +1418,8 @@ namespace CHI_MVCCodeHelper
             var schemaTable = myReader.GetSchemaTable();
             var i = 0;
             //For each field in the table...
-
+            if (_propertyList == null)
+                _propertyList = new List<Property>();
             foreach (DataRow myField in schemaTable.Rows)
             {
                 columns[i, 0] = myField["ColumnName"].ToString();
@@ -1435,12 +1439,6 @@ namespace CHI_MVCCodeHelper
                     continue;
                 }
 
-
-                var columnNameCamel = columnName.First().ToString().ToUpper() +
-                                      String.Join("", columnName.Skip(1));
-                columnNameCamel = columnNameCamel.Replace("ID", "Id");
-
-                var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
                 var dataType =
                     myField["DataType"].ToString()
                         .Replace("System.", "")
@@ -1451,10 +1449,12 @@ namespace CHI_MVCCodeHelper
                         .Replace("Boolean", "bool");
                 var size = Convert.ToInt32(myField["ColumnSize"]);
                 var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                var IsKey = Convert.ToBoolean(myField["IsKey"]);
+                var isKey = Convert.ToBoolean(myField["IsKey"]);
 
-                _columns.Add(i, columnNameCamel);
-                listBox1.Items.Add(columnNameCamel);
+                var property = new Property { Name = columnName, Type = dataType, Size = size, IsKey = isKey, IsNullable = isNullable };
+
+                _propertyList.Add(property);
+                listBox1.Items.Add(property.Name);
                 i++;
             }
 
@@ -1466,7 +1466,7 @@ namespace CHI_MVCCodeHelper
             ViewHelperTableCB.Items.Clear();
 
             var dt = _dbConnection.GetSchema("Tables");
-            var tables = (from DataRow row in dt.Rows where ((string) row[3]).Equals("BASE TABLE") && ((string) row[1]).Equals("dbo") select (string) row[2]).ToList();
+            var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
             tables.Sort();
 
             foreach (var item in tables)
@@ -1477,245 +1477,120 @@ namespace CHI_MVCCodeHelper
 
         private void ViewButton_Click(object sender, EventArgs e)
         {
-            if (ViewHelperTableCB.SelectedItem == null)
+            if (_propertyList.Count == 0)
             {
-                MessageBox.Show("Select a table first bro!");
+                MessageBox.Show("Select a table or a file, Bro!");
                 return;
             }
 
-            var tableName = ViewHelperTableCB.SelectedItem.ToString();
+            var tableName = ViewHelperTableCB.SelectedItem == null ? classfilename.Text.Replace(".cs", "") : ViewHelperTableCB.SelectedItem.ToString();
             const string n = "\n";
             var code = @"<!--#region " + tableName + @"  -->" + n;
-            if (ViewHelperTableCB.SelectedIndex == -1)
+
+            if (radioButtonLabel.Checked)
             {
-                MessageBox.Show("Select a table first bro!");
+                var i = 0;
+                foreach (var item in listBox1.Items)
+                {
+                    var property = _propertyList.Single(p => p.Name == (string)item);
+
+                    if (radioButtonBoth.Checked || radioButtonLabel.Checked)
+                    {
+                        code = property.Type != "bool"
+                            ? code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked? property.CamelName:property.Name) +
+                              @", new { @class = ""control-label col-md-12" + @""" },""" + ":" + @""")" + n
+                            : code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                              @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
+                    }
+
+                    if (StaticControlsCheck.Checked)
+                        code = code + @"<p data-bind=""text: @Html.NameFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                               @").ToString()""></p>" + n + n;
+                    else
+                        code = code + GenerateControl(property.Type, (AutoCamelCase.Checked ? property.CamelName : property.Name));
+
+
+
+                    //vmCode = vmCode + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
+
+                    //toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
+                    //toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
+                    //toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
+                    i++;
+                }
             }
+            else if (radioButtonBoth.Checked)
+            {
+                code = code + @"<div class=""row"">";
+                foreach (var item in listBox1.Items)
+                {
+                    var property = _propertyList.Single(p => p.Name == (string)item);
+
+                    var control = StaticControlsCheck.Checked
+                        ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
+                          nestedPrefix.Text +
+                           property.CamelName + @").ToString()""></p>" + n
+                        : GenerateControl(property.Type, property.CamelName, property.Size);
+
+
+                    code = property.Type != "bool"
+                        ? code + n + @"<div class=""" + textBoxFormclass.Text + @""">
+                                                @Html.LabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                          @", new { @class = ""control-label col-md-12"" },""" + ":" + @""")
+                                                <div class=""col-md-12"">" +
+                          control
+                          + @"</div>" + n + @"   </div>"
+                        : code + n + @"<div class=""" + textBoxFormclass.Text + @""">
+                                                @Html.LabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                          @", new { @class = ""control-label col-md-12"" },""" + @""")
+                                                <div class=""col-md-12"">" +
+                          control
+                          + @"</div>" + n + @"   </div>";
+                }
+                code = code + @"</div>" + n;
+            }
+            //Old lucky checkbox code
             else
             {
-                var columns = new string[100, 4];
-
-                var cmd = new SqlCommand
+                var listIndex = 0;
+                for (var k = 0; k <= listBox1.Items.Count / rowCount.Value; k++)
                 {
-                    Connection = _dbConnection,
-                    CommandText = "SELECT top 1 * FROM " + tableName
-                };
+                    if (listIndex == listBox1.Items.Count) continue;
 
-
-                //Retrieve records from the Employees table into a DataReader.
-                var myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
-
-                //Retrieve column schema into a DataTable.
-                var schemaTable = myReader.GetSchemaTable();
-
-                //For each field in the table...
-                if (radioButtonLabel.Checked)
-                {
-                    var i = 0;
+                    code = code + @"<div class=""row"">";
                     foreach (var item in listBox1.Items)
                     {
-                        if (schemaTable != null)
-                        {
-                            var myField =
-                                schemaTable.Rows[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[i]).Key];
-
-                            columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[i]).Key, 0] =
-                                myField["ColumnName"].ToString();
-                            columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[i]).Key, 1] =
-                                myField["DataType"].ToString();
-                            columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[i]).Key, 2] =
-                                myField["ColumnSize"].ToString();
-                            columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[i]).Key, 3] =
-                                myField["AllowDBNull"].ToString();
-
-                            var columnName = myField["ColumnName"].ToString();
-
-                            var columnNameCamel = columnName.First().ToString().ToUpper() +
-                                                  String.Join("", columnName.Skip(1));
-                            columnNameCamel = columnNameCamel.Replace("ID", "Id");
-
-                            var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
-                            var dataType =
-                                myField["DataType"].ToString()
-                                    .Replace("System.", "")
-                                    .Replace("Int16", "short")
-                                    .Replace("Int32", "int")
-                                    .Replace("Int", "int")
-                                    .Replace("String", "string")
-                                    .Replace("Boolean", "bool");
-                            var size = Convert.ToInt32(myField["ColumnSize"]);
-                            var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                            var IsKey = Convert.ToBoolean(myField["IsKey"]);
-
-                            if (radioButtonBoth.Checked || radioButtonLabel.Checked)
-                            {
-                                code = dataType != "bool"
-                                    ? code + @"@Html.LabelFor(a => a." + columnNameCamel +
-                                      @", new { @class = ""control-label col-md-12" + @""" },""" + ":" + @""")" + n
-                                    : code + @"@Html.LabelFor(a => a." + columnNameCamel +
-                                      @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
-                            }
-
-                            if (StaticControlsCheck.Checked)
-                                code = code + @"<p data-bind=""text: @Html.NameFor(a => a." + columnNameCamel +
-                                       @").ToString()""></p>" + n + n;
-                            else
-                                code = code + GenerateControl(dataType, columnNameCamel);
-                        }
-
-
-                        //vmCode = vmCode + "public " + dataType + " " + columnNameCamel + " { get; set; }" + n + n;
-
-                        //toEntity = toEntity + columnName + " = " + columnNameCamel + "," + n;
-                        //toEntityP = toEntityP + "entity." + columnName + " = " + columnNameCamel + ";" + n;
-                        //toModel = toModel + "model." + columnNameCamel + " = entity." + columnName + ";" + n;
-                        i++;
-                    }
-                }
-                else if (radioButtonBoth.Checked)
-                {
-                    var listIndex = 0;
-                    code = code + @"<div class=""row"">";
-                    for (var k = 0; k <= listBox1.Items.Count; k++)
-                    {
-                        if (listIndex == listBox1.Items.Count) continue;
-                        if (schemaTable == null) continue;
-                        var myField =
-                            schemaTable.Rows[
-                                _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key];
-
-                        columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 0] =
-                            myField["ColumnName"].ToString();
-                        columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 1] =
-                            myField["DataType"].ToString();
-                        columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 2] =
-                            myField["ColumnSize"].ToString();
-                        columns[_columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 3] =
-                            myField["AllowDBNull"].ToString();
-
-                        var columnName = myField["ColumnName"].ToString();
-
-                        var columnNameCamel = columnName.First().ToString().ToUpper() +
-                                              String.Join("", columnName.Skip(1));
-                        columnNameCamel = columnNameCamel.Replace("ID", "Id");
-
-                        var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
-                        var dataType =
-                            myField["DataType"].ToString()
-                                .Replace("System.", "")
-                                .Replace("Int16", "short")
-                                .Replace("Int32", "int")
-                                .Replace("Int", "int")
-                                .Replace("String", "string")
-                                .Replace("Boolean", "bool");
-                        var size = Convert.ToInt32(myField["ColumnSize"]);
-                        var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                        var IsKey = Convert.ToBoolean(myField["IsKey"]);
+                        var property = _propertyList.Single(p => p.Name == (string)item);
 
                         var control = StaticControlsCheck.Checked
                             ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
-                              nestedPrefix.Text +
-                              columnNameCamel + @").ToString()""></p>" + n
-                            : GenerateControl(dataType, columnNameCamel, size);
+                               (AutoCamelCase.Checked ? property.CamelName : property.Name) + @").ToString()""></p>" + n
+                            : GenerateControl(property.Type, (AutoCamelCase.Checked ? property.CamelName : property.Name), property.Size);
 
 
-                        code = dataType != "bool"
-                            ? code + n + @"<div class=""" + textBoxFormclass.Text + @""">
-                                                @Html.LabelFor(a => a." + nestedPrefix.Text + columnNameCamel +
-                              @", new { @class = ""control-label col-md-12"" },""" + ":" + @""")
-                                                <div class=""col-md-12"">" +
+                        code = property.Type != "bool"
+                            ? code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
+                                                @Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                              @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" +
+                              ":" + @""")
+                                                <div class=""col-md-" + ControllMD.Value + @""">" +
                               control
                               + @"</div>" + n + @"   </div>"
-                            : code + n + @"<div class=""" + textBoxFormclass.Text + @""">
-                                                @Html.LabelFor(a => a." + nestedPrefix.Text + columnNameCamel +
-                              @", new { @class = ""control-label col-md-12"" },""" + @""")
-                                                <div class=""col-md-12"">" +
+                            : code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
+                                                @Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                              @", new { @class = ""control-label col-md-" + ControlLabelMd.Value +
+                              @""" })                                                
+                                                <div class=""col-md-" + ControllMD.Value + @""">" +
                               control
-                              + @"</div>" + n + @"   </div>";
+                              + @"</div>" + n + @"   </div>"
+                            ;
 
                         listIndex++;
                     }
                     code = code + @"</div>" + n;
                 }
-                    //Old lucky checkbox code
-                else
-                {
-                    var listIndex = 0;
-                    for (var k = 0; k <= listBox1.Items.Count/rowCount.Value; k++)
-                    {
-                        if (listIndex == listBox1.Items.Count) continue;
-
-                        code = code + @"<div class=""row"">";
-                        for (var j = 0; j < listBox1.Items.Count; j++)
-                        {
-                            if (schemaTable != null)
-                            {
-                                var myField =
-                                    schemaTable.Rows[
-                                        _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key];
-
-                                columns[
-                                    _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 0] =
-                                    myField["ColumnName"].ToString();
-                                columns[
-                                    _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 1] =
-                                    myField["DataType"].ToString();
-                                columns[
-                                    _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 2] =
-                                    myField["ColumnSize"].ToString();
-                                columns[
-                                    _columns.FirstOrDefault(v => v.Value == (string) listBox1.Items[listIndex]).Key, 3] =
-                                    myField["AllowDBNull"].ToString();
-
-                                var columnName = myField["ColumnName"].ToString();
-
-                                var columnNameCamel = columnName.First().ToString().ToUpper() +
-                                                      String.Join("", columnName.Skip(1));
-                                columnNameCamel = columnNameCamel.Replace("ID", "Id");
-
-                                var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
-                                var dataType =
-                                    myField["DataType"].ToString()
-                                        .Replace("System.", "")
-                                        .Replace("Int16", "short")
-                                        .Replace("Int32", "int")
-                                        .Replace("Int", "int")
-                                        .Replace("String", "string")
-                                        .Replace("Boolean", "bool");
-                                var size = Convert.ToInt32(myField["ColumnSize"]);
-                                var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                                var IsKey = Convert.ToBoolean(myField["IsKey"]);
-
-                                var control = StaticControlsCheck.Checked
-                                    ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
-                                      columnNameCamel + @").ToString()""></p>" + n
-                                    : GenerateControl(dataType, columnNameCamel, size);
-
-
-                                code = dataType != "bool"
-                                    ? code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
-                                                @Html.LabelFor(a => a." + columnNameCamel +
-                                      @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" +
-                                      ":" + @""")
-                                                <div class=""col-md-" + ControllMD.Value + @""">" +
-                                      control
-                                      + @"</div>" + n + @"   </div>"
-                                    : code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
-                                                @Html.LabelFor(a => a." + columnNameCamel +
-                                      @", new { @class = ""control-label col-md-" + ControlLabelMd.Value +
-                                      @""" })                                                
-                                                <div class=""col-md-" + ControllMD.Value + @""">" +
-                                      control
-                                      + @"</div>" + n + @"   </div>"
-                                    ;
-                            }
-                            listIndex++;
-                        }
-                        code = code + @"</div>" + n;
-                    }
-                }
-                //Always close the DataReader and connection.
-                myReader.Close();
             }
+
             code = code + n + @" <!--#endregion -->";
             ViewCode.Text = code;
         }
@@ -1729,11 +1604,11 @@ namespace CHI_MVCCodeHelper
                 case "string":
                     c = size != null && size.Value < 200
                         ? @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName +
-                          @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." +
+                          @", new { @class = ""form-control input-sm"", @data_bind = ""razorNaming: true, value: "" + Html.NameFor(a => a." +
                           nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." +
                           nestedPrefix.Text + controlName + @", null, new { @class = ""help-block"" })" + n
                         : @"@Html.TextAreaFor(a => a." + nestedPrefix.Text + controlName +
-                          @", new { @class = ""form-control input-sm"", @data_bind = ""value: "" + Html.NameFor(a => a." +
+                          @", new { @class = ""form-control input-sm"", @data_bind = ""razorNaming: true, value: "" + Html.NameFor(a => a." +
                           nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." +
                           nestedPrefix.Text + controlName + @", null, new { @class = ""help-block"" })" + n;
                     break;
@@ -1741,7 +1616,7 @@ namespace CHI_MVCCodeHelper
                 case "bool":
                     c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." +
                         nestedPrefix.Text + controlName +
-                        @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""checkedUniform: "" + Html.NameFor(a => a." +
+                        @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""razorNaming: true, checkedUniform: "" + Html.NameFor(a => a." +
                         nestedPrefix.Text + controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." +
                         nestedPrefix.Text + controlName + @", null, new { @class = ""help-block""})" + n;
                     break;
@@ -1751,7 +1626,7 @@ namespace CHI_MVCCodeHelper
                 case "bigint":
                 case "short":
                     c = @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName +
-                        @", new { @class = ""form-control input-sm"", @type=""number"", @data_bind = ""value: "" + Html.NameFor(a => a." +
+                        @", new { @class = ""form-control input-sm"", @type=""number"", @data_bind = ""razorNaming: true, value: "" + Html.NameFor(a => a." +
                         nestedPrefix.Text +
                         controlName + @") })" + n + @"@Html.ValidationMessageFor(a => a." + nestedPrefix.Text +
                         controlName +
@@ -1806,7 +1681,7 @@ namespace CHI_MVCCodeHelper
             var point = listBox1.PointToClient(new Point(e.X, e.Y));
             var index = listBox1.IndexFromPoint(point);
             if (index < 0) index = listBox1.Items.Count - 1;
-            var data = e.Data.GetData(typeof (string));
+            var data = e.Data.GetData(typeof(string));
             listBox1.Items.Remove(data);
             listBox1.Items.Insert(index, data);
         }
@@ -1836,15 +1711,56 @@ namespace CHI_MVCCodeHelper
 
         private void rowCount_ValueChanged(object sender, EventArgs e)
         {
-            if (rowCount.Value < 7 && rowCount.Value > 0 && 12%rowCount.Value == 0)
+            if (rowCount.Value < 7 && rowCount.Value > 0 && 12 % rowCount.Value == 0)
             {
-                GroupMd.Value = 12/rowCount.Value;
+                GroupMd.Value = 12 / rowCount.Value;
             }
         }
 
         private void radioButtonBoth_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxLabelsandControlsOption.Visible = radioButtonBoth.Checked;
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (classFile.ShowDialog() == DialogResult.OK)
+            {
+                listBox1.Items.Clear();
+                _propertyList.Clear();
+                classfilename.Text = classFile.SafeFileName;
+                button1.Text = classFile.SafeFileName;
+                try
+                {
+                    var pattern = new Regex(@"public (.*) { get; set; }");
+
+                    var lines = File.ReadAllLines(classFile.FileName);
+                    foreach (var line in lines)
+                    {
+                        var match = pattern.Match(line);
+                        if (!match.Success) continue;
+                        var prop = match.Value.Replace("{ get; set; }", "").Replace("public", "").Trim();
+                        var array = prop.Split(null);
+                        var property = new Property { Name = array[1], Type = array[0].Replace("?", "") };
+                        if (_propertyList == null)
+                            _propertyList = new List<Property>();
+                        _propertyList.Add(property);
+                        listBox1.Items.Add(property.Name);
+
+                    }
+
+                    ViewHelperTableCB.SelectedIndex = -1;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
         }
     }
 }

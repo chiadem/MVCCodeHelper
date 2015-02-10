@@ -83,10 +83,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.classfilename = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.nestedPrefix = new System.Windows.Forms.TextBox();
             this.radioButtonLabel = new System.Windows.Forms.RadioButton();
             this.radioButtonBoth = new System.Windows.Forms.RadioButton();
             this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.groupBoxLabelsandControlsOption = new System.Windows.Forms.GroupBox();
             this.textBoxFormclass = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -108,6 +112,7 @@
             this.ViewCode = new System.Windows.Forms.RichTextBox();
             this.ViewHelperTableCB = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.DatabaseCB = new System.Windows.Forms.ComboBox();
@@ -119,8 +124,9 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.nestedPrefix = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
+            this.classFile = new System.Windows.Forms.OpenFileDialog();
+            this.label25 = new System.Windows.Forms.Label();
+            this.AutoCamelCase = new System.Windows.Forms.CheckBox();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -734,18 +740,23 @@
             // 
             this.tabPage4.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
             this.tabPage4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage4.Controls.Add(this.classfilename);
+            this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Controls.Add(this.groupBox2);
             this.tabPage4.Controls.Add(this.groupBoxLabelsandControlsOption);
             this.tabPage4.Controls.Add(this.label21);
             this.tabPage4.Controls.Add(this.label20);
             this.tabPage4.Controls.Add(this.listBox1);
             this.tabPage4.Controls.Add(this.LuckyGroup);
+            this.tabPage4.Controls.Add(this.AutoCamelCase);
             this.tabPage4.Controls.Add(this.DefaultscheckBox);
             this.tabPage4.Controls.Add(this.luckyCheckBox);
             this.tabPage4.Controls.Add(this.ViewButton);
             this.tabPage4.Controls.Add(this.ViewCode);
             this.tabPage4.Controls.Add(this.ViewHelperTableCB);
             this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Controls.Add(this.label25);
+            this.tabPage4.Controls.Add(this.label24);
             this.tabPage4.Controls.Add(this.label14);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -754,6 +765,29 @@
             this.tabPage4.Text = "View Controls Generator";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // classfilename
+            // 
+            this.classfilename.AutoSize = true;
+            this.classfilename.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.classfilename.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.classfilename.Location = new System.Drawing.Point(329, 65);
+            this.classfilename.Name = "classfilename";
+            this.classfilename.Size = new System.Drawing.Size(0, 15);
+            this.classfilename.TabIndex = 41;
+            this.classfilename.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.MediumAquamarine;
+            this.button1.Location = new System.Drawing.Point(111, 62);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(366, 23);
+            this.button1.TabIndex = 40;
+            this.button1.Text = "Select Class";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.nestedPrefix);
@@ -761,12 +795,19 @@
             this.groupBox2.Controls.Add(this.radioButtonBoth);
             this.groupBox2.Controls.Add(this.StaticControlsCheck);
             this.groupBox2.Controls.Add(this.label23);
-            this.groupBox2.Location = new System.Drawing.Point(111, 48);
+            this.groupBox2.Location = new System.Drawing.Point(111, 91);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(366, 73);
+            this.groupBox2.Size = new System.Drawing.Size(502, 73);
             this.groupBox2.TabIndex = 39;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Generate Option";
+            // 
+            // nestedPrefix
+            // 
+            this.nestedPrefix.Location = new System.Drawing.Point(256, 43);
+            this.nestedPrefix.Name = "nestedPrefix";
+            this.nestedPrefix.Size = new System.Drawing.Size(104, 20);
+            this.nestedPrefix.TabIndex = 36;
             // 
             // radioButtonLabel
             // 
@@ -802,13 +843,22 @@
             this.StaticControlsCheck.UseVisualStyleBackColor = true;
             this.StaticControlsCheck.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(126, 46);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(130, 13);
+            this.label23.TabIndex = 34;
+            this.label23.Text = "Control prefix (for nested) :";
+            // 
             // groupBoxLabelsandControlsOption
             // 
             this.groupBoxLabelsandControlsOption.Controls.Add(this.textBoxFormclass);
             this.groupBoxLabelsandControlsOption.Controls.Add(this.label22);
-            this.groupBoxLabelsandControlsOption.Location = new System.Drawing.Point(111, 144);
+            this.groupBoxLabelsandControlsOption.Location = new System.Drawing.Point(111, 170);
             this.groupBoxLabelsandControlsOption.Name = "groupBoxLabelsandControlsOption";
-            this.groupBoxLabelsandControlsOption.Size = new System.Drawing.Size(375, 48);
+            this.groupBoxLabelsandControlsOption.Size = new System.Drawing.Size(502, 48);
             this.groupBoxLabelsandControlsOption.TabIndex = 39;
             this.groupBoxLabelsandControlsOption.TabStop = false;
             this.groupBoxLabelsandControlsOption.Text = "Labels and Controls option";
@@ -818,7 +868,7 @@
             // 
             this.textBoxFormclass.Location = new System.Drawing.Point(101, 19);
             this.textBoxFormclass.Name = "textBoxFormclass";
-            this.textBoxFormclass.Size = new System.Drawing.Size(268, 20);
+            this.textBoxFormclass.Size = new System.Drawing.Size(259, 20);
             this.textBoxFormclass.TabIndex = 36;
             this.textBoxFormclass.Text = "form-group col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12";
             // 
@@ -978,9 +1028,9 @@
             this.DefaultscheckBox.AutoSize = true;
             this.DefaultscheckBox.Location = new System.Drawing.Point(482, 25);
             this.DefaultscheckBox.Name = "DefaultscheckBox";
-            this.DefaultscheckBox.Size = new System.Drawing.Size(141, 17);
+            this.DefaultscheckBox.Size = new System.Drawing.Size(153, 17);
             this.DefaultscheckBox.TabIndex = 35;
-            this.DefaultscheckBox.Text = "Include Default Colums?";
+            this.DefaultscheckBox.Text = "Include AutoAudit Colums?";
             this.DefaultscheckBox.UseVisualStyleBackColor = true;
             this.DefaultscheckBox.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
@@ -999,7 +1049,7 @@
             // ViewButton
             // 
             this.ViewButton.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
-            this.ViewButton.Location = new System.Drawing.Point(23, 213);
+            this.ViewButton.Location = new System.Drawing.Point(22, 235);
             this.ViewButton.Margin = new System.Windows.Forms.Padding(2);
             this.ViewButton.Name = "ViewButton";
             this.ViewButton.Size = new System.Drawing.Size(455, 25);
@@ -1012,10 +1062,10 @@
             // 
             this.ViewCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.ViewCode.Location = new System.Drawing.Point(23, 242);
+            this.ViewCode.Location = new System.Drawing.Point(23, 264);
             this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
             this.ViewCode.Name = "ViewCode";
-            this.ViewCode.Size = new System.Drawing.Size(1151, 452);
+            this.ViewCode.Size = new System.Drawing.Size(1151, 430);
             this.ViewCode.TabIndex = 29;
             this.ViewCode.Text = "";
             // 
@@ -1040,6 +1090,16 @@
             this.label19.Size = new System.Drawing.Size(54, 13);
             this.label19.TabIndex = 8;
             this.label19.Text = "Columns";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(20, 67);
+            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(62, 13);
+            this.label24.TabIndex = 8;
+            this.label24.Text = "View Model";
             // 
             // label14
             // 
@@ -1161,21 +1221,36 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // nestedPrefix
+            // classFile
             // 
-            this.nestedPrefix.Location = new System.Drawing.Point(256, 43);
-            this.nestedPrefix.Name = "nestedPrefix";
-            this.nestedPrefix.Size = new System.Drawing.Size(104, 20);
-            this.nestedPrefix.TabIndex = 36;
+            this.classFile.FileName = "openFileDialog1";
+            this.classFile.Filter = "C# files|*.cs|All files|*.*";
+            this.classFile.ReadOnlyChecked = true;
+            this.classFile.ShowReadOnly = true;
+            this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
-            // label23
+            // label25
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(126, 46);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(130, 13);
-            this.label23.TabIndex = 34;
-            this.label23.Text = "Control prefix (for nested) :";
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(108, 46);
+            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(18, 13);
+            this.label25.TabIndex = 8;
+            this.label25.Text = "Or";
+            // 
+            // AutoCamelCase
+            // 
+            this.AutoCamelCase.AutoSize = true;
+            this.AutoCamelCase.Checked = true;
+            this.AutoCamelCase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoCamelCase.Location = new System.Drawing.Point(482, 240);
+            this.AutoCamelCase.Name = "AutoCamelCase";
+            this.AutoCamelCase.Size = new System.Drawing.Size(153, 17);
+            this.AutoCamelCase.TabIndex = 35;
+            this.AutoCamelCase.Text = "Auto CamelCase properties";
+            this.AutoCamelCase.UseVisualStyleBackColor = true;
+            this.AutoCamelCase.CheckedChanged += new System.EventHandler(this.luckyCheckBox_CheckedChanged);
             // 
             // MVCCodeHelperMain
             // 
@@ -1312,5 +1387,11 @@
         private System.Windows.Forms.TextBox textBoxFormclass;
         private System.Windows.Forms.TextBox nestedPrefix;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.OpenFileDialog classFile;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label classfilename;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.CheckBox AutoCamelCase;
     }
 }
