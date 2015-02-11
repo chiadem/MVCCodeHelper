@@ -42,31 +42,36 @@ namespace CHI_MVCCodeHelper
             }
             else
             {
-                UserTB.Text = user;
-                PassTB.Text = pass;
-                ServeTB.Text = server;
-                DatabaseCB.Text = db;
-                _dbConnection = new SqlConnection("user id=" + user + ";" +
-                                                  "password=" + pass + ";server=" + server + ";" +
-                                                  "Trusted_Connection=false;" +
-                                                  "database=" + db + "; " +
-                                                  "connection timeout=30");
-                _dbConnection.Open();
+                OpenDBConnection(user, pass, server, db);
+                FillTableNameListBoxes();
             }
         }
 
+        private void OpenDBConnection(string user, string pass, string server, string db)
+        {
+            UserTB.Text = user;
+            PassTB.Text = pass;
+            ServeTB.Text = server;
+            DatabaseCB.Text = db;
+            _dbConnection = new SqlConnection("user id=" + user + ";" +
+                                              "password=" + pass + ";server=" + server + ";" +
+                                              "Trusted_Connection=false;" +
+                                              "database=" + db + "; " +
+                                              "connection timeout=30");
+            _dbConnection.Open();
+        }
 
         private void TestB_Click(object sender, EventArgs e)
         {
             _dbConnection = new SqlConnection("user id=" + UserTB.Text + ";" +
                                               "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
                                               "Trusted_Connection=false;" +
-                                              "database=" + DatabaseCB.SelectedText + "; " +
+                                              "database=" + DatabaseCB.Text + "; " +
                                               "connection timeout=30");
             try
             {
                 _dbConnection.Open();
-                MessageBox.Show("Succesful! Setting are saved.");
+                MessageBox.Show("Succesful! Setting are saved for databse:" + DatabaseCB.Text + ".");
                 Settings.Set("User", UserTB.Text);
                 Settings.Set("Password", PassTB.Text);
                 Settings.Set("Server", ServeTB.Text);
@@ -76,59 +81,37 @@ namespace CHI_MVCCodeHelper
             {
                 MessageBox.Show("Failed!");
             }
+            FillTableNameListBoxes();
         }
 
         private void DatabaseCB_Click(object sender, EventArgs e)
         {
-            var dbConnection2 = new SqlConnection("user id=" + UserTB.Text + ";" +
-                                                  "password=" + PassTB.Text + ";server=" + ServeTB.Text + ";" +
-                                                  "Trusted_Connection=false;" +
-                                                  "database=" + DatabaseCB.SelectedText + "; " +
-                                                  "connection timeout=30");
             try
             {
                 DatabaseCB.Items.Clear();
 
-
-                dbConnection2.Open();
-
-                var databases = new List<String>();
-
                 //get databases
-                var tblDatabases = dbConnection2.GetSchema("Databases");
+                var tblDatabases = _dbConnection.GetSchema("Databases");
 
                 //add to list
                 foreach (DataRow row in tblDatabases.Rows)
                 {
                     var strDatabaseName = row["database_name"].ToString();
 
-                    databases.Add(strDatabaseName);
 
                     DatabaseCB.Items.Add(strDatabaseName);
                 }
             }
             catch (Exception)
             {
-                dbConnection2.Close();
+                _dbConnection.Close();
             }
-            finally
-            {
-                dbConnection2.Close();
-            }
+
         }
 
         private void TableCB_Click(object sender, EventArgs e)
         {
-            VMTableCB.Items.Clear();
 
-            var dt = _dbConnection.GetSchema("Tables");
-            var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
-            tables.Sort();
-
-            foreach (var item in tables)
-            {
-                VMTableCB.Items.Add(item);
-            }
         }
 
         private void GenerateViewModel_Click(object sender, EventArgs e)
@@ -811,20 +794,20 @@ namespace CHI_MVCCodeHelper
                     var columnNameCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
                     columnNameCamel = columnNameCamel.Replace("ID", "Id");
 
-                    var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
-                    var dataType =
-                        myField["DataType"].ToString()
-                            .Replace("System.", "")
-                            .Replace("Int16", "short")
-                            .Replace("Int32", "int")
-                            .Replace("Int", "int")
-                            .Replace("String", "string")
-                            .Replace("Boolean", "bool");
-                    var size = Convert.ToInt32(myField["ColumnSize"]);
-                    var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                    var IsKey = Convert.ToBoolean(myField["IsKey"]);
+                    //  var displayName = Regex.Replace(columnNameCamel, "(\\B[A-Z])", " $1");
+                    ////   var dataType =
+                    //       myField["DataType"].ToString()
+                    //           .Replace("System.", "")
+                    //           .Replace("Int16", "short")
+                    //           .Replace("Int32", "int")
+                    //           .Replace("Int", "int")
+                    //           .Replace("String", "string")
+                    //           .Replace("Boolean", "bool");
+                    // var size = Convert.ToInt32(myField["ColumnSize"]);
+                    // var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                    var isKey = Convert.ToBoolean(myField["IsKey"]);
 
-                    if (IsKey)
+                    if (isKey)
                     {
                         parameterPk = columnName.Replace("ID", "Id");
                         primaryKeyCamel = columnName.First().ToString().ToUpper() + String.Join("", columnName.Skip(1));
@@ -1304,7 +1287,7 @@ namespace CHI_MVCCodeHelper
         }
 
 
-        public string ToPlural(string text)
+        private static string ToPlural(string text)
         {
             var tableNameplural = text + "s";
             if (text.Last().Equals('y'))
@@ -1340,9 +1323,17 @@ namespace CHI_MVCCodeHelper
 
         private void DBSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //FillTableNameListBoxes();
+
+        }
+
+        private void FillTableNameListBoxes()
+        {
             if (ServeTB.Text.Length > 0 && UserTB.Text.Length > 0 && PassTB.Text.Length > 0)
             {
                 TableNameRepo.Items.Clear();
+                VMTableCB.Items.Clear();
+                ViewHelperTableCB.Items.Clear();
 
                 var dt = _dbConnection.GetSchema("Tables");
                 var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
@@ -1350,6 +1341,9 @@ namespace CHI_MVCCodeHelper
                 foreach (var item in tables)
                 {
                     TableNameRepo.Items.Add(item);
+                    VMTableCB.Items.Add(item);
+                    ViewHelperTableCB.Items.Add(item);
+
                 }
             }
         }
@@ -1404,75 +1398,74 @@ namespace CHI_MVCCodeHelper
 
             var columns = new string[100, 4];
             const string n = "\n";
-
-            var cmd = new SqlCommand
+            try
             {
-                Connection = _dbConnection,
-                CommandText = "SELECT top 1 * FROM " + tableName
-            };
 
-            //Retrieve records from the Employees table into a DataReader.
-            var myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
 
-            //Retrieve column schema into a DataTable.
-            var schemaTable = myReader.GetSchemaTable();
-            var i = 0;
-            //For each field in the table...
-            if (_propertyList == null)
-                _propertyList = new List<Property>();
-            foreach (DataRow myField in schemaTable.Rows)
-            {
-                columns[i, 0] = myField["ColumnName"].ToString();
-                columns[i, 1] = myField["DataType"].ToString();
-                columns[i, 2] = myField["ColumnSize"].ToString();
-                columns[i, 3] = myField["AllowDBNull"].ToString();
-
-                var columnName = myField["ColumnName"].ToString();
-
-                if ((columnName.Equals("createdDate") && !DefaultscheckBox.Checked) ||
-                    (columnName.Equals("modifiedDate") && !DefaultscheckBox.Checked) ||
-                    (columnName.Equals("createdBy") && !DefaultscheckBox.Checked) ||
-                    (columnName.Equals("modifiedBy") && !DefaultscheckBox.Checked) ||
-                    (columnName.Equals("rowVersion") && !DefaultscheckBox.Checked)
-                    )
+                var cmd = new SqlCommand
                 {
-                    continue;
+                    Connection = _dbConnection,
+                    CommandText = "SELECT top 1 * FROM " + tableName
+                };
+
+                //Retrieve records from the Employees table into a DataReader.
+                var myReader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+
+                //Retrieve column schema into a DataTable.
+                var schemaTable = myReader.GetSchemaTable();
+                var i = 0;
+                //For each field in the table...
+                if (_propertyList == null)
+                    _propertyList = new List<Property>();
+                foreach (DataRow myField in schemaTable.Rows)
+                {
+                    columns[i, 0] = myField["ColumnName"].ToString();
+                    columns[i, 1] = myField["DataType"].ToString();
+                    columns[i, 2] = myField["ColumnSize"].ToString();
+                    columns[i, 3] = myField["AllowDBNull"].ToString();
+
+                    var columnName = myField["ColumnName"].ToString();
+
+                    if ((columnName.Equals("createdDate") && !DefaultscheckBox.Checked) ||
+                        (columnName.Equals("modifiedDate") && !DefaultscheckBox.Checked) ||
+                        (columnName.Equals("createdBy") && !DefaultscheckBox.Checked) ||
+                        (columnName.Equals("modifiedBy") && !DefaultscheckBox.Checked) ||
+                        (columnName.Equals("rowVersion") && !DefaultscheckBox.Checked)
+                        )
+                    {
+                        continue;
+                    }
+
+                    var dataType =
+                        myField["DataType"].ToString()
+                            .Replace("System.", "")
+                            .Replace("Int16", "short")
+                            .Replace("Int32", "int")
+                            .Replace("Int", "int")
+                            .Replace("String", "string")
+                            .Replace("Boolean", "bool");
+                    var size = Convert.ToInt32(myField["ColumnSize"]);
+                    var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
+                    var isKey = Convert.ToBoolean(myField["IsKey"]);
+
+                    var property = new Property { Name = columnName, Type = dataType, Size = size, IsKey = isKey, IsNullable = isNullable };
+
+                    _propertyList.Add(property);
+                    listBox1.Items.Add(property.Name);
+                    i++;
                 }
 
-                var dataType =
-                    myField["DataType"].ToString()
-                        .Replace("System.", "")
-                        .Replace("Int16", "short")
-                        .Replace("Int32", "int")
-                        .Replace("Int", "int")
-                        .Replace("String", "string")
-                        .Replace("Boolean", "bool");
-                var size = Convert.ToInt32(myField["ColumnSize"]);
-                var isNullable = Convert.ToBoolean(myField["AllowDBNull"]);
-                var isKey = Convert.ToBoolean(myField["IsKey"]);
-
-                var property = new Property { Name = columnName, Type = dataType, Size = size, IsKey = isKey, IsNullable = isNullable };
-
-                _propertyList.Add(property);
-                listBox1.Items.Add(property.Name);
-                i++;
+                myReader.Close();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not read the table. Pelase restart! \n Error: "+ex.ToString());
 
-            myReader.Close();
+            }
         }
 
         private void ViewHelperTableCB_Click(object sender, EventArgs e)
         {
-            ViewHelperTableCB.Items.Clear();
-
-            var dt = _dbConnection.GetSchema("Tables");
-            var tables = (from DataRow row in dt.Rows where ((string)row[3]).Equals("BASE TABLE") && ((string)row[1]).Equals("dbo") select (string)row[2]).ToList();
-            tables.Sort();
-
-            foreach (var item in tables)
-            {
-                ViewHelperTableCB.Items.Add(item);
-            }
         }
 
         private void ViewButton_Click(object sender, EventArgs e)
@@ -1497,7 +1490,7 @@ namespace CHI_MVCCodeHelper
                     if (radioButtonBoth.Checked || radioButtonLabel.Checked)
                     {
                         code = property.Type != "bool"
-                            ? code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked? property.CamelName:property.Name) +
+                            ? code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-12" + @""" },""" + ":" + @""")" + n
                             : code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
@@ -1602,6 +1595,7 @@ namespace CHI_MVCCodeHelper
             switch (dataType)
             {
                 case "string":
+                case "String":
                     c = size != null && size.Value < 200
                         ? @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName +
                           @", new { @class = ""form-control input-sm"", @data_bind = ""razorNaming: true, value: "" + Html.NameFor(a => a." +
@@ -1614,6 +1608,8 @@ namespace CHI_MVCCodeHelper
                     break;
 
                 case "bool":
+                case "bool?":
+                case "Nullable<bool>":
                     c = @"@Html.CheckBox(""" + Regex.Replace(controlName, "(\\B[A-Z])", " $1") + @""", Model." +
                         nestedPrefix.Text + controlName +
                         @".GetValueOrDefault(), new { @class = ""form-control"", @data_bind = ""razorNaming: true, checkedUniform: "" + Html.NameFor(a => a." +
@@ -1621,10 +1617,14 @@ namespace CHI_MVCCodeHelper
                         nestedPrefix.Text + controlName + @", null, new { @class = ""help-block""})" + n;
                     break;
                 case "int":
+                case "int?":
+                case "Nullable<int>":
                 case "tinyint":
                 case "smallint":
                 case "bigint":
                 case "short":
+                case "short?":
+                case "Nullable<short>":
                     c = @"@Html.TextBoxFor(a => a." + nestedPrefix.Text + controlName +
                         @", new { @class = ""form-control input-sm"", @type=""number"", @data_bind = ""razorNaming: true, value: "" + Html.NameFor(a => a." +
                         nestedPrefix.Text +
@@ -1744,7 +1744,7 @@ namespace CHI_MVCCodeHelper
                     {
                         var match = pattern.Match(line);
                         if (!match.Success) continue;
-                        var prop = match.Value.Replace("{ get; set; }", "").Replace("public", "").Replace("virtual","").Trim();
+                        var prop = match.Value.Replace("{ get; set; }", "").Replace("public", "").Replace("virtual", "").Trim();
                         var array = prop.Split(null);
                         var property = new Property { Name = array[1], Type = array[0] };
                         if (_propertyList == null)

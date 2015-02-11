@@ -113,7 +113,6 @@
             this.ViewCode = new System.Windows.Forms.RichTextBox();
             this.ViewHelperTableCB = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -755,7 +754,6 @@
             this.tabPage4.Controls.Add(this.ViewCode);
             this.tabPage4.Controls.Add(this.ViewHelperTableCB);
             this.tabPage4.Controls.Add(this.label19);
-            this.tabPage4.Controls.Add(this.label25);
             this.tabPage4.Controls.Add(this.label24);
             this.tabPage4.Controls.Add(this.label14);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -782,7 +780,7 @@
             this.button1.ForeColor = System.Drawing.Color.MediumAquamarine;
             this.button1.Location = new System.Drawing.Point(111, 62);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(366, 23);
+            this.button1.Size = new System.Drawing.Size(502, 23);
             this.button1.TabIndex = 40;
             this.button1.Text = "Select Class";
             this.button1.UseVisualStyleBackColor = true;
@@ -806,7 +804,7 @@
             // 
             this.nestedPrefix.Location = new System.Drawing.Point(256, 43);
             this.nestedPrefix.Name = "nestedPrefix";
-            this.nestedPrefix.Size = new System.Drawing.Size(104, 20);
+            this.nestedPrefix.Size = new System.Drawing.Size(240, 20);
             this.nestedPrefix.TabIndex = 36;
             // 
             // radioButtonLabel
@@ -835,7 +833,7 @@
             // StaticControlsCheck
             // 
             this.StaticControlsCheck.AutoSize = true;
-            this.StaticControlsCheck.Location = new System.Drawing.Point(256, 19);
+            this.StaticControlsCheck.Location = new System.Drawing.Point(129, 19);
             this.StaticControlsCheck.Name = "StaticControlsCheck";
             this.StaticControlsCheck.Size = new System.Drawing.Size(100, 17);
             this.StaticControlsCheck.TabIndex = 35;
@@ -868,7 +866,7 @@
             // 
             this.textBoxFormclass.Location = new System.Drawing.Point(101, 19);
             this.textBoxFormclass.Name = "textBoxFormclass";
-            this.textBoxFormclass.Size = new System.Drawing.Size(259, 20);
+            this.textBoxFormclass.Size = new System.Drawing.Size(395, 20);
             this.textBoxFormclass.TabIndex = 36;
             this.textBoxFormclass.Text = "form-group col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12";
             // 
@@ -1103,16 +1101,6 @@
             this.label19.Size = new System.Drawing.Size(54, 13);
             this.label19.TabIndex = 8;
             this.label19.Text = "Columns";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(108, 46);
-            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(18, 13);
-            this.label25.TabIndex = 8;
-            this.label25.Text = "Or";
             // 
             // label24
             // 
@@ -1390,7 +1378,6 @@
         private System.Windows.Forms.OpenFileDialog classFile;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label classfilename;
-        private System.Windows.Forms.Label label25;
         private System.Windows.Forms.CheckBox AutoCamelCase;
     }
 }
