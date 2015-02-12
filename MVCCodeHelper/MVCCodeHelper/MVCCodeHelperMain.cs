@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -1324,6 +1325,12 @@ namespace CHI_MVCCodeHelper
         private void DBSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
             //FillTableNameListBoxes();
+            if (DBSettings.SelectedIndex==4)
+            {
+                Stream str = Properties.Resources.helpaudio;
+                SoundPlayer snd = new SoundPlayer(str);
+                snd.Play();
+            }
 
         }
 
@@ -1459,7 +1466,7 @@ namespace CHI_MVCCodeHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not read the table. Pelase restart! \n Error: "+ex.ToString());
+                MessageBox.Show("Could not read the table. Pelase restart! \n Error: " + ex.ToString());
 
             }
         }
@@ -1475,7 +1482,7 @@ namespace CHI_MVCCodeHelper
                 MessageBox.Show("Select a table or a file, Bro!");
                 return;
             }
-
+            var labelPost = labelPostfix.Text.Length > 0 ? @",""" + labelPostfix.Text + @"""" : "";
             var tableName = ViewHelperTableCB.SelectedItem == null ? classfilename.Text.Replace(".cs", "") : ViewHelperTableCB.SelectedItem.ToString();
             const string n = "\n";
             var code = @"<!--#region " + tableName + @"  -->" + n;
@@ -1491,7 +1498,7 @@ namespace CHI_MVCCodeHelper
                     {
                         code = property.Type != "bool"
                             ? code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
-                              @", new { @class = ""control-label col-md-12" + @""" },""" + ":" + @""")" + n
+                              @", new { @class = ""control-label col-md-12" + @""" }" + labelPost + @")" + n
                             : code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
                     }
@@ -1529,7 +1536,7 @@ namespace CHI_MVCCodeHelper
                     code = property.Type != "bool"
                         ? code + n + @"<div class=""" + textBoxFormclass.Text + @""">
                                                 @Html.LabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
-                          @", new { @class = ""control-label col-md-12"" },""" + ":" + @""")
+                          @", new { @class = ""control-label col-md-12"" }" + labelPost + @")
                                                 <div class=""col-md-12"">" +
                           control
                           + @"</div>" + n + @"   </div>"
@@ -1564,8 +1571,7 @@ namespace CHI_MVCCodeHelper
                         code = property.Type != "bool"
                             ? code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
                                                 @Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
-                              @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" },""" +
-                              ":" + @""")
+                              @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" }" + labelPost + @")
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
                               control
                               + @"</div>" + n + @"   </div>"
@@ -1719,7 +1725,7 @@ namespace CHI_MVCCodeHelper
 
         private void radioButtonBoth_CheckedChanged(object sender, EventArgs e)
         {
-            groupBoxLabelsandControlsOption.Visible = radioButtonBoth.Checked;
+            textBoxFormclass.Enabled = radioButtonBoth.Checked;
         }
 
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1761,6 +1767,11 @@ namespace CHI_MVCCodeHelper
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
+        }
+
+        private void DBSettings_Selected(object sender, TabControlEventArgs e)
+        {
+            
         }
     }
 }

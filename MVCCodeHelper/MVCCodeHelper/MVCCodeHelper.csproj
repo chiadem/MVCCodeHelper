@@ -73,7 +73,7 @@
       <DependentUpon>MVCCodeHelperMain.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -100,6 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="1404178133_9102.ico" />
+    <None Include="Resources\helpaudio.wav" />
+    <None Include="Resources\help.wav" />
+    <None Include="Resources\help.bmp" />
+    <None Include="Resources\south-park-s16e10c09-hallo-dis-is-varashnu-16x9.jpg" />
     <None Include="Resources\chilogo4.png" />
     <None Include="Resources\chilogo3.png" />
   </ItemGroup>

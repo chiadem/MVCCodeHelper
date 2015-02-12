@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MVCCodeHelperMain));
             this.DBSettings = new System.Windows.Forms.TabControl();
+            this.classFile = new System.Windows.Forms.OpenFileDialog();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -83,6 +84,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label26 = new System.Windows.Forms.Label();
             this.classfilename = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -92,6 +94,8 @@
             this.StaticControlsCheck = new System.Windows.Forms.CheckBox();
             this.label23 = new System.Windows.Forms.Label();
             this.groupBoxLabelsandControlsOption = new System.Windows.Forms.GroupBox();
+            this.labelPostfix = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.textBoxFormclass = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -125,7 +129,9 @@
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
-            this.classFile = new System.Windows.Forms.OpenFileDialog();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -141,6 +147,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ControllMD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GroupMd)).BeginInit();
             this.tabPage1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // DBSettings
@@ -149,6 +156,7 @@
             this.DBSettings.Controls.Add(this.tabPage3);
             this.DBSettings.Controls.Add(this.tabPage4);
             this.DBSettings.Controls.Add(this.tabPage1);
+            this.DBSettings.Controls.Add(this.tabPage5);
             this.DBSettings.Location = new System.Drawing.Point(11, 11);
             this.DBSettings.Margin = new System.Windows.Forms.Padding(2);
             this.DBSettings.Name = "DBSettings";
@@ -156,6 +164,14 @@
             this.DBSettings.Size = new System.Drawing.Size(1378, 738);
             this.DBSettings.TabIndex = 0;
             this.DBSettings.SelectedIndexChanged += new System.EventHandler(this.DBSettings_SelectedIndexChanged);
+            this.DBSettings.Selected += new System.Windows.Forms.TabControlEventHandler(this.DBSettings_Selected);
+            // 
+            // classFile
+            // 
+            this.classFile.Filter = "C# files|*.cs|All files|*.*";
+            this.classFile.ReadOnlyChecked = true;
+            this.classFile.ShowReadOnly = true;
+            this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // tabPage2
             // 
@@ -739,6 +755,7 @@
             // 
             this.tabPage4.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.chilogo4;
             this.tabPage4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.tabPage4.Controls.Add(this.label26);
             this.tabPage4.Controls.Add(this.classfilename);
             this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Controls.Add(this.groupBox2);
@@ -763,6 +780,17 @@
             this.tabPage4.Text = "View Controls Generator";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Location = new System.Drawing.Point(20, 289);
+            this.label26.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(67, 13);
+            this.label26.TabIndex = 42;
+            this.label26.Text = "View Code";
+            // 
             // classfilename
             // 
             this.classfilename.AutoSize = true;
@@ -780,7 +808,7 @@
             this.button1.ForeColor = System.Drawing.Color.MediumAquamarine;
             this.button1.Location = new System.Drawing.Point(111, 62);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(502, 23);
+            this.button1.Size = new System.Drawing.Size(366, 23);
             this.button1.TabIndex = 40;
             this.button1.Text = "Select Class";
             this.button1.UseVisualStyleBackColor = true;
@@ -795,7 +823,7 @@
             this.groupBox2.Controls.Add(this.label23);
             this.groupBox2.Location = new System.Drawing.Point(111, 91);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(502, 73);
+            this.groupBox2.Size = new System.Drawing.Size(524, 73);
             this.groupBox2.TabIndex = 39;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Generate Option";
@@ -852,21 +880,40 @@
             // 
             // groupBoxLabelsandControlsOption
             // 
+            this.groupBoxLabelsandControlsOption.Controls.Add(this.labelPostfix);
+            this.groupBoxLabelsandControlsOption.Controls.Add(this.label25);
             this.groupBoxLabelsandControlsOption.Controls.Add(this.textBoxFormclass);
             this.groupBoxLabelsandControlsOption.Controls.Add(this.label22);
             this.groupBoxLabelsandControlsOption.Location = new System.Drawing.Point(111, 170);
             this.groupBoxLabelsandControlsOption.Name = "groupBoxLabelsandControlsOption";
-            this.groupBoxLabelsandControlsOption.Size = new System.Drawing.Size(502, 48);
+            this.groupBoxLabelsandControlsOption.Size = new System.Drawing.Size(524, 87);
             this.groupBoxLabelsandControlsOption.TabIndex = 39;
             this.groupBoxLabelsandControlsOption.TabStop = false;
             this.groupBoxLabelsandControlsOption.Text = "Labels and Controls option";
-            this.groupBoxLabelsandControlsOption.Visible = false;
+            // 
+            // labelPostfix
+            // 
+            this.labelPostfix.Location = new System.Drawing.Point(243, 45);
+            this.labelPostfix.Name = "labelPostfix";
+            this.labelPostfix.Size = new System.Drawing.Size(275, 20);
+            this.labelPostfix.TabIndex = 36;
+            this.labelPostfix.Text = ":";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 48);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(237, 13);
+            this.label25.TabIndex = 35;
+            this.label25.Text = "Label Postfix (Uses LaberFor extension method) :";
             // 
             // textBoxFormclass
             // 
-            this.textBoxFormclass.Location = new System.Drawing.Point(101, 19);
+            this.textBoxFormclass.Enabled = false;
+            this.textBoxFormclass.Location = new System.Drawing.Point(243, 19);
             this.textBoxFormclass.Name = "textBoxFormclass";
-            this.textBoxFormclass.Size = new System.Drawing.Size(395, 20);
+            this.textBoxFormclass.Size = new System.Drawing.Size(275, 20);
             this.textBoxFormclass.TabIndex = 36;
             this.textBoxFormclass.Text = "form-group col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12";
             // 
@@ -883,7 +930,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(1234, 36);
+            this.label21.Location = new System.Drawing.Point(1160, 37);
             this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(126, 13);
@@ -894,7 +941,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(1178, 679);
+            this.label20.Location = new System.Drawing.Point(1260, 679);
             this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(101, 13);
@@ -906,10 +953,10 @@
             this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(1178, 43);
+            this.listBox1.Location = new System.Drawing.Point(1163, 43);
             this.listBox1.Margin = new System.Windows.Forms.Padding(9);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(182, 649);
+            this.listBox1.Size = new System.Drawing.Size(197, 649);
             this.listBox1.TabIndex = 37;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.listBox1_DragOver);
@@ -928,7 +975,7 @@
             this.LuckyGroup.Controls.Add(this.label15);
             this.LuckyGroup.Controls.Add(this.ControllMD);
             this.LuckyGroup.Controls.Add(this.GroupMd);
-            this.LuckyGroup.Location = new System.Drawing.Point(627, 71);
+            this.LuckyGroup.Location = new System.Drawing.Point(648, 71);
             this.LuckyGroup.Name = "LuckyGroup";
             this.LuckyGroup.Size = new System.Drawing.Size(526, 114);
             this.LuckyGroup.TabIndex = 36;
@@ -1026,7 +1073,7 @@
             this.AutoCamelCase.AutoSize = true;
             this.AutoCamelCase.Checked = true;
             this.AutoCamelCase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoCamelCase.Location = new System.Drawing.Point(482, 240);
+            this.AutoCamelCase.Location = new System.Drawing.Point(482, 275);
             this.AutoCamelCase.Name = "AutoCamelCase";
             this.AutoCamelCase.Size = new System.Drawing.Size(153, 17);
             this.AutoCamelCase.TabIndex = 35;
@@ -1048,7 +1095,7 @@
             // luckyCheckBox
             // 
             this.luckyCheckBox.AutoSize = true;
-            this.luckyCheckBox.Location = new System.Drawing.Point(627, 48);
+            this.luckyCheckBox.Location = new System.Drawing.Point(648, 48);
             this.luckyCheckBox.Name = "luckyCheckBox";
             this.luckyCheckBox.Size = new System.Drawing.Size(84, 17);
             this.luckyCheckBox.TabIndex = 35;
@@ -1060,10 +1107,10 @@
             // ViewButton
             // 
             this.ViewButton.Image = global::CHI_MVCCodeHelper.Properties.Resources.chilogo3;
-            this.ViewButton.Location = new System.Drawing.Point(22, 235);
+            this.ViewButton.Location = new System.Drawing.Point(111, 270);
             this.ViewButton.Margin = new System.Windows.Forms.Padding(2);
             this.ViewButton.Name = "ViewButton";
-            this.ViewButton.Size = new System.Drawing.Size(455, 25);
+            this.ViewButton.Size = new System.Drawing.Size(366, 25);
             this.ViewButton.TabIndex = 30;
             this.ViewButton.Text = "Generate Code";
             this.ViewButton.UseVisualStyleBackColor = true;
@@ -1073,10 +1120,10 @@
             // 
             this.ViewCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewCode.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.ViewCode.Location = new System.Drawing.Point(23, 264);
+            this.ViewCode.Location = new System.Drawing.Point(23, 304);
             this.ViewCode.Margin = new System.Windows.Forms.Padding(2);
             this.ViewCode.Name = "ViewCode";
-            this.ViewCode.Size = new System.Drawing.Size(1151, 430);
+            this.ViewCode.Size = new System.Drawing.Size(1137, 390);
             this.ViewCode.TabIndex = 29;
             this.ViewCode.Text = "";
             // 
@@ -1095,7 +1142,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(1175, 24);
+            this.label19.Location = new System.Drawing.Point(1160, 24);
             this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(54, 13);
@@ -1232,12 +1279,41 @@
             this.ServerLabel.TabIndex = 0;
             this.ServerLabel.Text = "Server";
             // 
-            // classFile
+            // tabPage5
             // 
-            this.classFile.Filter = "C# files|*.cs|All files|*.*";
-            this.classFile.ReadOnlyChecked = true;
-            this.classFile.ShowReadOnly = true;
-            this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            this.tabPage5.BackgroundImage = global::CHI_MVCCodeHelper.Properties.Resources.image;
+            this.tabPage5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.tabPage5.Controls.Add(this.label28);
+            this.tabPage5.Controls.Add(this.label27);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(1370, 712);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Help?";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.label27.Location = new System.Drawing.Point(37, 64);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(846, 39);
+            this.label27.TabIndex = 0;
+            this.label27.Text = "Hello, this is Varachnu. How may I help you today?";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.label28.Location = new System.Drawing.Point(259, 306);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(378, 33);
+            this.label28.TabIndex = 0;
+            this.label28.Text = "Yes, I am in United States";
             // 
             // MVCCodeHelperMain
             // 
@@ -1251,7 +1327,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MVCCodeHelperMain";
-            this.Text = "CHI .NET MVC Code Helper";
+            this.Text = "Varachnu Code Guru - CHI ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewModelGen_FormClosing);
             this.Load += new System.EventHandler(this.ViewModelGen_Load);
             this.DBSettings.ResumeLayout(false);
@@ -1276,6 +1352,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.GroupMd)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1379,5 +1457,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label classfilename;
         private System.Windows.Forms.CheckBox AutoCamelCase;
+        private System.Windows.Forms.TextBox labelPostfix;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
     }
 }
