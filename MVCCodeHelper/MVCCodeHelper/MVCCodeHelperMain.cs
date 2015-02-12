@@ -22,11 +22,15 @@ namespace CHI_MVCCodeHelper
         private List<Property> _propertyList = new List<Property>();
 
         private SqlConnection _dbConnection;
-
+        private SoundPlayer butters, nice, help;
         public MVCCodeHelperMain()
         {
             InitializeComponent();
             listBox1.AllowDrop = true;
+
+             butters = new SoundPlayer(Properties.Resources.butters);
+             nice = new SoundPlayer(Properties.Resources.nice);
+             help = new SoundPlayer(Properties.Resources.helpaudio);
         }
 
         private void ViewModelGen_Load(object sender, EventArgs e)
@@ -72,17 +76,20 @@ namespace CHI_MVCCodeHelper
             try
             {
                 _dbConnection.Open();
+                nice.Play();
                 MessageBox.Show("Succesful! Setting are saved for databse:" + DatabaseCB.Text + ".");
                 Settings.Set("User", UserTB.Text);
                 Settings.Set("Password", PassTB.Text);
                 Settings.Set("Server", ServeTB.Text);
                 Settings.Set("DBName", DatabaseCB.Text);
+                FillTableNameListBoxes();
+
             }
             catch (Exception)
             {
+                butters.Play();
                 MessageBox.Show("Failed!");
             }
-            FillTableNameListBoxes();
         }
 
         private void DatabaseCB_Click(object sender, EventArgs e)
@@ -119,7 +126,10 @@ namespace CHI_MVCCodeHelper
         {
             if (VMTableCB.SelectedIndex == -1)
             {
+
+                butters.Play();
                 MessageBox.Show("Select a table first bro!");
+                return;
             }
             else
             {
@@ -280,6 +290,8 @@ namespace CHI_MVCCodeHelper
                 CodeText.Text = vmCode;
                 CodeText.Focus();
                 //  Clipboard.SetText(CodeText.Text);
+                nice.Play();
+
             }
         }
 
@@ -640,6 +652,7 @@ namespace CHI_MVCCodeHelper
             RepoCodeText.Focus();
             RepoCodeText.SelectAll();
             GenerateController();
+            nice.Play();
         }
 
         private void TableNameRepo_SelectedIndexChanged(object sender, EventArgs e)
@@ -662,6 +675,9 @@ namespace CHI_MVCCodeHelper
         {
             if (TableNameRepo.SelectedIndex == -1)
             {
+                
+                butters.Play();
+
                 MessageBox.Show(
                     "Which table do you want to add to the queue? Select a table first then click this button again!");
             }
@@ -1325,11 +1341,10 @@ namespace CHI_MVCCodeHelper
         private void DBSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
             //FillTableNameListBoxes();
-            if (DBSettings.SelectedIndex==4)
+            if (DBSettings.SelectedIndex == 4)
             {
-                Stream str = Properties.Resources.helpaudio;
-                SoundPlayer snd = new SoundPlayer(str);
-                snd.Play();
+               
+                help.Play();
             }
 
         }
@@ -1479,6 +1494,8 @@ namespace CHI_MVCCodeHelper
         {
             if (_propertyList.Count == 0)
             {
+
+                butters.Play();
                 MessageBox.Show("Select a table or a file, Bro!");
                 return;
             }
@@ -1592,6 +1609,7 @@ namespace CHI_MVCCodeHelper
 
             code = code + n + @" <!--#endregion -->";
             ViewCode.Text = code;
+            nice.Play();
         }
 
         private string GenerateControl(string dataType, string controlName, int? size = null)
@@ -1771,7 +1789,7 @@ namespace CHI_MVCCodeHelper
 
         private void DBSettings_Selected(object sender, TabControlEventArgs e)
         {
-            
+
         }
     }
 }

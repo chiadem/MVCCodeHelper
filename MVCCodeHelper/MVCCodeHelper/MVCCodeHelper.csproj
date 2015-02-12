@@ -100,6 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="1404178133_9102.ico" />
+    <None Include="Resources\nice.wav" />
+    <None Include="Resources\butters.wav" />
     <None Include="Resources\helpaudio.wav" />
     <None Include="Resources\help.wav" />
     <None Include="Resources\help.bmp" />

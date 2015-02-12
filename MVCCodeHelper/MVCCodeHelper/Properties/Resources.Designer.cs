@@ -61,6 +61,15 @@ namespace CHI_MVCCodeHelper.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream butters {
+            get {
+                return ResourceManager.GetStream("butters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap chilogo3 {
@@ -96,6 +105,15 @@ namespace CHI_MVCCodeHelper.Properties {
             get {
                 object obj = ResourceManager.GetObject("image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream nice {
+            get {
+                return ResourceManager.GetStream("nice", resourceCulture);
             }
         }
     }
