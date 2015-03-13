@@ -16,6 +16,7 @@ namespace CHI_MVCCodeHelper
             SettingsItem findSet = settingsList.Find(x => x.Name == name);
             if (findSet != null)
             {
+                var x = 1;
                 return findSet.Value;
             }
             settingsList.Add(new SettingsItem(name, defVal));
