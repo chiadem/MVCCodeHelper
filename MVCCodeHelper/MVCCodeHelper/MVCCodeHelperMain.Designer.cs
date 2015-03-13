@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MVCCodeHelperMain));
             this.DBSettings = new System.Windows.Forms.TabControl();
-            this.classFile = new System.Windows.Forms.OpenFileDialog();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -130,8 +129,9 @@
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.ServerLabel = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label27 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.classFile = new System.Windows.Forms.OpenFileDialog();
             this.DBSettings.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -165,13 +165,6 @@
             this.DBSettings.TabIndex = 0;
             this.DBSettings.SelectedIndexChanged += new System.EventHandler(this.DBSettings_SelectedIndexChanged);
             this.DBSettings.Selected += new System.Windows.Forms.TabControlEventHandler(this.DBSettings_Selected);
-            // 
-            // classFile
-            // 
-            this.classFile.Filter = "C# files|*.cs|All files|*.*";
-            this.classFile.ReadOnlyChecked = true;
-            this.classFile.ShowReadOnly = true;
-            this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // tabPage2
             // 
@@ -897,7 +890,6 @@
             this.labelPostfix.Name = "labelPostfix";
             this.labelPostfix.Size = new System.Drawing.Size(275, 20);
             this.labelPostfix.TabIndex = 36;
-            this.labelPostfix.Text = ":";
             // 
             // label25
             // 
@@ -1293,6 +1285,17 @@
             this.tabPage5.Text = "Help?";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.label28.Location = new System.Drawing.Point(259, 306);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(378, 33);
+            this.label28.TabIndex = 0;
+            this.label28.Text = "Yes, I am in United States";
+            // 
             // label27
             // 
             this.label27.AutoSize = true;
@@ -1304,16 +1307,12 @@
             this.label27.TabIndex = 0;
             this.label27.Text = "Hello, this is Varachnu. How may I help you today?";
             // 
-            // label28
+            // classFile
             // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.label28.Location = new System.Drawing.Point(259, 306);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(378, 33);
-            this.label28.TabIndex = 0;
-            this.label28.Text = "Yes, I am in United States";
+            this.classFile.Filter = "C# files|*.cs|All files|*.*";
+            this.classFile.ReadOnlyChecked = true;
+            this.classFile.ShowReadOnly = true;
+            this.classFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // MVCCodeHelperMain
             // 
