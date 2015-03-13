@@ -1514,9 +1514,9 @@ namespace CHI_MVCCodeHelper
                     if (radioButtonBoth.Checked || radioButtonLabel.Checked)
                     {
                         code = property.Type != "bool"
-                            ? code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                            ? code + @"@Html.WTLabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-12" + @""" }" + labelPost + @")" + n
-                            : code + @"@Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                            : code + @"@Html.WTLabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-12" + @""" })" + n + n;
                     }
 
@@ -1552,13 +1552,13 @@ namespace CHI_MVCCodeHelper
 
                     code = property.Type != "bool"
                         ? code + n + @"<div class=""" + textBoxFormclass.Text + @""">
-                                                @Html.LabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                                                @Html.WTLabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                           @", new { @class = ""control-label col-md-12"" }" + labelPost + @")
                                                 <div class=""col-md-12"">" +
                           control
                           + @"</div>" + n + @"   </div>"
                         : code + n + @"<div class=""" + textBoxFormclass.Text + @""">
-                                                @Html.LabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                                                @Html.WTLabelFor(a => a." + nestedPrefix.Text + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                           @", new { @class = ""control-label col-md-12"" },""" + @""")
                                                 <div class=""col-md-12"">" +
                           control
@@ -1587,13 +1587,13 @@ namespace CHI_MVCCodeHelper
 
                         code = property.Type != "bool"
                             ? code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
-                                                @Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                                                @Html.WTLabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-" + ControlLabelMd.Value + @""" }" + labelPost + @")
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
                               control
                               + @"</div>" + n + @"   </div>"
                             : code + n + @"<div class=""form-group col-md-" + GroupMd.Value + @""">
-                                                @Html.LabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                                                @Html.WTLabelFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                               @", new { @class = ""control-label col-md-" + ControlLabelMd.Value +
                               @""" })                                                
                                                 <div class=""col-md-" + ControllMD.Value + @""">" +
