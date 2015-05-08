@@ -1521,7 +1521,7 @@ namespace CHI_MVCCodeHelper
                     }
 
                     if (StaticControlsCheck.Checked)
-                        code = code + @"<p data-bind=""text: @Html.NameFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
+                        code = code + @"<p data-bind=""display: @Html.NameFor(a => a." + (AutoCamelCase.Checked ? property.CamelName : property.Name) +
                                @").ToString()""></p>" + n + n;
                     else
                         code = code + GenerateControl(property.Type, (AutoCamelCase.Checked ? property.CamelName : property.Name));
@@ -1544,7 +1544,7 @@ namespace CHI_MVCCodeHelper
                     var property = _propertyList.Single(p => p.Name == (string)item);
 
                     var control = StaticControlsCheck.Checked
-                        ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
+                        ? @"<p class=""form-control-static"" data-bind=""display: @Html.NameFor(a => a." +
                           nestedPrefix.Text +
                            property.CamelName + @").ToString()""></p>" + n
                         : GenerateControl(property.Type, property.CamelName, property.Size);
@@ -1580,7 +1580,7 @@ namespace CHI_MVCCodeHelper
                         var property = _propertyList.Single(p => p.Name == (string)item);
 
                         var control = StaticControlsCheck.Checked
-                            ? @"<p class=""form-control-static"" data-bind=""text: @Html.NameFor(a => a." +
+                            ? @"<p class=""form-control-static"" data-bind=""display: @Html.NameFor(a => a." +
                                (AutoCamelCase.Checked ? property.CamelName : property.Name) + @").ToString()""></p>" + n
                             : GenerateControl(property.Type, (AutoCamelCase.Checked ? property.CamelName : property.Name), property.Size);
 
